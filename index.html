@@ -66,6 +66,7 @@ aside.collapsed>*:not(#handle){display:none}
 .tUN{background:#ff0000;color:#fff!important}.tTR{background:#ffc000}.tTA{background:#ffff00}.tBA{background:#92d050}
 #list .td{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:4px;border:1px solid #0004;vertical-align:middle}
 #bType small{font-size:11px;font-weight:700;margin-left:4px;vertical-align:middle}#bType.safety{background:#ffe2b8;border-color:#c77d00}
+#tovl[hidden],#dovl[hidden]{display:none}#dovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}#dpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:460px;width:100%;max-height:90vh;overflow:auto}#dpanel h3{margin:0 0 6px}#dpanel .tnote{font-size:12px;color:#555;margin:0 0 8px}#dpanel .row{display:flex;gap:6px;margin-top:12px}#dList{border:1px solid #ddd;border-radius:6px;max-height:46vh;overflow:auto}#dList label{display:flex;gap:8px;align-items:flex-start;padding:7px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;cursor:pointer}#dList input,.dm input{width:auto;margin-top:2px}#dList small{display:block;color:#666;font-size:11px}.dm{display:flex;gap:6px;align-items:flex-start;font-size:12px;color:#444;margin-top:8px}
 #tovl[hidden]{display:none}#tovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}
 #tpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto}#tpanel h3{margin:0 0 6px}#tpanel h4{margin:12px 0 2px;color:#1f3d2b}
 #tpanel .tnote{font-size:12px;color:#555;margin:0 0 8px}.topt{display:flex;gap:8px;align-items:flex-start;border:1px solid #ccc;border-radius:6px;padding:8px;margin:6px 0;cursor:pointer}.topt input{width:auto;margin-top:3px}.topt small{color:#555}.topt:has(input:checked){border-color:#1f3d2b;background:#e3efe6}
@@ -125,7 +126,7 @@ body.locked>:not(#login){visibility:hidden}
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
 <div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bPts" hidden title="Show / hide imported points">⌖</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
 </header>
-<div id="menu" hidden><button id="bImp">⬆ Import xlsx</button><button id="bPtsImp">⌖ Import points (CSV)</button><button id="bPtsClr" class="danger">Clear imported points</button><button id="bExp">⬇ Export xlsx</button><button id="bDxf">⬇ Export DXF</button><button id="bClr" class="danger">Clear plotted trees</button><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><button id="bOff">📶 Offline maps</button><div id="st"></div></div>
+<div id="menu" hidden><button id="bImp">⬆ Import xlsx</button><button id="bPtsImp">⌖ Import points (CSV / DXF)</button><button id="bPtsClr" class="danger">Clear imported points</button><button id="bExp">⬇ Export xlsx</button><button id="bDxf">⬇ Export DXF</button><button id="bClr" class="danger">Clear plotted trees</button><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><button id="bOff">📶 Offline maps</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
@@ -137,7 +138,7 @@ body.locked>:not(#login){visibility:hidden}
 <div id="oProg" hidden><div class="bar"><i></i></div><span id="oProgT"></span></div>
 <hr><div id="oStore"></div><button id="oClear" class="danger">Clear all offline tiles</button>
 </div></div>
-<input type="file" id="fi" accept=".xlsx,.xls" hidden><input type="file" id="pFi" accept=".csv,.txt,.xlsx,.xls" hidden>
+<input type="file" id="fi" accept=".xlsx,.xls" hidden><input type="file" id="pFi" accept=".csv,.txt,.xlsx,.xls,.dxf" hidden>
 <main><div id="map"></div><div id="bn" hidden></div><aside><div id="handle" title="Minimise / maximise survey data panel" data-icon="&laquo;&laquo;"></div><div id="ah"><b id="ahT">Survey data</b><span><button id="bPrev" title="Select previous tree">‹</button><button id="bNext" title="Select next tree">›</button><button id="bMax">⤢ Full screen</button></span></div><div id="list"></div><div id="form"></div><div id="pform" hidden></div></aside></main>
 <div id="novl" hidden><div id="npanel">
 <h3>Predefined notes</h3>
@@ -155,6 +156,13 @@ body.locked>:not(#login){visibility:hidden}
 <div id="tSafe"><h4>Safety survey details</h4>
 <label>Site ID<input id="tSid"></label><label>Site name<input id="tSname"></label><label>Reason for survey<input id="tReason" list="rsl"></label></div>
 <div class="row"><button id="tApply">Apply</button><button id="tClose">Cancel</button></div>
+</div></div>
+<div id="dovl" hidden><div id="dpanel">
+<h3>Import points from DXF</h3>
+<p class="tnote">Tick the layers to take centre points from. Trunk circles are usually the smallest radius – leave RPA and crown layers unticked.</p>
+<div id="dList"></div>
+<label class="dm"><input type="checkbox" id="dMerge" checked> Merge circles that share a centre (within 0.1 m), e.g. trunk + RPA</label>
+<div class="row"><button id="dGo">Import points</button><button id="dCancel">Cancel</button></div>
 </div></div>
 <datalist id="rsl"><option value="Routine safety inspection"><option value="Reactive inspection"><option value="Post-storm inspection"><option value="Pre-works inspection"><option value="Re-inspection"></datalist>
 <datalist id="spl"></datalist>
@@ -595,15 +603,61 @@ function parsePts(rows){const H=r=>r.map(c=>String(c??'').trim().toLowerCase());
   pts.push({e:+E.toFixed(3),n:+N.toFixed(3),lat,lon,label:li>=0?String(r[li]??'').trim():''})});
  return{pts,bad,out}}
 $('bPtsImp').onclick=()=>$('pFi').click();
+function ipAccept(r,what){
+ if(!r.pts.length)return alert('No usable points found.'+(r.out?`\n\n${r.out} had coordinates outside British National Grid – check the drawing is in OSGB36 (EPSG:27700) metres, not a local site grid.`:''));
+ let add=false;if(IP.length)add=confirm(`${r.pts.length} point(s) found.\n\nOK = add to the ${IP.length} imported point(s) already on the map\nCancel = replace them`);
+ IP=add?IP.concat(r.pts):r.pts;ipOn=true;ipDraw();ipSave();
+ map.fitBounds(L.latLngBounds(r.pts.map(p=>[p.lat,p.lon])).pad(.15),{maxZoom:20});
+ alert(`${r.pts.length} point(s) imported and shown in magenta.`+(r.merged?`\n${r.merged} duplicate/concentric centre(s) merged.`:'')+(r.scaled?'\nDrawing units were millimetres – converted to metres.':'')+(r.bad?`\n${r.bad} row(s) without valid X/Y were skipped.`:'')+(r.out?`\n${r.out} ${what||'row(s)'} outside British National Grid were skipped.`:'')+`\n\nNew trees snap onto a point when you tap close to it (while the ⌖ layer is switched on).`)}
+// ---- DXF (ASCII): circle centres, points, block insertion points, and 2-vertex bulged polylines (polyline "circles", as TreePlotta's own DXF trunks)
+function parseDXF(txt){if(/^AutoCAD Binary DXF/.test(txt))throw Error('This is a binary DXF. In AutoCAD use SAVEAS → DXF and leave "Binary" unticked (ASCII), then import again.');
+ const Ls=txt.split(/\r?\n/),out=[];let sec='',wantName=false,cur=null,poly=null;
+ const polyCircle=(o,vx,vy,b)=>{if(vx.length==2&&vy.length==2&&Math.abs(Math.abs(b[0])-1)<1e-3&&Math.abs(Math.abs(b[1]||0)-1)<1e-3){const r=Math.hypot(vx[1]-vx[0],vy[1]-vy[0])/2;if(r>0)out.push({t:'POLYCIRCLE',layer:o.layer,x:(vx[0]+vx[1])/2,y:(vy[0]+vy[1])/2,r})}};
+ const flush=()=>{const o=cur;cur=null;if(!o)return;
+  if(o.t==='VERTEX'){if(poly&&o.x!=null){poly.vx.push(o.x);poly.vy.push(o.y);poly.b.push(o.bulge||0)}return}
+  if(o.t==='LWPOLYLINE')return polyCircle(o,o.vx,o.vy,o.b);
+  if(['CIRCLE','POINT','INSERT'].includes(o.t)&&o.x!=null&&o.y!=null)out.push({t:o.t,layer:o.layer,x:o.x,y:o.y,r:o.r||0,name:o.name||''})};
+ for(let i=0;i+1<Ls.length;i+=2){const c=parseInt(Ls[i],10),v=Ls[i+1].trim();if(isNaN(c))continue;
+  if(c===0){flush();
+   if(v==='SECTION'){wantName=true;continue}if(v==='ENDSEC'){sec='';poly=null;continue}if(sec!=='ENTITIES')continue;
+   if(v==='VERTEX'&&poly){cur={t:'VERTEX'};continue}
+   if(v==='SEQEND'){if(poly)polyCircle(poly,poly.vx,poly.vy,poly.b);poly=null;continue}
+   poly=null;cur={t:v,layer:'0',vx:[],vy:[],b:[]};if(v==='POLYLINE'){poly=cur;cur=null;poly.layerSet=false;continue}continue}
+  if(c===2&&wantName){sec=v;wantName=false;continue}
+  if(poly&&!cur){if(c===8)poly.layer=v;continue}
+  if(!cur)continue;
+  if(c===8&&cur.t!=='VERTEX')cur.layer=v;
+  else if(c===2&&cur.t==='INSERT')cur.name=v;
+  else if(c===10){if(cur.t==='LWPOLYLINE'){cur.vx.push(+v);cur.b.push(0)}else cur.x=+v}
+  else if(c===20){if(cur.t==='LWPOLYLINE')cur.vy.push(+v);else cur.y=+v}
+  else if(c===40&&cur.t==='CIRCLE')cur.r=+v;
+  else if(c===42){if(cur.t==='LWPOLYLINE')cur.b[cur.b.length-1]=+v;else cur.bulge=+v}}
+ flush();return out}
+const DXT={CIRCLE:'circles',POLYCIRCLE:'polyline circles',POINT:'points',INSERT:'block inserts'};
+let dxEnts=[];
+function dxfDialog(ents){dxEnts=ents;const g=new Map();
+ ents.forEach(e=>{const k=e.t+'\u0001'+e.layer;if(!g.has(k))g.set(k,{t:e.t,layer:e.layer,n:0,rmin:Infinity,rmax:0,names:new Set()});const o=g.get(k);o.n++;if(e.r){o.rmin=Math.min(o.rmin,e.r);o.rmax=Math.max(o.rmax,e.r)}if(e.name)o.names.add(e.name)});
+ const anyCircle=[...g.values()].some(o=>o.t=='CIRCLE'||o.t=='POLYCIRCLE');
+ const rows=[...g.entries()].sort((a,b)=>a[1].layer.localeCompare(b[1].layer)||a[1].t.localeCompare(b[1].t)).map(([k,o])=>{
+  const def=o.t=='CIRCLE'||o.t=='POLYCIRCLE'||(!anyCircle&&o.t!='INSERT')||(!anyCircle&&![...g.values()].some(q=>q.t=='POINT'));
+  const info=o.rmax?` · radius ${o.rmin.toFixed(2)}–${o.rmax.toFixed(2)}`:o.names.size?' · '+[...o.names].slice(0,3).join(', ')+(o.names.size>3?'…':''):'';
+  return `<label><input type="checkbox" data-g="${esc(k)}" ${def?'checked':''}><span><b>${esc(o.layer)}</b> – ${o.n} ${DXT[o.t]}<small>${esc(info)}</small></span></label>`}).join('');
+ $('dList').innerHTML=rows;$('dovl').hidden=false}
+$('dCancel').onclick=()=>{$('dovl').hidden=true;dxEnts=[]};
+$('dGo').onclick=()=>{const keys=new Set([...$('dList').querySelectorAll('input:checked')].map(c=>c.dataset.g));if(!keys.size)return alert('Tick at least one layer.');
+ let sel=dxEnts.filter(e=>keys.has(e.t+'\u0001'+e.layer));$('dovl').hidden=true;dxEnts=[];
+ const inGrid=(x,y)=>x>=0&&x<=700000&&y>=0&&y<=1300000;let scaled=false;
+ if(!sel.some(e=>inGrid(e.x,e.y))&&sel.some(e=>inGrid(e.x/1000,e.y/1000))){sel=sel.map(e=>({...e,x:e.x/1000,y:e.y/1000}));scaled=true}
+ let merged=0;const keep=[];
+ if($('dMerge').checked){const tol=0.1;sel.forEach(e=>{if(keep.some(k=>Math.abs(k.x-e.x)<=tol&&Math.abs(k.y-e.y)<=tol))merged++;else keep.push(e)})}else keep.push(...sel);
+ let out=0;const pts=[];keep.forEach(e=>{if(!inGrid(e.x,e.y)){out++;return}const[lon,lat]=proj4('EPSG:27700','EPSG:4326',[e.x,e.y]);pts.push({e:+e.x.toFixed(3),n:+e.y.toFixed(3),lat,lon,label:''})});
+ ipAccept({pts,out,merged,scaled,bad:0},'object(s)')};
 $('pFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
- try{const wb=/\.xlsx?$/i.test(f.name)?XLSX.read(await f.arrayBuffer()):XLSX.read(await f.text(),{type:'string',raw:true});
+ try{if(/\.dxf$/i.test(f.name)){const ents=parseDXF(await f.text());
+   if(!ents.length)return alert('No circles, points, block inserts or polyline circles were found in the drawing\'s model space.');return dxfDialog(ents)}
+  const wb=/\.xlsx?$/i.test(f.name)?XLSX.read(await f.arrayBuffer()):XLSX.read(await f.text(),{type:'string',raw:true});
   const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:''}),r=parsePts(rows);
-  if(r.err)return alert(r.err);
-  if(!r.pts.length)return alert('No usable points found.'+(r.out?`\n\n${r.out} row(s) had coordinates outside British National Grid – check the drawing is in OSGB36 (EPSG:27700) metres, not a local site grid.`:''));
-  let add=false;if(IP.length)add=confirm(`${r.pts.length} point(s) found.\n\nOK = add to the ${IP.length} imported point(s) already on the map\nCancel = replace them`);
-  IP=add?IP.concat(r.pts):r.pts;ipOn=true;ipDraw();ipSave();
-  map.fitBounds(L.latLngBounds(r.pts.map(p=>[p.lat,p.lon])).pad(.15),{maxZoom:20});
-  alert(`${r.pts.length} point(s) imported and shown in magenta.`+(r.bad?`\n${r.bad} row(s) without valid X/Y were skipped.`:'')+(r.out?`\n${r.out} row(s) outside British National Grid were skipped.`:'')+`\n\nNew trees snap onto a point when you tap close to it (while the ⌖ layer is switched on).`)
+  if(r.err)return alert(r.err);ipAccept(r)
  }catch(x){alert('Point import failed: '+x.message)}};
 $('bPtsClr').onclick=()=>{if(!IP.length)return alert('There are no imported points to clear.');if(!confirm(`Remove all ${IP.length} imported points from the map?\n\nYour trees and polygons are not affected.`))return;IP=[];ipDraw();ipSave();snapRing(null)};
 ipLoad();
