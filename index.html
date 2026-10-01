@@ -99,7 +99,7 @@ body.locked>:not(#login){visibility:hidden}
 <script>
 (function(){
  // Only a SHA-256 hash of the credentials is stored here, not the password itself.
- const AUTH_KEY='bs5837_plotter_v1_auth',H='018fba8157b75dd107076c5af538790247b70d8e774df2ebd06a5fab9638cb95';
+ const AUTH_KEY='bs5837_plotter_v1_auth',HS=['018fba8157b75dd107076c5af538790247b70d8e774df2ebd06a5fab9638cb95'/*al1*/,'374e6b4054b3f72acba1a0114fc8fce86b8185523bcc8484d7e81ee7541adb89'/*GUEST*/];
  function sha256(s){const K=[1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298];
   const b=new TextEncoder().encode(s),l=b.length,n=((l+9+63)>>6)<<6,m=new Uint8Array(n);m.set(b);m[l]=128;const dv=new DataView(m.buffer);dv.setUint32(n-4,l*8);dv.setUint32(n-8,Math.floor(l/536870912));
   let h=[1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225];const w=new Array(64),r=(x,k)=>(x>>>k)|(x<<(32-k));
@@ -111,11 +111,11 @@ body.locked>:not(#login){visibility:hidden}
   return h.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('')}
  window.tpSignOut=()=>{if(!confirm('Sign out of TreePlotta on this device?\n\nYour survey data stays saved on this device.'))return;try{localStorage.removeItem(AUTH_KEY)}catch(x){}location.reload()};
  const el=document.getElementById('login');
- let ok=false;try{ok=localStorage.getItem(AUTH_KEY)===H}catch(x){}
+ let ok=false;try{ok=HS.includes(localStorage.getItem(AUTH_KEY))}catch(x){}
  if(ok){el.remove();return}else{document.body.classList.add('locked');setTimeout(()=>document.getElementById('lgU').focus(),50)}
  document.getElementById('lgForm').onsubmit=e=>{e.preventDefault();
   const u=document.getElementById('lgU').value.trim(),p=document.getElementById('lgP').value;
-  if(sha256('TreePlotta|'+u+'|'+p)===H){try{localStorage.setItem(AUTH_KEY,H)}catch(x){}el.remove();document.body.classList.remove('locked');window.dispatchEvent(new Event('resize'))}
+  const hv=sha256('TreePlotta|'+u+'|'+p);if(HS.includes(hv)){try{localStorage.setItem(AUTH_KEY,hv)}catch(x){}el.remove();document.body.classList.remove('locked');window.dispatchEvent(new Event('resize'))}
   else{document.getElementById('lgErr').hidden=false;document.getElementById('lgP').value='';document.getElementById('lgP').focus()}};
 })();
 </script>
