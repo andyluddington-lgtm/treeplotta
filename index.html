@@ -80,14 +80,52 @@ aside.collapsed>*:not(#handle){display:none}
 @media(max-width:900px) and (orientation:landscape) and (max-height:520px){main{flex-direction:row}aside{width:46%;height:auto;border:0;border-left:1px solid #ccc;padding:8px 8px 8px 34px}
  #handle{left:0;right:auto;top:0;bottom:0;width:24px;height:auto}
  aside.collapsed{width:24px!important;height:auto!important}}
+
+#login{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(160deg,#1f3d2b,#2f5e40 60%,#3d7650)}
+#lgForm{background:#fff;color:#222;border-radius:12px;box-shadow:0 10px 40px #0007;padding:26px 24px 22px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;text-align:center}
+#lgForm .lgLogo{font-size:40px;line-height:1}#lgForm h1{margin:0;font-size:22px;color:#1f3d2b}#lgForm p{margin:0 0 6px;color:#666}
+#lgForm label{display:flex;flex-direction:column;gap:3px;text-align:left;font-size:12px;color:#555}#lgForm input{font-size:16px;padding:9px 10px}
+#lgForm button{margin-top:6px;padding:10px;font-size:15px;font-weight:700;background:#1f3d2b;color:#fff;border-color:#1f3d2b}
+#lgErr{background:#fde2e2;color:#9c0006;border-radius:6px;padding:7px;font-size:13px}#lgErr[hidden]{display:none}
+body.locked>:not(#login){visibility:hidden}
 </style></head><body>
+<div id="login"><form id="lgForm" autocomplete="on">
+<div class="lgLogo">🌳</div><h1>TreePlotta</h1><p>Sign in to continue</p>
+<label>Username<input id="lgU" name="username" autocomplete="username" autocapitalize="off" spellcheck="false" required></label>
+<label>Password<input id="lgP" name="password" type="password" autocomplete="current-password" required></label>
+<div id="lgErr" hidden>Incorrect username or password.</div>
+<button type="submit">Sign in</button>
+</form></div>
+<script>
+(function(){
+ // Only a SHA-256 hash of the credentials is stored here, not the password itself.
+ const AUTH_KEY='bs5837_plotter_v1_auth',H='018fba8157b75dd107076c5af538790247b70d8e774df2ebd06a5fab9638cb95';
+ function sha256(s){const K=[1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298];
+  const b=new TextEncoder().encode(s),l=b.length,n=((l+9+63)>>6)<<6,m=new Uint8Array(n);m.set(b);m[l]=128;const dv=new DataView(m.buffer);dv.setUint32(n-4,l*8);dv.setUint32(n-8,Math.floor(l/536870912));
+  let h=[1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225];const w=new Array(64),r=(x,k)=>(x>>>k)|(x<<(32-k));
+  for(let o=0;o<n;o+=64){for(let i=0;i<16;i++)w[i]=dv.getUint32(o+i*4);
+   for(let i=16;i<64;i++){const a=w[i-15],c=w[i-2];w[i]=(w[i-16]+(r(a,7)^r(a,18)^(a>>>3))+w[i-7]+(r(c,17)^r(c,19)^(c>>>10)))|0}
+   let[A,B,C,D,E,F,G,I]=h;
+   for(let i=0;i<64;i++){const t1=(I+(r(E,6)^r(E,11)^r(E,25))+((E&F)^(~E&G))+K[i]+w[i])|0,t2=((r(A,2)^r(A,13)^r(A,22))+((A&B)^(A&C)^(B&C)))|0;I=G;G=F;F=E;E=(D+t1)|0;D=C;C=B;B=A;A=(t1+t2)|0}
+   h=h.map((v,i)=>(v+[A,B,C,D,E,F,G,I][i])|0)}
+  return h.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('')}
+ window.tpSignOut=()=>{if(!confirm('Sign out of TreePlotta on this device?\n\nYour survey data stays saved on this device.'))return;try{localStorage.removeItem(AUTH_KEY)}catch(x){}location.reload()};
+ const el=document.getElementById('login');
+ let ok=false;try{ok=localStorage.getItem(AUTH_KEY)===H}catch(x){}
+ if(ok){el.remove();return}else{document.body.classList.add('locked');setTimeout(()=>document.getElementById('lgU').focus(),50)}
+ document.getElementById('lgForm').onsubmit=e=>{e.preventDefault();
+  const u=document.getElementById('lgU').value.trim(),p=document.getElementById('lgP').value;
+  if(sha256('TreePlotta|'+u+'|'+p)===H){try{localStorage.setItem(AUTH_KEY,H)}catch(x){}el.remove();document.body.classList.remove('locked');window.dispatchEvent(new Event('resize'))}
+  else{document.getElementById('lgErr').hidden=false;document.getElementById('lgP').value='';document.getElementById('lgP').focus()}};
+})();
+</script>
 <header>
 <div class="row"><b class="ttl">🌳 <span>TreePlotta</span></b>
 <span class="sr"><input id="q" type="search" placeholder="Search site address / postcode ⏎"><div id="res" hidden></div></span>
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
 <div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bPts" hidden title="Show / hide imported points">⌖</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
 </header>
-<div id="menu" hidden><button id="bImp">⬆ Import xlsx</button><button id="bPtsImp">⌖ Import points (CSV)</button><button id="bPtsClr" class="danger">Clear imported points</button><button id="bExp">⬇ Export xlsx</button><button id="bDxf">⬇ Export DXF</button><button id="bClr" class="danger">Clear plotted trees</button><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOff">📶 Offline maps</button><div id="st"></div></div>
+<div id="menu" hidden><button id="bImp">⬆ Import xlsx</button><button id="bPtsImp">⌖ Import points (CSV)</button><button id="bPtsClr" class="danger">Clear imported points</button><button id="bExp">⬇ Export xlsx</button><button id="bDxf">⬇ Export DXF</button><button id="bClr" class="danger">Clear plotted trees</button><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><button id="bOff">📶 Offline maps</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
