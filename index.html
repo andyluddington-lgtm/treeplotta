@@ -66,6 +66,7 @@ aside.collapsed>*:not(#handle){display:none}
 .tUN{background:#ff0000;color:#fff!important}.tTR{background:#ffc000}.tTA{background:#ffff00}.tBA{background:#92d050}
 #list .td{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:4px;border:1px solid #0004;vertical-align:middle}
 #bType small{font-size:11px;font-weight:700;margin-left:4px;vertical-align:middle}#bType.safety{background:#ffe2b8;border-color:#c77d00}
+#kovl[hidden]{display:none}#kovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}#kpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:92vh;overflow:auto}#kpanel h3{margin:0 0 2px}#kpanel .tnote{font-size:12px;color:#555;margin:0 0 6px;word-break:break-all}#kpanel .row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}#kpanel .kc{display:flex;gap:6px;align-items:center;font-size:13px;margin:4px 0}#kpanel .kc input{width:auto}#kpanel .kl{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:#1f3d2b;margin:10px 0 3px}#kpanel .kl input{width:60%}#kpanel input[type=color]{width:42px;height:26px;padding:0}#kList{border:1px solid #ddd;border-radius:6px;max-height:34vh;overflow:auto}#kList label{display:flex;gap:7px;align-items:center;padding:5px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;cursor:pointer}#kList input{width:auto}#kList i{width:12px;height:12px;border:1px solid #0006;border-radius:2px;flex:none}#kList small{color:#888;margin-left:auto}#bTopo.on{background:#d6f3ff;border-color:#0a7ab0}
 #tovl[hidden],#dovl[hidden]{display:none}#dovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}#dpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:460px;width:100%;max-height:90vh;overflow:auto}#dpanel h3{margin:0 0 6px}#dpanel .tnote{font-size:12px;color:#555;margin:0 0 8px}#dpanel .row{display:flex;gap:6px;margin-top:12px}#dList{border:1px solid #ddd;border-radius:6px;max-height:46vh;overflow:auto}#dList label{display:flex;gap:8px;align-items:flex-start;padding:7px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;cursor:pointer}#dList input,.dm input{width:auto;margin-top:2px}#dList small{display:block;color:#666;font-size:11px}.dm{display:flex;gap:6px;align-items:flex-start;font-size:12px;color:#444;margin-top:8px}
 #tovl[hidden]{display:none}#tovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}
 #tpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto}#tpanel h3{margin:0 0 6px}#tpanel h4{margin:12px 0 2px;color:#1f3d2b}
@@ -124,9 +125,9 @@ body.locked>:not(#login){visibility:hidden}
 <div class="row"><b class="ttl">🌳 <span>TreePlotta</span></b>
 <span class="sr"><input id="q" type="search" placeholder="Search site address / postcode ⏎"><div id="res" hidden></div></span>
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
-<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bPts" hidden title="Show / hide imported points">⌖</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
+<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bPts" hidden title="Show / hide imported points">⌖</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
 </header>
-<div id="menu" hidden><button id="bImp">⬆ Import xlsx</button><button id="bPtsImp">⌖ Import points (CSV / DXF)</button><button id="bPtsClr" class="danger">Clear imported points</button><button id="bExp">⬇ Export xlsx</button><button id="bDxf">⬇ Export DXF</button><button id="bClr" class="danger">Clear plotted trees</button><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><button id="bOff">📶 Offline maps</button><div id="st"></div></div>
+<div id="menu" hidden><button id="bImp">⬆ Import xlsx</button><button id="bPtsImp">⌖ Import points (CSV / DXF)</button><button id="bPtsClr" class="danger">Clear imported points</button><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><button id="bExp">⬇ Export xlsx</button><button id="bDxf">⬇ Export DXF</button><button id="bClr" class="danger">Clear plotted trees</button><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><button id="bOff">📶 Offline maps</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
@@ -138,7 +139,7 @@ body.locked>:not(#login){visibility:hidden}
 <div id="oProg" hidden><div class="bar"><i></i></div><span id="oProgT"></span></div>
 <hr><div id="oStore"></div><button id="oClear" class="danger">Clear all offline tiles</button>
 </div></div>
-<input type="file" id="fi" accept=".xlsx,.xls" hidden><input type="file" id="pFi" accept=".csv,.txt,.xlsx,.xls,.dxf" hidden>
+<input type="file" id="fi" accept=".xlsx,.xls" hidden><input type="file" id="tFi" accept=".dxf" hidden><input type="file" id="pFi" accept=".csv,.txt,.xlsx,.xls,.dxf" hidden>
 <main><div id="map"></div><div id="bn" hidden></div><aside><div id="handle" title="Minimise / maximise survey data panel" data-icon="&laquo;&laquo;"></div><div id="ah"><b id="ahT">Survey data</b><span><button id="bPrev" title="Select previous tree">‹</button><button id="bNext" title="Select next tree">›</button><button id="bMax">⤢ Full screen</button></span></div><div id="list"></div><div id="form"></div><div id="pform" hidden></div></aside></main>
 <div id="novl" hidden><div id="npanel">
 <h3>Predefined notes</h3>
@@ -163,6 +164,18 @@ body.locked>:not(#login){visibility:hidden}
 <div id="dList"></div>
 <label class="dm"><input type="checkbox" id="dMerge" checked> Merge circles that share a centre (within 0.1 m), e.g. trunk + RPA</label>
 <div class="row"><button id="dGo">Import points</button><button id="dCancel">Cancel</button></div>
+</div></div>
+<div id="kovl" hidden><div id="kpanel">
+<h3>Topo survey</h3><div id="kName" class="tnote"></div>
+<label class="kc"><input type="checkbox" id="kOn"> Show topo survey</label>
+<label class="kc"><input type="checkbox" id="kTxt"> Show text and levels (appear as you zoom in)</label>
+<label class="kl">Opacity<input type="range" id="kOp" min="15" max="100" step="5"></label>
+<div class="kl">Colours</div>
+<label class="kc"><input type="radio" name="kMode" value="dwg"> Drawing colours</label>
+<label class="kc"><input type="radio" name="kMode" value="mono"> Single colour <input type="color" id="kMono"></label>
+<div class="kl">Layers <span><button id="kAll" type="button">All</button> <button id="kNone" type="button">None</button></span></div>
+<div id="kList"></div>
+<div class="row"><button id="kFit">Zoom to topo</button><button id="kClose">Close</button><button id="kDel" class="danger">Remove topo</button></div>
 </div></div>
 <datalist id="rsl"><option value="Routine safety inspection"><option value="Reactive inspection"><option value="Post-storm inspection"><option value="Pre-works inspection"><option value="Re-inspection"></datalist>
 <datalist id="spl"></datalist>
@@ -661,6 +674,138 @@ $('pFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)re
  }catch(x){alert('Point import failed: '+x.message)}};
 $('bPtsClr').onclick=()=>{if(!IP.length)return alert('There are no imported points to clear.');if(!confirm(`Remove all ${IP.length} imported points from the map?\n\nYour trees and polygons are not affected.`))return;IP=[];ipDraw();ipSave();snapRing(null)};
 ipLoad();
+// ---------- topo survey overlay (georeferenced ASCII DXF on British National Grid, drawn on a canvas above the basemap)
+const TOPO_DB='bs5837_topo_v1',TOPO_CFG=KEY+'_topo_cfg';
+let TOPO=null,tcfg={on:true,txt:true,op:1,mode:'dwg',mono:'#00e5ff',off:[]};
+try{Object.assign(tcfg,JSON.parse(localStorage.getItem(TOPO_CFG)||'{}'))}catch(x){}
+const tcfgSave=()=>{try{localStorage.setItem(TOPO_CFG,JSON.stringify(tcfg))}catch(x){}};
+function tdb(){return new Promise((res,rej)=>{const r=indexedDB.open(TOPO_DB,1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function tdbDo(mode,fn){try{const d=await tdb();return await new Promise(res=>{const t=d.transaction('f',mode),rq=fn(t.objectStore('f'));t.oncomplete=()=>res(rq&&rq.result);t.onerror=()=>res(null)})}catch(x){return null}}
+// AutoCAD Colour Index -> hex (7 = white/black, resolved against the basemap when drawn)
+function aci(i){i=Math.abs(i);const F=['','#ff0000','#ffff00','#00ff00','#00ffff','#0000ff','#ff00ff','W','#808080','#c0c0c0'];if(i<10)return F[i]||'W';
+ if(i>=250)return['#333333','#505050','#696969','#828282','#bebebe','#ffffff'][i-250]||'W';
+ const h=Math.floor((i-10)/10)*15,k=(i-10)%10,v=[1,1,.8,.8,.6,.6,.5,.5,.3,.3][k],s=k%2?.5:1,f=n=>{const q=(n+h/60)%6;return Math.round(255*(v-v*s*Math.max(0,Math.min(q,4-q,1))))};
+ return'#'+[f(5),f(3),f(1)].map(n=>n.toString(16).padStart(2,'0')).join('')}
+function parseTopo(txt){if(/^AutoCAD Binary DXF/.test(txt))throw Error('This is a binary DXF. In AutoCAD use SAVEAS → DXF with "Binary" unticked (ASCII), then import again.');
+ const Ls=txt.split(/\r?\n/),ents=[],blocks={},layers={};let sec=null,blk=null,rec=null,units=0;
+ const fin=r=>{if(!r)return;const t=r.t;
+  if(t==='SECTION'){const n=r.g.find(x=>x[0]===2);sec=n?n[1]:null;return}if(t==='ENDSEC'){sec=null;return}
+  if(sec==='HEADER')return;
+  if(sec==='TABLES'){if(t==='LAYER'){const n=gv(r,2);if(n!=null){const c=+(gv(r,62)??7);layers[n]={c:Math.abs(c)||7,off:c<0||(+(gv(r,70)||0)&1)===1}}}return}
+  if(sec==='BLOCKS'){if(t==='BLOCK'){blk={name:gv(r,2),bx:+(gv(r,10)||0),by:+(gv(r,20)||0),ents:[]};blocks[blk.name]=blk}else if(t==='ENDBLK')blk=null;else if(blk)blk.ents.push(r);return}
+  if(sec==='ENTITIES')ents.push(r)};
+ for(let i=0;i+1<Ls.length;i+=2){const c=parseInt(Ls[i],10);if(isNaN(c))continue;const v=c===1||c===3?Ls[i+1].replace(/\s+$/,''):Ls[i+1].trim();
+  if(c===0){fin(rec);rec={t:v,g:[]};continue}if(rec){rec.g.push([c,v]);if(sec==='HEADER'&&c===9&&v==='$INSUNITS'){const u=Ls[i+3];units=parseInt(u,10)||0}}}
+ fin(rec);
+ const feats=[];
+ const mul=(A,B)=>[A[0]*B[0]+A[2]*B[1],A[1]*B[0]+A[3]*B[1],A[0]*B[2]+A[2]*B[3],A[1]*B[2]+A[3]*B[3],A[0]*B[4]+A[2]*B[5]+A[4],A[1]*B[4]+A[3]*B[5]+A[5]];
+ const ap=(M,x,y)=>[M[0]*x+M[2]*y+M[4],M[1]*x+M[3]*y+M[5]];
+ const colOf=(r,inh)=>{const tc=gv(r,420);if(tc!=null)return'#'+(+tc).toString(16).padStart(6,'0');const c=+(gv(r,62)??256);if(c===256)return null;if(c===0)return inh;return aci(c)};
+ const arcPts=(cx,cy,r,a0,a1)=>{if(a1<=a0)a1+=Math.PI*2;const n=Math.max(4,Math.ceil((a1-a0)/(Math.PI/18))),o=[];for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n;o.push(cx+r*Math.cos(a),cy+r*Math.sin(a))}return o};
+ const bulgePts=(V,closed)=>{const o=[];const n=V.length;for(let i=0;i<n;i++){const p=V[i];o.push(p.x,p.y);if(i===n-1&&!closed)break;const q=V[(i+1)%n],b=p.b||0;if(Math.abs(b)<1e-9)continue;
+  const th=4*Math.atan(b),dx=q.x-p.x,dy=q.y-p.y,ch=Math.hypot(dx,dy);if(!ch)continue;const r=ch/(2*Math.sin(th/2)),mx=(p.x+q.x)/2,my=(p.y+q.y)/2,h=r*Math.cos(th/2),cx=mx-h*dy/ch,cy=my+h*dx/ch;
+  let a0=Math.atan2(p.y-cy,p.x-cx),seg=Math.max(2,Math.ceil(Math.abs(th)/(Math.PI/18)));for(let k=1;k<seg;k++){const a=a0+th*k/seg;o.push(cx+Math.abs(r)*Math.cos(a),cy+Math.abs(r)*Math.sin(a))}}
+  if(closed&&n)o.push(V[0].x,V[0].y);return o};
+ const flipX=(o,r)=>{if(+(gv(r,230)||1)<0)for(let i=0;i<o.length;i+=2)o[i]=-o[i];return o};
+ const line=(M,L,col,o)=>{if(o.length<4)return;const p=new Array(o.length);for(let i=0;i<o.length;i+=2){const q=ap(M,o[i],o[i+1]);p[i]=q[0];p[i+1]=q[1]}feats.push({k:'l',L,col,p})};
+ const text=(M,L,col,x,y,h,rot,s,ha,va)=>{s=String(s||'').trim();if(!s||!(h>0))return;const q=ap(M,x,y),sc=Math.hypot(M[0],M[1]);feats.push({k:'t',L,col,p:q,h:h*sc,rot:rot+Math.atan2(M[1],M[0]),s:s.split('\n'),ha,va})};
+ const mtextClean=s=>s.replace(/\\P/g,'\n').replace(/\\[ACFHQTWfhcqtw][^;\\{}]*;/g,'').replace(/\\[LlOoKk]/g,'').replace(/\\S([^;]*);/g,(m,a)=>a.replace(/[#^]/,'/')).replace(/[{}]/g,'').replace(/%%[cC]/g,'Ø').replace(/%%[dD]/g,'°').replace(/%%[pP]/g,'±').replace(/\\~/g,' ').replace(/\\\\/g,'\\');
+ function emit(list,M,inhL,inhC,depth){
+  let lastI=null;
+  for(let i=0;i<list.length;i++){const r=list[i],t=r.t;let L=gv(r,8)||'0';if(L==='0'&&inhL)L=inhL;
+   // attributes on layer 0 / BYBLOCK take the layer and colour of the block they belong to
+   if(t==='ATTRIB'&&lastI&&L==='0')L=lastI.L;const col=colOf(r,t==='ATTRIB'&&lastI?lastI.col:inhC);if(t==='INSERT')lastI={L,col};
+   const n=k=>+(gv(r,k)||0);
+   if(t==='LINE')line(M,L,col,[n(10),n(20),n(11),n(21)]);
+   else if(t==='LWPOLYLINE'){const V=[];let cur=null;r.g.forEach(([c,v])=>{if(c===10){cur={x:+v,y:0,b:0};V.push(cur)}else if(cur&&c===20)cur.y=+v;else if(cur&&c===42)cur.b=+v});
+    line(M,L,col,flipX(bulgePts(V,(n(70)&1)===1),r))}
+   else if(t==='POLYLINE'){const fl=n(70),V=[];let j=i+1;for(;j<list.length&&list[j].t==='VERTEX';j++){const vr=list[j];if((+(gv(vr,70)||0)&128)&&!(+(gv(vr,70)||0)&64))continue;V.push({x:+(gv(vr,10)||0),y:+(gv(vr,20)||0),b:+(gv(vr,42)||0)})}
+    if(j<list.length&&list[j].t==='SEQEND')j++;i=j-1;if(fl&(16|64))continue;line(M,L,col,flipX(bulgePts(V,(fl&1)===1),r))}
+   else if(t==='CIRCLE')line(M,L,col,flipX(arcPts(n(10),n(20),n(40),0,Math.PI*2),r));
+   else if(t==='ARC')line(M,L,col,flipX(arcPts(n(10),n(20),n(40),n(50)*Math.PI/180,n(51)*Math.PI/180),r));
+   else if(t==='ELLIPSE'){const cx=n(10),cy=n(20),mx=n(11),my=n(21),ra=+(gv(r,40)||1);let a0=+(gv(r,41)||0),a1=+(gv(r,42)??Math.PI*2);if(a1<=a0)a1+=Math.PI*2;const k=Math.max(8,Math.ceil((a1-a0)/(Math.PI/24))),o=[];
+    for(let s=0;s<=k;s++){const a=a0+(a1-a0)*s/k,c=Math.cos(a),sn=Math.sin(a);o.push(cx+c*mx-sn*ra*my,cy+c*my+sn*ra*mx)}line(M,L,col,o)}
+   else if(t==='SPLINE'){const f=[],cp=[];let cx=null;r.g.forEach(([c,v])=>{if(c===11)cx=+v;else if(c===21&&cx!=null){f.push(cx,+v);cx=null}else if(c===10)r._x=+v;else if(c===20&&r._x!=null){cp.push(r._x,+v);r._x=null}});line(M,L,col,f.length>=4?f:cp)}
+   else if(t==='POINT'){const q=ap(M,n(10),n(20));feats.push({k:'p',L,col,p:q})}
+   else if(t==='TEXT'||t==='ATTRIB'){if(t==='ATTRIB'&&(n(70)&1))continue;let ha=n(72),va=t==='TEXT'?n(73):n(74);const al=(ha||va)&&ha!==3&&ha!==5&&gv(r,11)!=null;if(ha===3||ha===5)ha=0;if(ha===4){ha=1;va=2}let x=al?n(11):n(10),y=al?n(21):n(20),rot=n(50)*Math.PI/180;
+    if(+(gv(r,230)||1)<0){x=-x;rot=Math.PI-rot}text(M,L,col,x,y,n(40),rot,(gv(r,1)||'').replace(/%%[cC]/g,'Ø').replace(/%%[dD]/g,'°').replace(/%%[pP]/g,'±').replace(/%%[uUoO]/g,''),[0,1,2][ha]??0,[0,1,2,3][va]??0)}
+   else if(t==='MTEXT'){const s=r.g.filter(x=>x[0]===3).map(x=>x[1]).join('')+(gv(r,1)||''),at=n(71)||1;let rot=n(50)*Math.PI/180;const dx=gv(r,11);if(dx!=null)rot=Math.atan2(n(21),n(11));
+    text(M,L,col,n(10),n(20),n(40),rot,mtextClean(s),(at-1)%3,at<=3?3:at<=6?2:1)}
+   else if((t==='INSERT'||t==='DIMENSION')&&depth<8){const b=blocks[gv(r,2)];if(!b)continue;
+    if(t==='DIMENSION'){emit(b.ents,M,L,col||inhC,depth+1);continue}
+    const sx=+(gv(r,41)||1),sy=+(gv(r,42)||1),ro=n(50)*Math.PI/180,co=Math.cos(ro),si=Math.sin(ro),ix=n(10),iy=n(20);
+    const cols=Math.max(1,n(70)),rows=Math.max(1,n(71)),cs=n(44),rs=n(45);
+    for(let a=0;a<Math.min(cols,50);a++)for(let bb=0;bb<Math.min(rows,50);bb++){const ox=ix+co*a*cs-si*bb*rs,oy=iy+si*a*cs+co*bb*rs;
+     const T=[co*sx,si*sx,-si*sy,co*sy,ox-(co*sx*b.bx-si*sy*b.by),oy-(si*sx*b.bx+co*sy*b.by)];emit(b.ents,mul(M,T),L,col||inhC,depth+1)}}}}
+ emit(ents,[1,0,0,1,0,0],null,null,0);
+ return{feats,layers,units}}
+function gv(r,c){for(const x of r.g)if(x[0]===c)return x[1];return undefined}
+// convert drawing coordinates (BNG metres) to Web Mercator pixels at zoom 0, drop strays outside the grid, auto-detect millimetres
+function topoBuild(name,res){const inG=(x,y)=>x>1000&&x<=700000&&y>1000&&y<=1300000;/* >1 km excludes strays left at the drawing origin */let f=res.feats;
+ const first=o=>[o.p[0],o.p[1]];let ok=f.filter(o=>inG(...first(o))).length,sc=1;
+ if(ok<f.length/2){const okmm=f.filter(o=>{const[x,y]=first(o);return inG(x/1000,y/1000)}).length;if(okmm>ok){sc=0.001;ok=okmm}}
+ if(!ok)return{err:'None of the drawing is on British National Grid coordinates. Check the topo is georeferenced to OSGB36 (EPSG:27700) in metres.'};
+ const out=[];let dropped=0;const P=(x,y)=>{const ll=proj4('EPSG:27700','EPSG:4326',[x*sc,y*sc]),q=map.project([ll[1],ll[0]],0);return[q.x,q.y]};
+ const mid=f.find(o=>inG(o.p[0]*sc,o.p[1]*sc)),ml=proj4('EPSG:27700','EPSG:4326',[mid.p[0]*sc,mid.p[1]*sc]),k=1/(156543.03392804097*Math.cos(ml[1]*Math.PI/180));
+ f.forEach(o=>{let bad=false;for(let i=0;i<o.p.length;i+=2)if(!inG(o.p[i]*sc,o.p[i+1]*sc)){bad=true;break}if(bad){dropped++;return}
+  const p=new Float64Array(o.p.length);let x0=1e18,y0=1e18,x1=-1e18,y1=-1e18;
+  for(let i=0;i<o.p.length;i+=2){const q=P(o.p[i],o.p[i+1]);p[i]=q[0];p[i+1]=q[1];x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1])}
+  const g={...o,p,bb:[x0,y0,x1,y1]};if(o.k==='t'){g.h=o.h*sc*k;const r=g.h*Math.max(...o.s.map(s=>s.length))*0.7+g.h*o.s.length*1.5;g.bb=[x0-r,y0-r,x1+r,y1+r]}out.push(g)});
+ const L={};Object.entries(res.layers).forEach(([n,v])=>L[n]={c:v.c,off:v.off,n:0});out.forEach(o=>{if(!L[o.L])L[o.L]={c:7,off:false,n:0};L[o.L].n++});
+ // texts last so they sit on top of linework
+ out.sort((a,b)=>(a.k==='t')-(b.k==='t'));
+ let bx=[1e18,1e18,-1e18,-1e18];out.forEach(o=>{bx=[Math.min(bx[0],o.bb[0]),Math.min(bx[1],o.bb[1]),Math.max(bx[2],o.bb[2]),Math.max(bx[3],o.bb[3])]});
+ return{name,feats:out,layers:L,bbox:bx,dropped,scaled:sc!==1}}
+map.createPane('topoPane').style.zIndex=350;map.getPane('topoPane').style.pointerEvents='none';
+const TopoLayer=L.Layer.extend({
+ onAdd(m){this._c=L.DomUtil.create('canvas','');this._c.style.position='absolute';m.getPane('topoPane').appendChild(this._c);m.on('moveend resize viewreset baselayerchange',this.redraw,this);m.on('zoomstart',this._hide,this);this.redraw()},
+ onRemove(m){this._c.remove();m.off('moveend resize viewreset baselayerchange',this.redraw,this);m.off('zoomstart',this._hide,this)},
+ _hide(){if(this._c)this._c.style.visibility='hidden'},
+ redraw(){const m=this._map;if(!m||!TOPO)return;const c=this._c,sz=m.getSize(),pad=.3,w=Math.round(sz.x*(1+2*pad)),h=Math.round(sz.y*(1+2*pad)),dpr=window.devicePixelRatio||1;
+  const pos=m.containerPointToLayerPoint([-sz.x*pad,-sz.y*pad]).round();L.DomUtil.setPosition(c,pos);c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px';c.style.opacity=tcfg.op;c.style.visibility='';
+  const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);const s=Math.pow(2,m.getZoom()),po=m.getPixelOrigin(),ox=po.x+pos.x,oy=po.y+pos.y,v=[ox/s,oy/s,(ox+w)/s,(oy+h)/s];
+  const W=m.hasLayer(osm)?'#000000':'#ffffff',off=new Set(tcfg.off),lc={};Object.entries(TOPO.layers).forEach(([n,o])=>{const a=aci(o.c);lc[n]=a==='W'?W:a});
+  const colour=o=>tcfg.mode==='mono'?tcfg.mono:(o.col==null?lc[o.L]:o.col==='W'?W:o.col);
+  x.lineWidth=1;x.lineJoin='round';let last='';
+  for(const o of TOPO.feats){if(off.has(o.L))continue;const b=o.bb;if(b[2]<v[0]||b[0]>v[2]||b[3]<v[1]||b[1]>v[3])continue;const cl=colour(o);
+   if(o.k==='l'){if((b[2]-b[0])*s<0.5&&(b[3]-b[1])*s<0.5)continue;if(cl!==last){x.strokeStyle=cl;last=cl}x.beginPath();const p=o.p;x.moveTo(p[0]*s-ox,p[1]*s-oy);for(let i=2;i<p.length;i+=2)x.lineTo(p[i]*s-ox,p[i+1]*s-oy);x.stroke()}
+   else if(o.k==='p'){x.fillStyle=cl;x.fillRect(o.p[0]*s-ox-1.5,o.p[1]*s-oy-1.5,3,3)}
+   else if(o.k==='t'&&tcfg.txt){const hp=o.h*s;if(hp<4||hp>600)continue;x.save();x.translate(o.p[0]*s-ox,o.p[1]*s-oy);x.rotate(-o.rot);x.fillStyle=cl;x.font=hp.toFixed(1)+'px Arial,sans-serif';
+    x.textAlign=['left','center','right'][o.ha]||'left';x.textBaseline=['alphabetic','bottom','middle','top'][o.va]||'alphabetic';
+    const n=o.s.length,lh=hp*1.35;o.s.forEach((t,i)=>{const dy=o.va===3?i*lh:o.va===2?(i-(n-1)/2)*lh:(i-(n-1))*lh;x.fillText(t,0,dy)});x.restore()}}}
+});
+const topoL=new TopoLayer();
+function topoShow(){const on=!!TOPO&&tcfg.on;if(on&&!map.hasLayer(topoL))topoL.addTo(map);else if(!on&&map.hasLayer(topoL))map.removeLayer(topoL);else if(on)topoL.redraw();
+ const b=$('bTopo');b.hidden=!TOPO;b.classList.toggle('on',on);b.title=TOPO?(on?'Hide':'Show')+' topo survey ('+TOPO.name+')':''}
+function topoPanel(){if(!TOPO)return alert('No topo survey loaded – use Import topo survey (DXF) first.');
+ $('kName').textContent=TOPO.name+' · '+TOPO.feats.length.toLocaleString('en-GB')+' objects';$('kOn').checked=tcfg.on;$('kTxt').checked=tcfg.txt;$('kOp').value=Math.round(tcfg.op*100);
+ document.querySelector(`input[name=kMode][value=${tcfg.mode}]`).checked=true;$('kMono').value=tcfg.mono;const off=new Set(tcfg.off);
+ $('kList').innerHTML=Object.entries(TOPO.layers).filter(([,o])=>o.n).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,o])=>{const c=aci(o.c);return `<label><input type="checkbox" data-l="${esc(n)}" ${off.has(n)?'':'checked'}><i style="background:${c==='W'?'#fff':c}"></i>${esc(n)} <small>${o.n}</small></label>`}).join('');
+ $('kovl').hidden=false}
+$('kovl').addEventListener('input',e=>{const t=e.target;if(t.dataset.l!=null){const s=new Set(tcfg.off);t.checked?s.delete(t.dataset.l):s.add(t.dataset.l);tcfg.off=[...s]}
+ else if(t.id==='kOn')tcfg.on=t.checked;else if(t.id==='kTxt')tcfg.txt=t.checked;else if(t.id==='kOp')tcfg.op=t.value/100;else if(t.name==='kMode')tcfg.mode=t.value;else if(t.id==='kMono'){tcfg.mono=t.value;tcfg.mode='mono';document.querySelector('input[name=kMode][value=mono]').checked=true}
+ tcfgSave();topoShow()});
+$('kAll').onclick=()=>{tcfg.off=[];$('kList').querySelectorAll('input').forEach(c=>c.checked=true);tcfgSave();topoShow()};
+$('kNone').onclick=()=>{tcfg.off=Object.keys(TOPO.layers);$('kList').querySelectorAll('input').forEach(c=>c.checked=false);tcfgSave();topoShow()};
+$('kClose').onclick=()=>{$('kovl').hidden=true};
+$('kFit').onclick=()=>{if(!TOPO)return;const b=TOPO.bbox;map.fitBounds(L.latLngBounds(map.unproject([b[0],b[1]],0),map.unproject([b[2],b[3]],0)));$('kovl').hidden=true};
+$('kDel').onclick=async()=>{if(!confirm('Remove the topo survey from this device?\n\nYour trees, polygons and imported points are not affected.'))return;TOPO=null;await tdbDo('readwrite',s=>s.delete('topo'));tcfg.off=[];tcfgSave();$('kovl').hidden=true;topoShow()};
+$('bTopo').onclick=()=>{tcfg.on=!tcfg.on;tcfgSave();topoShow()};
+$('bTopoCfg').onclick=topoPanel;
+$('bTopoImp').onclick=()=>$('tFi').click();
+function topoFromText(name,txt){const r=topoBuild(name,parseTopo(txt));if(r.err)throw Error(r.err);return r}
+$('tFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+ if(TOPO&&!confirm(`Replace the current topo survey (${TOPO.name}) with ${f.name}?`))return;
+ const st=$('st');st.textContent='Reading topo survey…';$('dot').className='';
+ try{const txt=await f.text();await new Promise(r=>setTimeout(r,30));const t0=performance.now(),r=topoFromText(f.name,txt);
+  if(!r.feats.length)return alert('No drawable linework, points or text found in the DXF model space.');
+  TOPO=r;tcfg.on=true;tcfg.off=Object.entries(r.layers).filter(([,o])=>o.off).map(([n])=>n);tcfgSave();
+  const saved=await tdbDo('readwrite',s=>s.put({name:f.name,txt},'topo'));
+  topoShow();const b=r.bbox;map.fitBounds(L.latLngBounds(map.unproject([b[0],b[1]],0),map.unproject([b[2],b[3]],0)));
+  alert(`${f.name}: ${r.feats.length.toLocaleString('en-GB')} objects on ${Object.values(r.layers).filter(o=>o.n).length} layers drawn over the basemap.`+(r.scaled?'\nDrawing units were millimetres – converted to metres.':'')+(r.dropped?`\n${r.dropped} object(s) away from the site (outside British National Grid, e.g. at 0,0) were left out.`:'')+(saved===null?'\n\n⚠ The file could not be stored on this device, so it will need importing again next time.':'')+'\n\nUse 🗺 Topo layers & style in the menu to switch layers off, change colours or transparency.');
+  topoPanel()}catch(x){alert('Topo import failed: '+x.message)}finally{save()}};
+(async()=>{const d=await tdbDo('readonly',s=>s.get('topo'));if(!d||!d.txt)return;try{TOPO=topoFromText(d.name,d.txt);topoShow()}catch(x){}})();
+
 $('bNew').onclick=()=>{if(!T.length&&!PG.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
  if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s) and the site pin from this device. Imported points are kept (use Clear imported points to remove them).\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
  try{localStorage.setItem(KEY+'_backup',localStorage.getItem(KEY)||'')}catch(x){}
