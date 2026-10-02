@@ -71,8 +71,9 @@ aside.collapsed>*:not(#handle){display:none}
 #tovl[hidden]{display:none}#tovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}
 #tpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto}#tpanel h3{margin:0 0 6px}#tpanel h4{margin:12px 0 2px;color:#1f3d2b}
 #tpanel .tnote{font-size:12px;color:#555;margin:0 0 8px}.topt{display:flex;gap:8px;align-items:flex-start;border:1px solid #ccc;border-radius:6px;padding:8px;margin:6px 0;cursor:pointer}.topt input{width:auto;margin-top:3px}.topt small{color:#555}.topt:has(input:checked){border-color:#1f3d2b;background:#e3efe6}
-#tSafe label{display:block;font-size:12px;color:#555;margin:6px 0 2px}#tpanel .row{display:flex;gap:6px;margin-top:12px}
+#tSafe label,#tBs label{display:block;font-size:12px;color:#555;margin:6px 0 2px}#tpanel .row{display:flex;gap:6px;margin-top:12px}
 #bPts{color:#c0c;font-weight:700}#bPts.on{background:#ffd6ff;border-color:#c0c}
+.aer-ctrl button{display:flex;align-items:center;gap:4px;padding:5px 9px;border:0;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.4);background:#fff;font-size:13px;font-weight:600;color:#555;min-height:0}.aer-ctrl button span{font-size:12px}.aer-ctrl button.on{background:#ffd54a;color:#222}#map.noaer{background:#fff}
 @media(pointer:coarse){.h{transform:scale(1.7)}input,select,textarea{font-size:16px}button{min-height:40px}#list div{padding:9px 6px}}
 @media(max-width:800px){main{flex-direction:column}aside{width:100%;height:44%;border:0;border-top:1px solid #ccc;padding:0 8px max(8px,env(safe-area-inset-bottom))}#list{max-height:110px}
  #handle{position:sticky;left:0;right:0;top:0;bottom:auto;width:100%;height:24px;z-index:16}
@@ -131,7 +132,7 @@ body.locked>:not(#login){visibility:hidden}
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
-<label>Basemap to download<select id="oLayer"><option value="sat">Aerial (Esri)</option><option value="osm">OpenStreetMap</option></select></label>
+<input type="hidden" id="oLayer" value="sat">
 <label>Lowest zoom (wider area, smaller download) - <span id="ozMinV"></span></label><input type="range" id="oZmin" min="12" max="19" value="16">
 <label>Highest zoom (most detail, capped at 19) - <span id="ozMaxV"></span></label><input type="range" id="oZmax" min="12" max="19" value="19">
 <div id="oInfo"></div>
@@ -154,8 +155,11 @@ body.locked>:not(#login){visibility:hidden}
 <p class="tnote">Each survey type keeps its own trees and polygons on this device. Switching never deletes anything.</p>
 <label class="topt"><input type="radio" name="stype" value="bs5837"><span><b>BS5837</b><br><small>Trees in relation to design, demolition and construction: RPAs, FSB and retention categories.</small><br><small class="tc" data-c="bs5837"></small></span></label>
 <label class="topt"><input type="radio" name="stype" value="safety"><span><b>Safety (QTRA)</b><br><small>Tree safety survey: QTRA risk of harm, tolerability, recommendations, work priority and safety action dates.</small><br><small class="tc" data-c="safety"></small></span></label>
+<div id="tBs"><h4>BS5837 project details</h4>
+<label>Project number<input id="tPno"></label><label>Project name<input id="tPname"></label></div>
 <div id="tSafe"><h4>Safety survey details</h4>
 <label>Site ID<input id="tSid"></label><label>Site name<input id="tSname"></label><label>Reason for survey<input id="tReason" list="rsl"></label></div>
+<p class="tnote" style="margin-top:8px">These details start the export file names (xlsx and DXF).</p>
 <div class="row"><button id="tApply">Apply</button><button id="tClose">Cancel</button></div>
 </div></div>
 <div id="dovl" hidden><div id="dpanel">
@@ -328,9 +332,15 @@ const OfflineLayer=L.TileLayer.extend({createTile(coords,done){const img=documen
   if(!navigator.onLine){img.src=PH;done(null,img);return}
   fetch(url).then(r=>{if(!r.ok)throw 0;return r.blob()}).then(b=>{tPut(key,b);if(!img._gone)img.src=URL.createObjectURL(b);done(null,img)}).catch(()=>{if(!img._gone){img.src=PH;done(null,img)}})});
  return img},_removeTile(k){if(this._tiles[k]&&this._tiles[k].el)this._tiles[k].el._gone=1;L.TileLayer.prototype._removeTile.call(this,k)}});
-const osm=new OfflineLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{id:'osm',maxZoom:22,maxNativeZoom:19,attribution:'© OpenStreetMap contributors'});
 const sat=new OfflineLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{id:'sat',maxZoom:22,maxNativeZoom:19,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'}).addTo(map);
-L.control.layers({'Aerial (Esri)':sat,'OpenStreetMap':osm}).addTo(map);L.control.scale({imperial:false}).addTo(map);HL.addTo(map);
+// aerial basemap on/off (off = plain white background, e.g. when working from an imported topo)
+const AER_KEY=KEY+'_aerial';
+function setAerial(on,keep){if(on){if(!map.hasLayer(sat))sat.addTo(map)}else if(map.hasLayer(sat))map.removeLayer(sat);
+ map.getContainer().classList.toggle('noaer',!on);const b=document.querySelector('.aer-ctrl button');if(b){b.classList.toggle('on',on);b.title=on?'Hide aerial basemap':'Show aerial basemap'}
+ if(!keep)try{localStorage.setItem(AER_KEY,on?1:0)}catch(x){}if(typeof topoL!=='undefined'&&map.hasLayer(topoL))topoL.redraw()}
+const AerCtrl=L.Control.extend({options:{position:'topright'},onAdd(){const d=L.DomUtil.create('div','leaflet-control aer-ctrl');d.innerHTML='<button type="button">🛰<span>Aerial</span></button>';
+ L.DomEvent.disableClickPropagation(d);d.firstChild.onclick=()=>setAerial(!map.hasLayer(sat));return d}});
+new AerCtrl().addTo(map);try{if(localStorage.getItem(AER_KEY)==='0')setAerial(false,1);else setAerial(true,1)}catch(x){}L.control.scale({imperial:false}).addTo(map);HL.addTo(map);
 const PanCtrl=L.Control.extend({options:{position:'topleft'},onAdd(){
  const d=L.DomUtil.create('div','leaflet-control pan-ctrl');
  d.innerHTML='<button class="pn" title="Pan north">▲</button><button class="pw" title="Pan west">◀</button><button class="pe" title="Pan east">▶</button><button class="ps" title="Pan south">▼</button>';
@@ -535,9 +545,9 @@ async function oInfo(){const n=tileCount(),big=n>TILE_MAX;$('oInfo').innerHTML=`
 $('oZmin').oninput=$('oZmax').oninput=()=>{if(+$('oZmin').value>+$('oZmax').value)$('oZmax').value=$('oZmin').value;$('ozMinV').textContent=$('oZmin').value;$('ozMaxV').textContent=$('oZmax').value;oInfo()};
 async function oStore(){const n=await tCount(),est=(navigator.storage&&navigator.storage.estimate)?await navigator.storage.estimate():null;
  $('oStore').textContent=n+' tiles saved offline'+(est&&est.usage?' – using about '+fmtB(est.usage):'')}
-async function openOff(){$('ovl').hidden=false;$('oLayer').value=map.hasLayer(sat)?'sat':'osm';$('ozMinV').textContent=$('oZmin').value;$('ozMaxV').textContent=$('oZmax').value;oInfo();oStore()}
+async function openOff(){$('ovl').hidden=false;$('oLayer').value='sat';$('ozMinV').textContent=$('oZmin').value;$('ozMaxV').textContent=$('oZmax').value;oInfo();oStore()}
 $('bOff').onclick=openOff;$('oClose').onclick=()=>{odl.stop=1;$('ovl').hidden=true};
-$('oGo').onclick=async()=>{if(tileCount()>TILE_MAX)return oInfo();const t=planTiles(),id=$('oLayer').value,layer=id=='sat'?sat:osm;if(!t.length)return;
+$('oGo').onclick=async()=>{if(tileCount()>TILE_MAX)return oInfo();const t=planTiles(),id=$('oLayer').value,layer=sat;if(!t.length)return;
  if(!navigator.onLine)return alert('You are offline – connect to download tiles first.');
  odl.stop=0;$('oGo').hidden=true;$('oStop').hidden=false;$('oProg').hidden=false;let done=0,fail=0;
  const CONC=6;let i=0;
@@ -567,11 +577,12 @@ $('bLoc').onclick=()=>{
  },e=>{alert('Could not get your location: '+e.message+(location.protocol=='file:'?' \u2013 on-device location often needs the page to be opened over https rather than as a local file.':''));locStop()},
  {enableHighAccuracy:true,maximumAge:3000,timeout:20000})};
 // ---------- persistence
-function save(){try{localStorage.setItem(dsKey(),JSON.stringify({T,PG,site,meta:META,v:[map.getCenter(),map.getZoom()],b:map.hasLayer(osm)}));localStorage.setItem(TYPE_KEY,ST);$('st').textContent='Saved locally '+new Date().toLocaleTimeString('en-GB')+' · '+T.length+' trees';$('dot').className='';$('dot').title=$('st').textContent}catch(x){$('st').textContent='⚠ Local save failed – export xlsx!';$('dot').className='bad';$('dot').title=$('st').textContent}}
+function save(){try{localStorage.setItem(dsKey(),JSON.stringify({T,PG,site,meta:META,v:[map.getCenter(),map.getZoom()]}));localStorage.setItem(TYPE_KEY,ST);$('st').textContent='Saved locally '+new Date().toLocaleTimeString('en-GB')+' · '+T.length+' trees';$('dot').className='';$('dot').title=$('st').textContent}catch(x){$('st').textContent='⚠ Local save failed – export xlsx!';$('dot').className='bad';$('dot').title=$('st').textContent}}
 addEventListener('beforeunload',e=>{if(dirty){save()}});
 function load(){try{const ty=localStorage.getItem(TYPE_KEY);if(ty==='safety'&&ST!=='safety'){ST='safety';buildForms()}}catch(x){}
- try{const d=JSON.parse(localStorage.getItem(dsKey())||'null');if(d){T=d.T||[];PG=d.PG||[];META=d.meta||{};if(d.site)setSite(d.site);if(d.v)map.setView(d.v[0],d.v[1]);if(d.b){map.removeLayer(sat);osm.addTo(map)}}}catch(x){}
- T.forEach(t=>{if(t.lat===0&&t.lon===0)t.lat=t.lon=null;draw(t)});PG.forEach(drawP);list();fill(null);save()}
+ try{const d=JSON.parse(localStorage.getItem(dsKey())||'null');if(d){T=d.T||[];PG=d.PG||[];META=d.meta||{};if(d.site)setSite(d.site);if(d.v)map.setView(d.v[0],d.v[1])}}catch(x){}
+ T.forEach(t=>{if(t.lat===0&&t.lon===0)t.lat=t.lon=null;draw(t)});PG.forEach(drawP);list();fill(null);save();
+ if(!T.length&&!PG.length&&metaMissing(META).length)setTimeout(openType,0)}
 // ---------- imported points (AutoCAD DATAEXTRACTION CSV, British National Grid X/Y)
 const IPK=KEY+'_points';let IP=[],ipOn=true;
 map.createPane('ipPane').style.zIndex=390;// below trees/polygons (400), above the basemap
@@ -768,7 +779,7 @@ const TopoLayer=L.Layer.extend({
  redraw(){const m=this._map;if(!m||!TOPO)return;const c=this._c,sz=m.getSize(),pad=.3,w=Math.round(sz.x*(1+2*pad)),h=Math.round(sz.y*(1+2*pad)),dpr=window.devicePixelRatio||1;
   const pos=m.containerPointToLayerPoint([-sz.x*pad,-sz.y*pad]).round();L.DomUtil.setPosition(c,pos);c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px';c.style.opacity=tcfg.op;c.style.visibility='';
   const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);const s=Math.pow(2,m.getZoom()),po=m.getPixelOrigin(),ox=po.x+pos.x,oy=po.y+pos.y,v=[ox/s,oy/s,(ox+w)/s,(oy+h)/s];
-  const W=m.hasLayer(osm)?'#000000':'#ffffff',off=new Set(tcfg.off),lc={};Object.entries(TOPO.layers).forEach(([n,o])=>{const a=aci(o.c);lc[n]=a==='W'?W:a});
+  const W=m.hasLayer(sat)?'#ffffff':'#000000',off=new Set(tcfg.off),lc={};Object.entries(TOPO.layers).forEach(([n,o])=>{const a=aci(o.c);lc[n]=a==='W'?W:a});
   const colour=o=>tcfg.mode==='mono'?tcfg.mono:(o.col==null?lc[o.L]:o.col==='W'?W:o.col);
   x.lineWidth=1;x.lineJoin='round';let last='';
   for(const o of TOPO.feats){if(off.has(o.L))continue;const b=o.bb;if(b[2]<v[0]||b[0]>v[2]||b[3]<v[1]||b[1]>v[3])continue;const cl=colour(o);
@@ -811,12 +822,12 @@ $('tFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)re
 (async()=>{const d=await tdbDo('readonly',s=>s.get('topo'));if(!d||!d.txt)return;try{TOPO=topoFromText(d.name,d.txt);topoShow()}catch(x){}})();
 
 $('bNew').onclick=()=>{if(!T.length&&!PG.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
- if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s) and the site pin from this device. Imported points are kept (use Clear imported points to remove them).\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
+ if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s), the project details and the site pin from this device. Imported points are kept (use Clear imported points to remove them).\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
  try{localStorage.setItem(KEY+'_backup',localStorage.getItem(KEY)||'')}catch(x){}
  select(null);
  T.forEach(t=>{if(G.has(t))map.removeLayer(G.get(t))});G.clear();T=[];
  PG.forEach(p=>{if(GP.has(p))map.removeLayer(GP.get(p))});GP.clear();PG=[];
- setSite(null);$('menu').hidden=true;list();save()};
+ META={};setSite(null);$('menu').hidden=true;list();save();openType()};
 // ---------- survey type switching
 function dsCount(t){try{const d=JSON.parse(localStorage.getItem(dsKey(t))||'null');return d?(d.T||[]).length+(d.PG||[]).length:0}catch(x){return 0}}
 function switchType(nt){if(nt===ST)return true;if(!confirmLeave('Switch survey type anyway?'))return false;
@@ -826,24 +837,32 @@ function switchType(nt){if(nt===ST)return true;if(!confirmLeave('Switch survey t
  try{const d=JSON.parse(localStorage.getItem(dsKey())||'null');if(d){T=d.T||[];PG=d.PG||[];META=d.meta||{};if(d.site)setSite(d.site)}}catch(x){}
  T.forEach(t=>{if(t.lat===0&&t.lon===0)t.lat=t.lon=null;if(isSafe()&&t.sd===undefined)Object.assign(t,extraFields())});PG.forEach(p=>{if(isSafe()&&p.sd===undefined)Object.assign(p,extraFields())});
  buildForms();T.forEach(draw);PG.forEach(drawP);list();fill(null);save();return true}
-function metaMissing(m){return[['sid','Site ID'],['sname','Site name'],['reason','Reason for survey']].filter(([k])=>!String((m||{})[k]||'').trim()).map(([,l])=>l)}
-function tChk(){const safe=document.querySelector('input[name=stype]:checked').value==='safety';$('tSafe').hidden=!safe;
- [['tSid'],['tSname'],['tReason']].forEach(([id])=>$(id).classList.toggle('needs-data',safe&&!$(id).value.trim()))}
-$('bType').onclick=()=>{document.querySelector(`input[name=stype][value=${ST}]`).checked=true;
- let m=META;if(!isSafe()){try{m=(JSON.parse(localStorage.getItem(dsKey('safety'))||'null')||{}).meta||{}}catch(x){m={}}}
- $('tSid').value=m.sid||'';$('tSname').value=m.sname||'';$('tReason').value=m.reason||'';
+const META_F={safety:[['sid','Site ID'],['sname','Site name'],['reason','Reason for survey']],bs5837:[['pno','Project number'],['pname','Project name']]};
+function metaMissing(m,t){return META_F[t||ST].filter(([k])=>!String((m||{})[k]||'').trim()).map(([,l])=>l)}
+function tChk(){const safe=document.querySelector('input[name=stype]:checked').value==='safety';$('tSafe').hidden=!safe;$('tBs').hidden=safe;
+ ['tSid','tSname','tReason'].forEach(id=>$(id).classList.toggle('needs-data',safe&&!$(id).value.trim()));['tPno','tPname'].forEach(id=>$(id).classList.toggle('needs-data',!safe&&!$(id).value.trim()))}
+const otherMeta=t=>{try{return(JSON.parse(localStorage.getItem(dsKey(t))||'null')||{}).meta||{}}catch(x){return{}}};
+function openType(){document.querySelector(`input[name=stype][value=${ST}]`).checked=true;
+ const ms=isSafe()?META:otherMeta('safety'),mb=isSafe()?otherMeta('bs5837'):META;
+ $('tSid').value=ms.sid||'';$('tSname').value=ms.sname||'';$('tReason').value=ms.reason||'';$('tPno').value=mb.pno||'';$('tPname').value=mb.pname||'';
  document.querySelectorAll('#tpanel .tc').forEach(el=>{const n=el.dataset.c===ST?T.length+PG.length:dsCount(el.dataset.c);el.textContent=n?n+' feature'+(n>1?'s':'')+' saved on this device':'No features saved yet'});
- tChk();$('tovl').hidden=false};
+ tChk();$('tovl').hidden=false;setTimeout(()=>{const f=isSafe()?$('tSid'):$('tPno');if(!f.value)f.focus()},50)}
+$('bType').onclick=openType;
 $('tpanel').addEventListener('input',tChk);$('tpanel').addEventListener('change',tChk);
 $('tClose').onclick=()=>{$('tovl').hidden=true};
 $('tApply').onclick=()=>{const nt=document.querySelector('input[name=stype]:checked').value;
- const m={sid:$('tSid').value.trim(),sname:$('tSname').value.trim(),reason:$('tReason').value.trim()};
- if(nt==='safety'){const miss=metaMissing(m);if(miss.length&&!confirm('Safety survey details are incomplete:\n\u2022 '+miss.join('\n\u2022 ')+'\n\nContinue anyway? (You can add them later from the Survey type button.)'))return}
- if(!switchType(nt))return;if(nt==='safety'){META=m;save()}$('tovl').hidden=true};
+ const m=nt==='safety'?{sid:$('tSid').value.trim(),sname:$('tSname').value.trim(),reason:$('tReason').value.trim()}:{pno:$('tPno').value.trim(),pname:$('tPname').value.trim()};
+ {const miss=metaMissing(m,nt);if(miss.length&&!confirm((nt==='safety'?'Safety survey':'BS5837 project')+' details are incomplete:\n\u2022 '+miss.join('\n\u2022 ')+'\n\nContinue anyway? (You can add them later from the 📋 Survey type button.)'))return}
+ if(!switchType(nt))return;META={...META,...m};save();$('tovl').hidden=true};
+// export file names start with the project / site details from the Survey type screen
+const fnPart=s=>String(s||'').trim().replace(/[\\\/:*?"<>|,;]+/g,'').replace(/\s+/g,'_').replace(/_+/g,'_');
+function expName(ext){if(isSafe())return(fnPart(META.sid)||'SITE_NUMBER')+'_'+(fnPart(META.sname)||'SITE_NAME')+'-'+(ext==='dxf'?'Safety_Tree_Survey':'Tree_Survey_Schedule')+'_'+stamp()+'.'+ext;
+ const p=[fnPart(META.pno),fnPart(META.pname)].filter(Boolean).join('_');return(p?p+'-':'')+'BS5837_Tree_Survey_'+stamp()+'.'+ext}
+function projOK(){const miss=metaMissing(META);if(!miss.length)return true;return confirm((isSafe()?'Safety survey':'BS5837 project')+' details missing: '+miss.join(', ')+'\n\nThe file name will not include them. Export anyway? (Cancel, then use 📋 Survey type to add them.)')}
 // ---------- DXF (AutoCAD R12 ASCII: opens in all AutoCAD versions incl. LT)
 function stamp(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())}
 function dxf(){
- const P=T.filter(t=>t.lat!=null);if(!P.length&&!PG.length)return alert('Nothing plotted to export');
+ const P=T.filter(t=>t.lat!=null);if(!P.length&&!PG.length)return alert('Nothing plotted to export');if(!projOK())return;
  const AC={A:3,B:5,C:251,U:14},L={};let e='';const E=(c,v)=>{e+=c+'\n'+v+'\n'};
  const lay=(f,c,col)=>{const n=`TREE_${f}_${c}`;L[n]=/RPA$/.test(f)?1:col;return n},f3=v=>(+v).toFixed(3);
  const cls=o=>{if(isSafe()){const q=qtra(o),t=q&&q.tol;return t=='Unacceptable'?['UNACCEPTABLE',1]:t=='Tolerable if ALARP (risk reduction required)'?['ALARP_REDUCE',30]:t=='Tolerable if ALARP'?['ALARP',2]:t=='Broadly Acceptable'?['ACCEPTABLE',3]:['NONE',7]}const k=(o.cat||'')[0];return AC[k]?[k,AC[k]]:['NONE',7]};
@@ -869,7 +888,7 @@ function dxf(){
  H(0,'STYLE');H(2,'TREEREF');H(70,0);H(40,0);H(41,1);H(50,0);H(71,0);H(42,0.2);H(3,'arial.ttf');H(4,'');H(0,'ENDTAB');H(0,'ENDSEC');
  H(0,'SECTION');H(2,'ENTITIES');h+=e;H(0,'ENDSEC');H(0,'EOF');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h],{type:'application/dxf'}));
- a.download=(isSafe()?'Safety':'BS5837')+'_Tree_Survey_'+stamp()+'.dxf';document.body.appendChild(a);a.click();a.remove()}
+ a.download=expName('dxf');document.body.appendChild(a);a.click();a.remove()}
 $('bDxf').onclick=dxf;
 // ---------- xlsx
 // Safety survey: same columns (A:AJ) as the 'Survey data' sheet of the Tree Survey Schedule, plus app columns for re-import
@@ -897,7 +916,7 @@ function expSafety(){const all=[...T.map(t=>[t,'Tree']),...PG.map(p=>[p,p.kind])
  const qa=[['Code','Value','Description'],...QS,[],['Code','Value','Description'],...QT,[],['Code','Value','Description'],...QP];XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(qa),'QTRA');
  if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');
  const fn=s=>String(s||'').trim().replace(/[\\\/:*?"<>|]+/g,'').replace(/\s+/g,'_');
- XLSX.writeFile(wb,(fn(META.sid)||'SITE_NUMBER')+'_'+(fn(META.sname)||'SITE_NAME')+'-Tree_Survey_Schedule_'+stamp()+'.xlsx')}
+ XLSX.writeFile(wb,expName('xlsx'))}
 function isSafetyBook(wb){const ws=wb.Sheets['Survey data'];if(!ws)return false;const h=(XLSX.utils.sheet_to_json(ws,{header:1})[0]||[]).map(String);return h.includes('QTRA - Size')||h.includes('Tree Ref')&&h.includes('Object type')}
 function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
  XLSX.utils.sheet_to_json(wb.Sheets['Survey data'],{defval:''}).forEach(o=>{const ref=String(o['Tree Ref']).trim();if(!ref)return;
@@ -917,7 +936,7 @@ function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
   if(v.length<3&&la!=null){const c={lat:la,lon:lo};v=[m2ll(c,-5,5),m2ll(c,5,5),m2ll(c,5,-5),m2ll(c,-5,-5)]}
   if(v.length<3){skipped++;return}np.push({...b,kind:type,ll:v})});
  return{nt,np,meta,skipped}}
-$('bExp').onclick=()=>{if(!T.length&&!PG.length)return alert('Nothing to export');if(isSafe())return expSafety();
+$('bExp').onclick=()=>{if(!T.length&&!PG.length)return alert('Nothing to export');if(isSafe())return expSafety();if(!projOK())return;
  const DH=['Type',...HD,'Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
  const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),...geo];
  const tRows=T.map(t=>{const e=t.lat!=null?en(t):['',''];
@@ -925,13 +944,15 @@ $('bExp').onclick=()=>{if(!T.length&&!PG.length)return alert('Nothing to export'
  const pRows=PG.map(p=>row(p.kind,p,['','','','',+gA(p).toFixed(1),+gPer(p).toFixed(1),p.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),p.ll.map(v=>{const e=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return e[0].toFixed(2)+','+e[1].toFixed(2)}).join('; ')]));
  const wb=XLSX.utils.book_new(),ws=XLSX.utils.aoa_to_sheet([DH,...tRows,...pRows]);ws['!cols']=DH.map(h=>({wch:Math.max(10,h.length)}));
  XLSX.utils.book_append_sheet(wb,ws,'DATA');
- if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');XLSX.writeFile(wb,'BS5837_Tree_Survey_'+stamp()+'.xlsx')};
+ XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Project number',META.pno||''],['Project name',META.pname||'']]),'Project');
+ if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');XLSX.writeFile(wb,expName('xlsx'))};
 $('bImp').onclick=()=>$('fi').click();
 $('fi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
  try{const wb=XLSX.read(await f.arrayBuffer()),safeBook=isSafetyBook(wb);
   if(safeBook!==isSafe()){const to=safeBook?'safety':'bs5837';if(!confirm(`This looks like a ${safeBook?'Safety (QTRA)':'BS5837'} survey file.\n\nSwitch to the ${safeBook?'Safety':'BS5837'} survey type and import it there?`))return;if(!switchType(to))return}
   const ss=wb.Sheets['Site'];if(ss&&!site){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ss,{header:1}).filter(r=>r[0]).map(r=>[r[0],r[1]]));if(a.Latitude&&a.Longitude)setSite({name:a['Site address']||'',lat:+a.Latitude,lon:+a.Longitude})}
-  let nt=[],np=[],skipped=0;const ds=wb.Sheets['DATA'];
+  let nt=[],np=[],skipped=0;const ds=wb.Sheets['DATA'],ps=wb.Sheets['Project'];
+  if(ps&&!safeBook){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ps,{header:1}).filter(r=>r[0]).map(r=>[r[0],String(r[1]??'').trim()]));if((a['Project number']||a['Project name'])&&metaMissing(META).length)META={...META,pno:a['Project number']||META.pno||'',pname:a['Project name']||META.pname||''}}
   if(safeBook){const r=parseSafety(wb);nt=r.nt;np=r.np;skipped=r.skipped;if(r.meta&&(!metaMissing(r.meta).length||metaMissing(META).length==3))META=r.meta}
   else if(ds){
    XLSX.utils.sheet_to_json(ds,{defval:''}).forEach(o=>{
