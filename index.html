@@ -100,16 +100,19 @@ aside.collapsed>#abody{display:none}
 .qbtn:hover{background:rgba(31,61,43,.85)}
 #qc{position:fixed;z-index:3500;width:290px;max-width:calc(100vw - 16px);background:rgba(255,255,255,.97);border-radius:12px;box-shadow:0 8px 28px #0006;padding:8px;font-size:13px;color:#222}#qc[hidden]{display:none}
 #qc .qh{display:flex;align-items:center;gap:6px;padding:0 2px 6px}#qc .qh span{color:#666;font-size:12px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#qc .qh b{flex:none}#qc .qx{margin-left:auto;border:0;background:#eee;border-radius:50%;width:30px;height:30px;min-height:0;padding:0}
-#qc .qtabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px}#qc .qtabs button{flex:1;padding:6px 4px;font-size:12px;border-radius:6px;min-height:0}#qc .qtabs button.on{background:#1f3d2b;color:#fff;border-color:#1f3d2b}#qc .qtabs button.miss:not(.on){background:#fde2e2;border-color:#e29a9a}
+#qc .qtabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px}#qc .qtabs button{flex:1 0 18%;padding:6px 2px;font-size:11.5px;border-radius:6px;min-height:0}#qc .qtabs button.on{background:#1f3d2b;color:#fff;border-color:#1f3d2b}#qc .qtabs button.miss:not(.on){background:#fde2e2;border-color:#e29a9a}
 #qc .qv{display:flex;align-items:baseline;justify-content:center;gap:6px;background:#f2f6f3;border-radius:8px;padding:6px}#qc .qv span{font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;color:#1f3d2b}#qc .qv.typing span{color:#0a7ab0}#qc .qv small{font-size:15px;color:#555}
 #qc .qnote{font-size:11px;color:#666;text-align:center;margin:4px 0 6px;min-height:14px}
 #qc .qpad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}#qc .qpad button{font-size:22px;font-weight:600;padding:8px 0;border-radius:8px;min-height:44px}#qc .qpad button:active{background:#cfe8d5}
 #qc .qact{display:flex;gap:5px;margin-top:6px}#qc .qact button{flex:1;padding:9px;border-radius:8px;font-weight:700;min-height:42px}#qc .qok{background:#1f3d2b;color:#fff;border-color:#1f3d2b;flex:2!important}
-#qc .qchips{display:grid;gap:5px;max-height:46vh;overflow:auto}#qc .qcat{grid-template-columns:repeat(5,1fr)}#qc .qq{grid-template-columns:repeat(2,1fr)}
+#qc .qchips{display:grid;gap:5px;max-height:46vh;overflow:auto}#qc .qcat{grid-template-columns:repeat(5,1fr)}#qc .qq{grid-template-columns:repeat(2,1fr)}#qc .qtxt{grid-template-columns:repeat(2,1fr)}#qc .qsps{grid-template-columns:repeat(2,1fr)}#qc .qsps button{font-size:13px;font-weight:600}#qc .qfd{grid-template-columns:repeat(3,1fr);max-width:220px;margin:0 auto}#qc .qfdc{display:flex;align-items:center;justify-content:center;color:#999;font-size:11px;font-weight:700}
+#qc .qsp{width:100%;font-size:16px;padding:9px 10px;border-radius:8px;margin-bottom:4px}
 #qc .qchips button{padding:8px 4px;border-radius:8px;font-weight:700;font-size:15px;min-height:44px;white-space:normal;line-height:1.15}#qc .qchips button small{display:block;font-weight:400;font-size:10px;color:#555;margin-top:2px}
 #qc .qchips button.on{outline:3px solid #ffd54a;outline-offset:-1px}#qc .cA{background:#cfffcf}#qc .cB{background:#d6dcff}#qc .cC{background:#e6e6e6}#qc .cU{background:#f1d0d0}
 #qc .qres2{font-size:12px;line-height:1.6;margin-top:6px;background:#f2f6f3;border-radius:8px;padding:5px 8px}#qc .qres2 .tol{display:inline-block;padding:0 6px;border-radius:4px;font-weight:700}
 @media(max-height:500px){#qc{padding:6px}#qc .qh{padding-bottom:3px}#qc .qv span{font-size:24px}#qc .qv{padding:2px}#qc .qnote{margin:2px 0 3px}#qc .qpad{gap:4px}#qc .qpad button{min-height:36px;padding:2px 0;font-size:18px}#qc .qact button{min-height:36px;padding:5px}#qc .qtabs button{padding:4px 3px}#qc .qchips button{min-height:36px;padding:4px}}
+.meas{position:absolute;left:0;top:0;white-space:nowrap;background:rgba(20,40,28,.82);color:#fff;font:600 12px/1 system-ui,sans-serif;padding:5px 8px;border-radius:12px;box-shadow:0 1px 4px #0005;pointer-events:none;letter-spacing:.02em}.meas b{font-size:14px}
+@media(pointer:coarse){.meas{font-size:14px;padding:6px 10px}.meas b{font-size:17px}}
 @media(pointer:coarse){.h{transform:scale(1.7)}input,select,textarea{font-size:16px}button{min-height:40px}#list div{padding:9px 6px}}
 @media(max-width:800px){main{flex-direction:column}aside{width:100%;height:44%;flex-direction:column;border:0;border-top:1px solid #ccc}#list{max-height:110px}
  #handle{width:auto;height:var(--hw);align-self:stretch}
@@ -420,16 +423,24 @@ function draw(t){
   L.circle(ll,{radius:eqd(t)/2000,color:c,weight:1,fillOpacity:.9,interactive:false}),
   L.circleMarker(ll,{radius:4,color:'#fff',weight:1,fillColor:c,fillOpacity:1}).on('click',go).bindTooltip(t.ref,{permanent:true,direction:'right',className:lblCls(t),offset:[6,0]})
  ]).addTo(map);G.set(t,g)}
+// crown-spread drag readout: dashed line from trunk centre to the node and a small distance label just above it
+const measL=L.layerGroup().addTo(map);let measT=null;
+function measShow(t,k,ll){clearTimeout(measT);measL.clearLayers();const up=matchMedia('(pointer:coarse)').matches?46:26;
+ L.polyline([[t.lat,t.lon],ll],{color:'#fff',weight:3,opacity:.85,interactive:false}).addTo(measL);
+ L.polyline([[t.lat,t.lon],ll],{color:'#1f3d2b',weight:1.5,dashArray:'4 4',interactive:false}).addTo(measL);
+ L.marker(ll,{interactive:false,keyboard:false,zIndexOffset:2000,icon:L.divIcon({className:'',iconSize:[0,0],html:`<div class="meas" style="transform:translate(-50%,calc(-100% - ${up}px))">${k[1].toUpperCase()} <b>${(+t[k]).toFixed(1)}</b> m</div>`})}).addTo(measL)}
+function measHide(ms){clearTimeout(measT);measT=setTimeout(()=>measL.clearLayers(),ms||0)}
 function handles(){
  HL.clearLayers();const t=sel;if(!t||t.lat==null)return;
  const pos={cn:()=>m2ll(t,0,t.cn),ce:()=>m2ll(t,t.ce,0),cs:()=>m2ll(t,0,-t.cs),cw:()=>m2ll(t,-t.cw,0)},ms={};
  const mk=(html,p,z)=>L.marker(p,{draggable:true,zIndexOffset:z,icon:L.divIcon({className:'',html,iconSize:[18,18],iconAnchor:[9,9]})}).addTo(HL);
  for(const k in pos){const m=mk(`<div class="h">${k[1].toUpperCase()}</div>`,pos[k](),1000);ms[k]=m;
+  m.on('dragstart',()=>measShow(t,k,pos[k]()));
   m.on('drag',e=>{const p=e.latlng,dy=(p.lat-t.lat)*R,dx=(p.lng-t.lon)*R*Math.cos(t.lat*Math.PI/180);
-   let d=k=='cn'?dy:k=='cs'?-dy:k=='ce'?dx:-dx;t[k]=Math.max(0,Math.round(d*2)/2);m.setLatLng(pos[k]());draw(t);fill(t);dirty=1});
-  m.on('dragend',()=>{save();handles()})}
+   let d=k=='cn'?dy:k=='cs'?-dy:k=='ce'?dx:-dx;t[k]=Math.max(0,Math.round(d*2)/2);m.setLatLng(pos[k]());measShow(t,k,pos[k]());draw(t);fill(t);dirty=1});
+  m.on('dragend',()=>{measHide(1200);save();handles()})}
  const s=mk('<div class="h s">+</div>',[t.lat,t.lon],1100);
- const qbs=matchMedia('(pointer:coarse)').matches?44:34,qb=batch?null:L.marker([t.lat,t.lon],{zIndexOffset:1200,keyboard:false,icon:L.divIcon({className:'',html:'<div class="qbtn" title="Quick entry – stem, height, clearance, category">✎</div>',iconSize:[qbs,qbs],iconAnchor:[-26,-26]})}).addTo(HL);
+ const qbs=matchMedia('(pointer:coarse)').matches?44:34,qb=batch?null:L.marker([t.lat,t.lon],{zIndexOffset:1200,keyboard:false,icon:L.divIcon({className:'',html:'<div class="qbtn" title="Quick entry">✎</div>',iconSize:[qbs,qbs],iconAnchor:[-26,-26]})}).addTo(HL);
  if(qb)qb.on('click',e=>{L.DomEvent.stop(e);qcBox.hidden?qcOpen():qcClose()});
  s.on('drag',e=>{const q=snap(e.latlng);if(q!==e.latlng)s.setLatLng(q);snapRing(e.latlng);t.lat=q.lat;t.lon=q.lng;for(const k in ms)ms[k].setLatLng(pos[k]());if(qb)qb.setLatLng(q);draw(t);fill(t);qcPlace()});
  s.on('dragend',()=>{snapRing(null);save();handles()})}
@@ -898,14 +909,14 @@ $('abody').addEventListener('scroll',()=>{if(acIn)acShow(acIn)},{passive:true});
 
 // ---------- quick entry: ✎ button beside the selected tree opens a compact card (pin pad for numbers, chips for categories)
 /* Values are written through the normal panel fields (dispatching 'input'), so warnings, redraws and saving behave exactly as if typed in the panel. */
-const QC_NUM={d1:{lab:'Stem Ø',u:'mm',dec:false,max:4},h:{lab:'Height',u:'m',dec:true,max:4},cc:{lab:'Clearance',u:'m',dec:true,max:4}};
-const qcFields=()=>isSafe()?['d1','h','cc','qs','qt','qp']:['d1','h','cc','cat'];
-const QC_LAB={d1:'Stem Ø',h:'Height',cc:'Clearance',cat:'Category',qs:'Size',qt:'Target',qp:'Probability'};
+const QC_NUM={d1:{lab:'Stem Ø',u:'mm',dec:false,max:4},h:{lab:'Height',u:'m',dec:true,max:4},cc:{lab:'Clearance',u:'m',dec:true,max:4},fh:{lab:'FSB height',u:'m',dec:true,max:4}};
+const qcFields=()=>isSafe()?['sp','d1','h','cc','age','cond','qs','qt','qp']:['sp','d1','h','cc','fd','fh','age','cond','cat'];
+const QC_LAB={sp:'Species',d1:'Stem Ø',h:'Height',cc:'Clearance',fd:'FSB dir',fh:'FSB ht',age:'Age',cond:'Condition',cat:'Category',qs:'Size',qt:'Target',qp:'Probability'};
 let qcK=null,qcBuf='',qcOrig=null,qcPanning=0;
 const qcBox=document.createElement('div');qcBox.id='qc';qcBox.hidden=true;document.body.appendChild(qcBox);
 function qcField(k){return fm.querySelector(`input[data-k="${k}"],select[data-k="${k}"]`)}
 function qcSet(k,v){const el=qcField(k);if(!el)return;el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}))}
-function qcOpen(k){if(!sel||sel.lat==null||batch)return;qcBox.hidden=false;qcTab(k||qcFields()[0])}
+function qcOpen(k){if(!sel||sel.lat==null||batch)return;qcBox.hidden=false;const f=qcFields(),need=new Set(reqList(sel).map(r=>r[0]));qcTab(k||f.find(x=>need.has(x)&&fieldMissing(sel[x]))||f[0])}
 function qcClose(){if(qcBox.hidden)return;qcBox.hidden=true;qcK=null;qcBuf=''}
 function qcTab(k){qcK=k;qcBuf='';qcOrig=sel?sel[k]:null;qcRender();qcPlace()}
 function qcNext(){const f=qcFields(),i=f.indexOf(qcK);if(i<f.length-1)qcTab(f[i+1]);else qcClose()}
@@ -918,8 +929,13 @@ function qcRender(){if(!sel)return qcClose();const f=qcFields(),k=qcK;
   <div class="qnote">${k==='d1'&&requiredStemCount(sel)>1?'Multi-stem tree – this sets stem 1; use the panel for stems 2–5.':qcBuf!==''?'Was '+qcFmt(k,qcOrig)+' '+n.u+' · C to undo':'Type a new value'}</div>
   <div class="qpad">${['1','2','3','4','5','6','7','8','9',n.dec?'.':'','0','⌫'].map(d=>d?`<button type="button" data-d="${d}">${d}</button>`:'<span></span>').join('')}</div>
   <div class="qact"><button type="button" data-q="c">C</button><button type="button" data-q="ok" class="qok">${f.indexOf(k)<f.length-1?'OK · Next ›':'Done'}</button></div>`}
- else{const opts=k==='cat'?fo('cat').map(v=>[v,v]):(k==='qs'?QS:k==='qt'?QT:QP).map(x=>[x[0],x[0]+'<small>'+esc(x[2].length>34?x[2].slice(0,32)+'…':x[2])+'</small>']);
-  h+=`<div class="qchips ${k==='cat'?'qcat':'qq'}">${opts.map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${String(sel[k]||'')===v?'on':''} ${k==='cat'?'c'+v[0]:''}">${l}</button>`).join('')}</div>`;
+ else if(k==='sp'){const cnt=new Map();[...T,...PG].forEach(o=>{const v=String(o.sp||'').trim();if(v)cnt.set(v,(cnt.get(v)||0)+1)});
+  const used=[...cnt.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(x=>x[0]);
+  h+=`<input class="qsp" data-qsp="1" data-ac="sp" autocomplete="off" autocapitalize="sentences" placeholder="Start typing a tree name…" value="${esc(sel.sp||'')}">
+  ${used.length?`<div class="qnote">Already used on this site</div><div class="qchips qsps">${used.map(v=>`<button type="button" data-v="${esc(v)}" class="${sel.sp===v?'on':''}">${esc(v)}</button>`).join('')}</div>`:'<div class="qnote">Type for suggestions, or enter any name</div>'}
+  <div class="qact"><button type="button" data-q="ok" class="qok">OK · Next ›</button></div>`}
+ else{const src=k==='cat'||k==='age'||k==='cond'?fo(k).map(v=>[v,v]):k==='fd'?['NW','N','NE','W','','E','SW','S','SE'].map(v=>[v,v]):(k==='qs'?QS:k==='qt'?QT:QP).map(x=>[x[0],x[0]+'<small>'+esc(x[2].length>34?x[2].slice(0,32)+'…':x[2])+'</small>']),opts=src;
+  h+=`<div class="qchips ${k==='cat'?'qcat':k==='fd'?'qfd':k==='age'||k==='cond'?'qtxt':'qq'}">${opts.map(([v,l])=>v===''?'<span class="qfdc">FSB</span>':`<button type="button" data-v="${esc(v)}" class="${String(sel[k]||'')===v?'on':''} ${k==='cat'?'c'+v[0]:''}">${l}</button>`).join('')}</div>`;
   if(isSafe())h+=`<div class="qres2">${qresHTML(sel)}</div>`;
   h+=`<div class="qact"><button type="button" data-q="ok" class="qok">${f.indexOf(k)<f.length-1?'Next ›':'Done'}</button></div>`}
  qcBox.innerHTML=h}
@@ -940,6 +956,8 @@ function qcKey(d){const k=qcK,n=QC_NUM[k];if(!n)return;
  else{if(qcBuf.includes('.')&&qcBuf.split('.')[1].length>=1)return;if(qcBuf.replace('.','').length>=n.max)return;qcBuf=qcBuf==='0'?d:qcBuf+d}
  qcSet(k,qcBuf===''?qcOrig:qcBuf);qcRender()}
 qcBox.addEventListener('pointerdown',e=>e.stopPropagation());
+qcBox.addEventListener('input',e=>{if(e.target.dataset.qsp){qcSet('sp',e.target.value);const q=qcBox.querySelector('.qtabs [data-tab=sp]');if(q)q.classList.toggle('miss',!e.target.value.trim())}});
+qcBox.addEventListener('keydown',e=>{if(e.target.dataset.qsp&&e.key==='Enter'&&(acBox.hidden||acSel<0)){e.preventDefault();acHide();qcNext()}});
 qcBox.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('button');if(!b||!sel)return;
  if(b.dataset.tab)return qcTab(b.dataset.tab);if(b.dataset.d)return qcKey(b.dataset.d);
  if(b.dataset.v!=null){qcSet(qcK,b.dataset.v);qcRender();setTimeout(qcNext,180);return}
