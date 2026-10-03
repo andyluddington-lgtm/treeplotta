@@ -24,16 +24,17 @@ header .row.tools button{font-size:18px}
 button.on{background:#ffd54a;border-color:#a80}button.danger{color:#b00}
 main{flex:1;display:flex;min-height:0}#map{flex:1}#map.add{cursor:crosshair}
 :root{--hw:30px}@media(pointer:coarse){:root{--hw:46px}}/* chevron bar width: wider on touch screens */
-aside{width:340px;display:flex;flex-direction:row;overflow:hidden;border-left:1px solid #ccc;padding:0;background:#fafafa;position:relative}
+aside{width:calc(360px + var(--hw) + env(safe-area-inset-right));display:flex;flex-direction:row;overflow:hidden;border-left:1px solid #ccc;padding:0;background:#fafafa;position:relative}
 #handle{flex:none;width:var(--hw);align-self:stretch;background:#1f3d2b;cursor:pointer;touch-action:manipulation;position:relative;z-index:15}
 #handle:hover{background:#2a5239}
 #handle::after{content:attr(data-icon);color:#fff;font-size:calc(var(--hw)*.55);font-weight:700;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);letter-spacing:-2px;line-height:1}
 #abody{flex:1;min-width:0;overflow:auto;padding:8px;padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(8px,env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
 aside.collapsed{width:calc(var(--hw) + env(safe-area-inset-right))!important;background:#1f3d2b}
 aside.collapsed>#abody{display:none}
+#abody>#ah{margin-right:calc(-1*max(8px,env(safe-area-inset-right)))}
 #list{max-height:150px;overflow:auto;border:1px solid #ccc;background:#fff;margin-bottom:8px}
 #list div{padding:3px 6px;cursor:pointer;border-bottom:1px solid #eee}#list div.s{background:#cfe8d5;font-weight:600}#list i{color:#c50}
-#form{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px}#form label{display:flex;flex-direction:column;font-size:11px;color:#555}
+#form{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px}#form label{display:flex;flex-direction:column;justify-content:flex-end;font-size:11px;color:#555}#form label>input:not([type=checkbox]),#form label>select,#pform label>input:not([type=checkbox]),#pform label>select{min-height:32px}
 .needs-data{background:#fde2e2!important;border-color:#e29a9a!important}
 .needs-check{background:#fff3c4!important;border-color:#d9b93c!important}
 .pan-ctrl{display:grid;grid-template-columns:22px 22px 22px;grid-template-rows:22px 22px 22px;background:#fff;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.4)}
@@ -68,7 +69,7 @@ aside.collapsed>#abody{display:none}
 #nList input[type=checkbox]{width:auto}
 #nNewCat{max-width:110px}#nNewText{flex:1}
 #bNotes{margin:2px 0 4px}
-#oProg[hidden]{display:none}#offBadge{display:none;background:#a33;padding:2px 8px;border-radius:10px;font-size:11px}body.offline #offBadge{display:inline}#form[hidden],#pform[hidden]{display:none}#pform{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px}#pform label{display:flex;flex-direction:column;font-size:11px;color:#555}#pform .w{grid-column:1/3}#pform input[type=checkbox]{width:auto}#ah{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;margin:-8px -8px 8px;padding:6px 8px;background:#e3efe6;border-bottom:1px solid #ccc}#ah span{display:flex;gap:6px}#bPrev,#bNext{font-size:18px;font-weight:700;min-width:34px;padding:4px 8px}aside.max{position:fixed;inset:0;width:100%;height:100%;z-index:2500;border:0;padding-top:max(8px,env(safe-area-inset-top));padding-bottom:max(8px,env(safe-area-inset-bottom))}aside.max #ah{margin-top:-8px}aside.max #list{max-height:35vh}
+#oProg[hidden]{display:none}#offBadge{display:none;background:#a33;padding:2px 8px;border-radius:10px;font-size:11px}body.offline #offBadge{display:inline}#form[hidden],#pform[hidden]{display:none}#pform{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px}#pform label{display:flex;flex-direction:column;justify-content:flex-end;font-size:11px;color:#555}#pform .w{grid-column:1/3}#pform input[type=checkbox]{width:auto}#ah{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;margin:-8px -8px 8px;padding:6px 8px;background:#e3efe6;border-bottom:1px solid #ccc}#ah span{display:flex;gap:6px}#bPrev,#bNext{font-size:18px;font-weight:700;min-width:34px;padding:4px 8px}aside.max{position:fixed;inset:0;width:100%;height:100%;z-index:2500;border:0;padding-top:max(8px,env(safe-area-inset-top));padding-bottom:max(8px,env(safe-area-inset-bottom))}aside.max #ah{margin-top:-8px}aside.max #list{max-height:35vh}
 .over-limit{background:#ffc7ce!important;color:#9c0006!important;border-color:#e29a9a!important;font-weight:700}
 .lblUN{color:#ff0000}.lblTR{color:#ffc000;text-shadow:0 0 3px #000,0 0 3px #000}.lblTA{color:#ffff00;text-shadow:0 0 3px #000,0 0 3px #000}.lblBA{color:#92d050;text-shadow:0 0 3px #000,0 0 3px #000}
 .qres{grid-column:1/3;background:#fff;border:1px solid #c9c9c9;border-radius:5px;padding:6px 8px;font-size:12px;line-height:1.7}
@@ -92,13 +93,17 @@ aside.collapsed>#abody{display:none}
 #bRecs label{display:flex;gap:6px;align-items:center;font-size:12px;padding:2px 0}#bRecs input{width:auto}
 #bform .brow{display:flex;gap:6px;margin-top:4px}#bform .bgo{background:#1f3d2b;color:#fff;font-weight:700;border-color:#1f3d2b;flex:1}#bform .bgo:disabled{opacity:.45}
 #list .lcb{width:auto;margin:0 6px 0 0;vertical-align:middle;pointer-events:none}
+#acBox{position:fixed;z-index:6000;background:#fff;border:1px solid #9bb8a5;border-radius:6px;box-shadow:0 6px 18px #0004;overflow:auto;-webkit-overflow-scrolling:touch}#acBox[hidden]{display:none}
+#acBox div{padding:8px 10px;font-size:14px;border-bottom:1px solid #eef3ef;cursor:pointer}#acBox div:last-child{border-bottom:0}#acBox div.on,#acBox div:hover{background:#cfe8d5}#acBox b{color:#1f3d2b}
+@media(pointer:coarse){#acBox div{padding:11px 12px;font-size:16px}}
 @media(pointer:coarse){.h{transform:scale(1.7)}input,select,textarea{font-size:16px}button{min-height:40px}#list div{padding:9px 6px}}
 @media(max-width:800px){main{flex-direction:column}aside{width:100%;height:44%;flex-direction:column;border:0;border-top:1px solid #ccc}#list{max-height:110px}
  #handle{width:auto;height:var(--hw);align-self:stretch}
  #abody{padding:0 8px max(8px,env(safe-area-inset-bottom))}#ah{margin:0 -8px 8px}
  aside.max #ah{margin-top:0}
- aside.collapsed{height:calc(var(--hw) + env(safe-area-inset-bottom))!important;width:100%!important}}
-@media(max-width:900px) and (orientation:landscape) and (max-height:520px){main{flex-direction:row}aside{width:46%;height:auto;flex-direction:row;border:0;border-left:1px solid #ccc}
+ aside.collapsed{height:calc(30px + env(safe-area-inset-bottom))!important;width:100%!important}
+ aside.collapsed #handle{height:auto;flex:1}aside.collapsed #handle::after{top:15px;font-size:20px}}
+@media(max-width:900px) and (orientation:landscape) and (max-height:520px){main{flex-direction:row}aside{width:min(62%,calc(360px + var(--hw) + env(safe-area-inset-right)));height:auto;flex-direction:row;border:0;border-left:1px solid #ccc}
  #handle{width:var(--hw);height:auto}#abody{padding:8px;padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(8px,env(safe-area-inset-bottom))}#ah{margin:-8px -8px 8px}
  aside.collapsed{width:calc(var(--hw) + env(safe-area-inset-right))!important;height:auto!important}}
 
@@ -112,6 +117,7 @@ body.locked>:not(#login){visibility:hidden}
 
 /* iPhone / iPad full screen (viewport-fit=cover): fill the notch and rounded-corner areas, keep controls clear of them */
 html,body{background:#1f3d2b}
+body{position:fixed;top:0;right:0;bottom:0;left:0;height:auto}
 .leaflet-top.leaflet-left,.leaflet-bottom.leaflet-left{padding-left:env(safe-area-inset-left)}
 .leaflet-bottom{padding-bottom:env(safe-area-inset-bottom)}
 #menu{right:max(8px,env(safe-area-inset-right))}
@@ -422,7 +428,7 @@ function buildFields(fs,pre){return fs.map(([k,l,ty,o,wide])=>{if(ty=='sec')retu
  const i=ty=='s'?`<select data-k="${k}"><option></option>${typeof o=='string'?o:o.map(optH).join('')}</select>`:
  ty=='a'?`<textarea rows="3" data-k="${k}"></textarea>`:ty=='c'?`<input type="checkbox" data-k="${k}">`:ty=='d'?`<input type="date" data-k="${k}">`:ty=='t'?`<input data-k="${k}">`:
  ty=='n'?`<div class="stepwrap"><button type="button" class="stp" data-k="${k}" data-s="${-st}">−</button><input data-k="${k}" type="number" inputmode="decimal" min="0" step="${st}"><button type="button" class="stp" data-k="${k}" data-s="${st}">+</button></div>`:
- `<input data-k="${k}" list="spl">`;
+ `<input data-k="${k}" data-ac="sp" autocomplete="off" autocapitalize="sentences" placeholder="Start typing a tree name…">`;
  return `<label${w}>${l}${i}</label>`}).join('')}
 function addRec(root,obj,v){if(!obj||!v)return;if(/^none$/i.test(v))obj.rec='None';else{const t=v+'.',cur=(obj.rec||'').trim();if(!cur.includes(t))obj.rec=(cur&&!noWork(obj)?cur+' ':'')+t}
  root.querySelector('[data-k="rec"]').value=obj.rec}
@@ -779,7 +785,7 @@ function buildBatch(){const f=bfields();const ruleF=[['notes','Notes'],...f.filt
  <div id="bFields">${f.map(([k,l,t,o])=>{let i;
   if(t==='s')i=`<select data-bk="${k}"><option value="">— leave unchanged —</option>${o.map(x=>`<option>${esc(x)}</option>`).join('')}</select>`;
   else if(t==='q')i=`<select data-bk="${k}"><option value="">— leave unchanged —</option>${o.map(x=>`<option value="${x[0]}">${x[0]} · ${esc(x[2])}</option>`).join('')}</select>`;
-  else if(t==='d')i=`<input type="date" data-bk="${k}">`;else i=`<input data-bk="${k}" list="spl" placeholder="— leave unchanged —">`;
+  else if(t==='d')i=`<input type="date" data-bk="${k}">`;else i=`<input data-bk="${k}" data-ac="sp" autocomplete="off" placeholder="— leave unchanged —">`;
   return`<label>${l}${i}<small class="bsm" data-bs="${k}"></small></label>`}).join('')}</div>
  <div class="bsec">Add notes <small>(added to existing notes – duplicates skipped)</small></div>
  <button id="bNotesPick" type="button">📋 Choose predefined notes…</button><div id="bNotesSel" class="bchips"></div>
@@ -837,6 +843,42 @@ function bApply(){const it=bItems();if(!it.length)return;const set={},lab=[];
  const b=$('bSelInc');if(b)b.onclick=()=>{BSEL.clear();inc.forEach(o=>BSEL.add(o));bRedrawAll()}}
 function bxUndo(){const u=BUNDO.pop();if(!u)return;if(!confirm(`Undo the last batch change (${u.length} feature(s))?`)){BUNDO.push(u);return}
  u.forEach(({o,b})=>Object.assign(o,b));save();bRedrawAll();$('bMsg').textContent='Last batch change undone.'}
+
+// ---------- species autocomplete: common UK tree names, filters as you type, free text always allowed
+const TREE_NAMES=['Unknown - Broadleaf','Unknown - Conifer','Mixed broadleaf','Mixed conifer','Mixed broadleaf and conifer',
+'Alder','Grey alder','Italian alder','Apple','Crab apple','Ash','Manna ash','Narrow-leaved ash','Aspen','Bay','Beech','Copper beech','Weeping beech',
+'Silver birch','Downy birch','Himalayan birch','Paper birch','Blackthorn','Box','Alder buckthorn','Purging buckthorn','Atlas cedar','Blue Atlas cedar','Cedar of Lebanon','Deodar cedar','Western red cedar','Japanese red cedar',
+'Wild cherry','Bird cherry','Japanese cherry','Tibetan cherry','Cherry plum','Cherry laurel','Portugal laurel','Sweet chestnut','Horse chestnut','Red horse chestnut','Indian horse chestnut',
+'Leyland cypress','Lawson cypress','Monterey cypress','Italian cypress','Swamp cypress','Douglas fir','Grand fir','Noble fir','Nordmann fir','Elder',
+'English elm','Wych elm','Field elm','Hybrid elm','Eucalyptus','Cider gum','False acacia','Field maple','Norway maple','Silver maple','Red maple','Sugar maple','Japanese maple','Paperbark maple','Ginkgo',
+'Hawthorn','Midland hawthorn','Hazel','Turkish hazel','Holly','Hornbeam','Hop hornbeam','Honey locust','Indian bean tree','Judas tree','Juniper','Katsura',
+'European larch','Japanese larch','Hybrid larch','Laburnum','Common lime','Small-leaved lime','Large-leaved lime','Silver lime','London plane','Oriental plane','Magnolia','Medlar','Monkey puzzle','Mulberry','Black mulberry',
+'English oak','Sessile oak','Red oak','Turkey oak','Holm oak','Pin oak','Scarlet oak','Cork oak','Hungarian oak','Lucombe oak',
+'Pear','Wild pear','Callery pear','Persian ironwood','Austrian pine','Bhutan pine','Corsican pine','Lodgepole pine','Maritime pine','Monterey pine','Scots pine','Stone pine','Weymouth pine','Plum',
+'Black poplar','Black Italian poplar','Hybrid black poplar','Grey poplar','Lombardy poplar','White poplar','Balsam poplar','Coast redwood','Dawn redwood','Giant redwood','Rowan','Sea buckthorn','Snowy mespilus','Spindle',
+'Norway spruce','Sitka spruce','Serbian spruce','Blue spruce','Strawberry tree','Sweetgum','Sycamore','Tree of heaven','Tulip tree','Walnut','Black walnut','Wellingtonia','Whitebeam','Swedish whitebeam','Wild service tree',
+'Bay willow','Crack willow','Goat willow','Grey willow','Osier','Weeping willow','White willow','Corkscrew willow','Yew','Irish yew','Guelder rose','Wayfaring tree','Dogwood','Privet'];
+const acBox=document.createElement('div');acBox.id='acBox';acBox.hidden=true;document.body.appendChild(acBox);
+let acIn=null,acSel=-1,acList=[];
+function acMatches(q){q=q.trim().toLowerCase();if(!q)return[];const out=[];
+ for(const n of TREE_NAMES){const l=n.toLowerCase();if(l.startsWith(q))out.push([0,n]);else if(l.split(/[\s-]+/).some(w=>w.startsWith(q)))out.push([1,n]);else if(q.length>2&&l.includes(q))out.push([2,n])}
+ return out.sort((a,b)=>a[0]-b[0]||a[1].localeCompare(b[1])).slice(0,10).map(x=>x[1])}
+function acHide(){acBox.hidden=true;acIn=null;acSel=-1}
+function acShow(inp){acIn=inp;acList=acMatches(inp.value);if(!acList.length||(acList.length===1&&acList[0].toLowerCase()===inp.value.trim().toLowerCase())){acBox.hidden=true;return}
+ const q=inp.value.trim();const rx=new RegExp('(^|[\\s-])('+escRe(q)+')','i');
+ acBox.innerHTML=acList.map((n,i)=>`<div data-n="${esc(n)}" class="${i===acSel?'on':''}">${esc(n).replace(rx,'$1<b>$2</b>')}</div>`).join('');
+ const r=inp.getBoundingClientRect(),vh=window.visualViewport?visualViewport.height:innerHeight,below=vh-r.bottom;acBox.hidden=false;
+ acBox.style.left=r.left+'px';acBox.style.width=Math.max(r.width,200)+'px';
+ const h=Math.min(acBox.scrollHeight,260);if(below<h+8&&r.top>below){acBox.style.top=(r.top-h-2)+'px'}else acBox.style.top=(r.bottom+2)+'px';acBox.style.maxHeight=h+'px'}
+function acPick(n){const inp=acIn;if(!inp)return;inp.value=n;acHide();inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}))}
+document.addEventListener('input',e=>{if(e.target.matches&&e.target.matches('input[data-ac="sp"]')){acSel=-1;acShow(e.target)}});
+document.addEventListener('focusin',e=>{if(e.target.matches&&e.target.matches('input[data-ac="sp"]')&&e.target.value)acShow(e.target)});
+document.addEventListener('focusout',e=>{if(e.target===acIn)setTimeout(()=>{if(document.activeElement!==acIn)acHide()},150)});
+document.addEventListener('keydown',e=>{if(!acIn||acBox.hidden||e.target!==acIn)return;
+ if(e.key==='ArrowDown'){acSel=Math.min(acList.length-1,acSel+1);acShow(acIn);e.preventDefault()}else if(e.key==='ArrowUp'){acSel=Math.max(-1,acSel-1);acShow(acIn);e.preventDefault()}
+ else if(e.key==='Enter'&&acSel>=0){acPick(acList[acSel]);e.preventDefault()}else if(e.key==='Escape'){acHide();e.stopPropagation()}},true);
+acBox.addEventListener('pointerdown',e=>{const d=e.target.closest('[data-n]');if(!d)return;e.preventDefault();acPick(d.dataset.n)});
+$('abody').addEventListener('scroll',()=>{if(acIn)acShow(acIn)},{passive:true});addEventListener('resize',()=>{if(acIn)acShow(acIn)});
 
 // ---------- survey type switching
 function dsCount(t){try{const d=JSON.parse(localStorage.getItem(dsKey(t))||'null');return d?(d.T||[]).length+(d.PG||[]).length:0}catch(x){return 0}}
