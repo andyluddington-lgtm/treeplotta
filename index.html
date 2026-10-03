@@ -96,6 +96,20 @@ aside.collapsed>#abody{display:none}
 #acBox{position:fixed;z-index:6000;background:#fff;border:1px solid #9bb8a5;border-radius:6px;box-shadow:0 6px 18px #0004;overflow:auto;-webkit-overflow-scrolling:touch}#acBox[hidden]{display:none}
 #acBox div{padding:8px 10px;font-size:14px;border-bottom:1px solid #eef3ef;cursor:pointer}#acBox div:last-child{border-bottom:0}#acBox div.on,#acBox div:hover{background:#cfe8d5}#acBox b{color:#1f3d2b}
 @media(pointer:coarse){#acBox div{padding:11px 12px;font-size:16px}}
+.qbtn{width:100%;height:100%;border-radius:50%;background:rgba(31,61,43,.55);border:2px solid rgba(255,255,255,.85);color:#fff;font-size:17px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 5px #0006;cursor:pointer;backdrop-filter:blur(2px)}
+.qbtn:hover{background:rgba(31,61,43,.85)}
+#qc{position:fixed;z-index:3500;width:290px;max-width:calc(100vw - 16px);background:rgba(255,255,255,.97);border-radius:12px;box-shadow:0 8px 28px #0006;padding:8px;font-size:13px;color:#222}#qc[hidden]{display:none}
+#qc .qh{display:flex;align-items:center;gap:6px;padding:0 2px 6px}#qc .qh span{color:#666;font-size:12px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#qc .qh b{flex:none}#qc .qx{margin-left:auto;border:0;background:#eee;border-radius:50%;width:30px;height:30px;min-height:0;padding:0}
+#qc .qtabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px}#qc .qtabs button{flex:1;padding:6px 4px;font-size:12px;border-radius:6px;min-height:0}#qc .qtabs button.on{background:#1f3d2b;color:#fff;border-color:#1f3d2b}#qc .qtabs button.miss:not(.on){background:#fde2e2;border-color:#e29a9a}
+#qc .qv{display:flex;align-items:baseline;justify-content:center;gap:6px;background:#f2f6f3;border-radius:8px;padding:6px}#qc .qv span{font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;color:#1f3d2b}#qc .qv.typing span{color:#0a7ab0}#qc .qv small{font-size:15px;color:#555}
+#qc .qnote{font-size:11px;color:#666;text-align:center;margin:4px 0 6px;min-height:14px}
+#qc .qpad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}#qc .qpad button{font-size:22px;font-weight:600;padding:8px 0;border-radius:8px;min-height:44px}#qc .qpad button:active{background:#cfe8d5}
+#qc .qact{display:flex;gap:5px;margin-top:6px}#qc .qact button{flex:1;padding:9px;border-radius:8px;font-weight:700;min-height:42px}#qc .qok{background:#1f3d2b;color:#fff;border-color:#1f3d2b;flex:2!important}
+#qc .qchips{display:grid;gap:5px;max-height:46vh;overflow:auto}#qc .qcat{grid-template-columns:repeat(5,1fr)}#qc .qq{grid-template-columns:repeat(2,1fr)}
+#qc .qchips button{padding:8px 4px;border-radius:8px;font-weight:700;font-size:15px;min-height:44px;white-space:normal;line-height:1.15}#qc .qchips button small{display:block;font-weight:400;font-size:10px;color:#555;margin-top:2px}
+#qc .qchips button.on{outline:3px solid #ffd54a;outline-offset:-1px}#qc .cA{background:#cfffcf}#qc .cB{background:#d6dcff}#qc .cC{background:#e6e6e6}#qc .cU{background:#f1d0d0}
+#qc .qres2{font-size:12px;line-height:1.6;margin-top:6px;background:#f2f6f3;border-radius:8px;padding:5px 8px}#qc .qres2 .tol{display:inline-block;padding:0 6px;border-radius:4px;font-weight:700}
+@media(max-height:500px){#qc{padding:6px}#qc .qh{padding-bottom:3px}#qc .qv span{font-size:24px}#qc .qv{padding:2px}#qc .qnote{margin:2px 0 3px}#qc .qpad{gap:4px}#qc .qpad button{min-height:36px;padding:2px 0;font-size:18px}#qc .qact button{min-height:36px;padding:5px}#qc .qtabs button{padding:4px 3px}#qc .qchips button{min-height:36px;padding:4px}}
 @media(pointer:coarse){.h{transform:scale(1.7)}input,select,textarea{font-size:16px}button{min-height:40px}#list div{padding:9px 6px}}
 @media(max-width:800px){main{flex-direction:column}aside{width:100%;height:44%;flex-direction:column;border:0;border-top:1px solid #ccc}#list{max-height:110px}
  #handle{width:auto;height:var(--hw);align-self:stretch}
@@ -415,7 +429,9 @@ function handles(){
    let d=k=='cn'?dy:k=='cs'?-dy:k=='ce'?dx:-dx;t[k]=Math.max(0,Math.round(d*2)/2);m.setLatLng(pos[k]());draw(t);fill(t);dirty=1});
   m.on('dragend',()=>{save();handles()})}
  const s=mk('<div class="h s">+</div>',[t.lat,t.lon],1100);
- s.on('drag',e=>{const q=snap(e.latlng);if(q!==e.latlng)s.setLatLng(q);snapRing(e.latlng);t.lat=q.lat;t.lon=q.lng;for(const k in ms)ms[k].setLatLng(pos[k]());draw(t);fill(t)});
+ const qbs=matchMedia('(pointer:coarse)').matches?44:34,qb=batch?null:L.marker([t.lat,t.lon],{zIndexOffset:1200,keyboard:false,icon:L.divIcon({className:'',html:'<div class="qbtn" title="Quick entry – stem, height, clearance, category">✎</div>',iconSize:[qbs,qbs],iconAnchor:[-26,-26]})}).addTo(HL);
+ if(qb)qb.on('click',e=>{L.DomEvent.stop(e);qcBox.hidden?qcOpen():qcClose()});
+ s.on('drag',e=>{const q=snap(e.latlng);if(q!==e.latlng)s.setLatLng(q);snapRing(e.latlng);t.lat=q.lat;t.lon=q.lng;for(const k in ms)ms[k].setLatLng(pos[k]());if(qb)qb.setLatLng(q);draw(t);fill(t);qcPlace()});
  s.on('dragend',()=>{snapRing(null);save();handles()})}
 // ---------- UI
 const fm=$('form');
@@ -452,8 +468,8 @@ function list(){const entries=[...T.map((t,i)=>({ref:t.ref,html:`<div data-i="${
  entries.sort((x,y)=>natCmp(x.ref,y.ref));
  $('list').innerHTML=entries.map(e=>e.html).join('')||'<div>Nothing yet – press “＋ Add” or “▱ Polygon”.</div>';banner()}
 $('list').onclick=e=>{const i=e.target.closest('[data-i]');if(i){const t=T[i.dataset.i];if(batch)return bToggle(t);if(wantSelect(t)&&t.lat!=null)map.setView([t.lat,t.lon],Math.max(map.getZoom(),20))}};
-function select(t){const p=sel,q=selP;sel=t;selP=null;if(p&&T.includes(p))draw(p);if(q&&PG.includes(q))drawP(q);if(t)draw(t);fill(t);$('pform').hidden=true;fm.hidden=false;list();handles()}
-function setMode(m){if(batch&&m)exitBatch();mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);$('bPoly').classList.toggle('on',mode=='poly');$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();banner()}
+function select(t){if(t!==sel)qcClose();const p=sel,q=selP;sel=t;selP=null;if(p&&T.includes(p))draw(p);if(q&&PG.includes(q))drawP(q);if(t)draw(t);fill(t);$('pform').hidden=true;fm.hidden=false;list();handles()}
+function setMode(m){qcClose();if(batch&&m)exitBatch();mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);$('bPoly').classList.toggle('on',mode=='poly');$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();banner()}
 $('bCopy').onclick=()=>{if(mode=='paste')return setMode('paste');
  if(sel)clip={kind:'tree',data:{...sel}};
  else if(selP)clip={kind:'poly',data:{...selP,ll:selP.ll.map(v=>v.slice())}};
@@ -880,9 +896,62 @@ document.addEventListener('keydown',e=>{if(!acIn||acBox.hidden||e.target!==acIn)
 acBox.addEventListener('pointerdown',e=>{const d=e.target.closest('[data-n]');if(!d)return;e.preventDefault();acPick(d.dataset.n)});
 $('abody').addEventListener('scroll',()=>{if(acIn)acShow(acIn)},{passive:true});addEventListener('resize',()=>{if(acIn)acShow(acIn)});
 
+// ---------- quick entry: ✎ button beside the selected tree opens a compact card (pin pad for numbers, chips for categories)
+/* Values are written through the normal panel fields (dispatching 'input'), so warnings, redraws and saving behave exactly as if typed in the panel. */
+const QC_NUM={d1:{lab:'Stem Ø',u:'mm',dec:false,max:4},h:{lab:'Height',u:'m',dec:true,max:4},cc:{lab:'Clearance',u:'m',dec:true,max:4}};
+const qcFields=()=>isSafe()?['d1','h','cc','qs','qt','qp']:['d1','h','cc','cat'];
+const QC_LAB={d1:'Stem Ø',h:'Height',cc:'Clearance',cat:'Category',qs:'Size',qt:'Target',qp:'Probability'};
+let qcK=null,qcBuf='',qcOrig=null,qcPanning=0;
+const qcBox=document.createElement('div');qcBox.id='qc';qcBox.hidden=true;document.body.appendChild(qcBox);
+function qcField(k){return fm.querySelector(`input[data-k="${k}"],select[data-k="${k}"]`)}
+function qcSet(k,v){const el=qcField(k);if(!el)return;el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}))}
+function qcOpen(k){if(!sel||sel.lat==null||batch)return;qcBox.hidden=false;qcTab(k||qcFields()[0])}
+function qcClose(){if(qcBox.hidden)return;qcBox.hidden=true;qcK=null;qcBuf=''}
+function qcTab(k){qcK=k;qcBuf='';qcOrig=sel?sel[k]:null;qcRender();qcPlace()}
+function qcNext(){const f=qcFields(),i=f.indexOf(qcK);if(i<f.length-1)qcTab(f[i+1]);else qcClose()}
+function qcFmt(k,v){const n=QC_NUM[k];return v===''||v==null?'–':(n.dec?(+v).toFixed(1).replace(/\.0$/,''):String(Math.round(+v)))}
+function qcRender(){if(!sel)return qcClose();const f=qcFields(),k=qcK;
+ let h=`<div class="qh"><b>${esc(sel.ref)}</b>${sel.sp?` <span>${esc(sel.sp)}</span>`:''}<button type="button" class="qx" data-q="x" title="Close">✕</button></div>
+ <div class="qtabs">${f.map(x=>{const miss=fieldMissing(sel[x])&&reqList(sel).some(r=>r[0]===x)||(x==='d1'&&fieldMissing(sel.d1));return`<button type="button" data-tab="${x}" class="${x===k?'on':''}${miss?' miss':''}">${QC_LAB[x]}</button>`}).join('')}</div>`;
+ if(QC_NUM[k]){const n=QC_NUM[k],shown=qcBuf!==''?qcBuf:qcFmt(k,sel[k]);
+  h+=`<div class="qv${qcBuf!==''?' typing':''}"><span>${esc(shown)}</span><small>${n.u}</small></div>
+  <div class="qnote">${k==='d1'&&requiredStemCount(sel)>1?'Multi-stem tree – this sets stem 1; use the panel for stems 2–5.':qcBuf!==''?'Was '+qcFmt(k,qcOrig)+' '+n.u+' · C to undo':'Type a new value'}</div>
+  <div class="qpad">${['1','2','3','4','5','6','7','8','9',n.dec?'.':'','0','⌫'].map(d=>d?`<button type="button" data-d="${d}">${d}</button>`:'<span></span>').join('')}</div>
+  <div class="qact"><button type="button" data-q="c">C</button><button type="button" data-q="ok" class="qok">${f.indexOf(k)<f.length-1?'OK · Next ›':'Done'}</button></div>`}
+ else{const opts=k==='cat'?fo('cat').map(v=>[v,v]):(k==='qs'?QS:k==='qt'?QT:QP).map(x=>[x[0],x[0]+'<small>'+esc(x[2].length>34?x[2].slice(0,32)+'…':x[2])+'</small>']);
+  h+=`<div class="qchips ${k==='cat'?'qcat':'qq'}">${opts.map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${String(sel[k]||'')===v?'on':''} ${k==='cat'?'c'+v[0]:''}">${l}</button>`).join('')}</div>`;
+  if(isSafe())h+=`<div class="qres2">${qresHTML(sel)}</div>`;
+  h+=`<div class="qact"><button type="button" data-q="ok" class="qok">${f.indexOf(k)<f.length-1?'Next ›':'Done'}</button></div>`}
+ qcBox.innerHTML=h}
+function qcPlace(){if(qcBox.hidden||!sel)return;const r=$('map').getBoundingClientRect(),p=map.latLngToContainerPoint([sel.lat,sel.lon]),w=qcBox.offsetWidth,ht=qcBox.offsetHeight;
+ const vw=innerWidth,vh0=window.visualViewport?visualViewport.height:innerHeight;
+ if(vw>vh0&&vh0<560){/* phone landscape: dock on the right (over the panel) and keep the tree visible to its left */
+  const left=Math.max(8,vw-w-8-Math.max(0,vw-document.documentElement.clientWidth)-(parseFloat(getComputedStyle(document.querySelector('aside')).paddingRight)||0)),sr=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sar'))||0;
+  qcBox.style.left=(left-sr)+'px';qcBox.style.top=Math.max(r.top+4,vh0-ht-6)+'px';
+  const tx=r.left+p.x,lim=left-sr-60;if(tx>lim&&!qcPanning){qcPanning=1;map.panBy([tx-lim,0],{animate:false});qcPanning=0}return}
+ if(r.width<560){/* phone portrait: dock at the bottom of the screen (over the panel) and keep the tree visible above it */
+  const vh=window.visualViewport?visualViewport.height:innerHeight,top=Math.max(8,vh-ht-8-(parseFloat(getComputedStyle(document.body).paddingBottom)||0));
+  qcBox.style.left=Math.max(8,(innerWidth-w)/2)+'px';qcBox.style.top=top+'px';
+  const ty=r.top+p.y,lim=top-50;if(ty>lim&&!qcPanning){qcPanning=1;map.panBy([0,ty-lim],{animate:false});qcPanning=0}return}
+ let x=r.left+p.x+56;if(x+w>r.right-8)x=r.left+p.x-56-w;x=Math.max(r.left+8,Math.min(x,r.right-w-8));
+ let y=r.top+p.y-ht/2;y=Math.max(r.top+8,Math.min(y,r.bottom-ht-8));qcBox.style.left=x+'px';qcBox.style.top=y+'px'}
+function qcKey(d){const k=qcK,n=QC_NUM[k];if(!n)return;
+ if(d==='⌫')qcBuf=qcBuf.slice(0,-1);else if(d==='.'){if(!n.dec||qcBuf.includes('.'))return;qcBuf=(qcBuf||'0')+'.'}
+ else{if(qcBuf.includes('.')&&qcBuf.split('.')[1].length>=1)return;if(qcBuf.replace('.','').length>=n.max)return;qcBuf=qcBuf==='0'?d:qcBuf+d}
+ qcSet(k,qcBuf===''?qcOrig:qcBuf);qcRender()}
+qcBox.addEventListener('pointerdown',e=>e.stopPropagation());
+qcBox.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('button');if(!b||!sel)return;
+ if(b.dataset.tab)return qcTab(b.dataset.tab);if(b.dataset.d)return qcKey(b.dataset.d);
+ if(b.dataset.v!=null){qcSet(qcK,b.dataset.v);qcRender();setTimeout(qcNext,180);return}
+ const q=b.dataset.q;if(q==='x')qcClose();else if(q==='c'){qcBuf='';qcSet(qcK,qcOrig);qcRender()}else if(q==='ok')qcNext()});
+document.addEventListener('keydown',e=>{if(qcBox.hidden||e.target.matches('input,select,textarea'))return;
+ if(/^[0-9]$/.test(e.key)||e.key==='.'){qcKey(e.key);e.preventDefault()}else if(e.key==='Backspace'){qcKey('⌫');e.preventDefault()}
+ else if(e.key==='Enter'){qcNext();e.preventDefault()}else if(e.key==='Escape'){qcClose();e.stopPropagation()}},true);
+map.on('move zoom',qcPlace);addEventListener('resize',qcPlace);
+
 // ---------- survey type switching
 function dsCount(t){try{const d=JSON.parse(localStorage.getItem(dsKey(t))||'null');return d?(d.T||[]).length+(d.PG||[]).length:0}catch(x){return 0}}
-function switchType(nt){if(nt===ST)return true;exitBatch();if(!confirmLeave('Switch survey type anyway?'))return false;
+function switchType(nt){if(nt===ST)return true;exitBatch();qcClose();if(!confirmLeave('Switch survey type anyway?'))return false;
  save();if(mode)setMode(mode);select(null);
  T.forEach(t=>{if(G.has(t))map.removeLayer(G.get(t))});G.clear();PG.forEach(p=>{if(GP.has(p))map.removeLayer(GP.get(p))});GP.clear();
  ST=nt;T=[];PG=[];META={};
