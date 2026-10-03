@@ -983,7 +983,13 @@ function qcRender(){if(!qo())return qcClose();const f=qcFields(),k=qcK,g=qcGroup
   if(isSafe()&&(k==='qs'||k==='qt'||k==='qp'||k==='wp'))h+=`<div class="qres2">${qresHTML(qo())}</div>`;
   h+=`<div class="qact"><button type="button" data-q="ok" class="qok">${last?'Done':'Next ›'}</button></div>`}
  qcBox.innerHTML=h;const on=qcBox.querySelector('.qtabs .on');if(on)on.scrollIntoView({block:'nearest',inline:'nearest'});qcPlace()}
-function qcPlace(){const an=qanchor();if(qcBox.hidden||!an)return;const r=$('map').getBoundingClientRect(),p=map.latLngToContainerPoint(an),w=qcBox.offsetWidth,ht=qcBox.offsetHeight;
+function qcKb(){const ae=document.activeElement;return!!(window.visualViewport&&ae&&qcBox.contains(ae)&&ae.matches('input:not([type=date]),textarea')&&matchMedia('(pointer:coarse)').matches)}
+function qcPlace(){const an=qanchor();if(qcBox.hidden||!an)return;
+ /* typing on a phone/tablet: the on-screen keyboard shrinks and shifts the visible area, so pin the card to the top of what is actually visible and leave the map alone */
+ if(qcKb()){const vv=visualViewport,w=qcBox.offsetWidth;qcBox.classList.add('kb');qcBox.style.maxHeight=Math.max(160,vv.height-16)+'px';qcBox.style.left=Math.max(8,vv.offsetLeft+(vv.width-w)/2)+'px';qcBox.style.top=(vv.offsetTop+8)+'px';return}
+ if(qcBox.classList.contains('kb'))qcBox.classList.remove('kb');
+ {const mt=$('map').getBoundingClientRect().top,v=window.visualViewport?visualViewport.height:innerHeight;/* phone landscape: fit below the toolbar (the card scrolls if needed) */qcBox.style.maxHeight=innerWidth>v&&v<560?Math.max(160,v-mt-10)+'px':''}
+ const r=$('map').getBoundingClientRect(),p=map.latLngToContainerPoint(an),w=qcBox.offsetWidth,ht=qcBox.offsetHeight;
  const vw=innerWidth,vh0=window.visualViewport?visualViewport.height:innerHeight;
  if(vw>vh0&&vh0<560){/* phone landscape: dock on the right (over the panel) and keep the tree visible to its left */
   const left=Math.max(8,vw-w-8-Math.max(0,vw-document.documentElement.clientWidth)-(parseFloat(getComputedStyle(document.querySelector('aside')).paddingRight)||0));
@@ -998,7 +1004,9 @@ function qcKey(d){const k=qcK,n=QF[k];if(!n||n.t!=='num')return;
  if(d==='⌫')qcBuf=qcBuf.slice(0,-1);else if(d==='.'){if(!n.dec||qcBuf.includes('.'))return;qcBuf=(qcBuf||'0')+'.'}
  else{if(qcBuf.includes('.')&&qcBuf.split('.')[1].length>=1)return;if(qcBuf.replace('.','').length>=n.max)return;qcBuf=qcBuf==='0'?d:qcBuf+d}
  qcSet(k,qcBuf===''?qcOrig:qcBuf);if(k==='n')qcRender();else qcRender()}
-qcBox.addEventListener('pointerdown',e=>e.stopPropagation());
+qcBox.addEventListener('pointerdown',e=>{e.stopPropagation();
+ /* tapping a card button while typing: keep focus (and the keyboard layout) until the tap has registered, so the card doesn't move under the finger */
+ if(e.target.closest('button')&&qcKb())e.preventDefault()});
 // typed text (species, ref, date, photo, notes, recommendations) writes through live without re-rendering, so the keyboard stays up
 qcBox.addEventListener('input',e=>{const k=e.target.dataset.qtext;if(!k)return;qcSet(k,e.target.value);if(k==='sp'){const sg=qcBox.querySelector('.qsugg');if(sg){sg.innerHTML=qcSugg(e.target.value);qcPlace()}}
  const hd=qcBox.querySelector('.qh b');if(hd&&k==='ref')hd.textContent=e.target.value;qcBox.querySelectorAll(`[data-tab="${k}"]`).forEach(b=>b.classList.toggle('miss',qcMiss(k)))});
@@ -1013,6 +1021,10 @@ document.addEventListener('keydown',e=>{if(qcBox.hidden||e.target.matches('input
  if(/^[0-9]$/.test(e.key)||e.key==='.'){qcKey(e.key);e.preventDefault()}else if(e.key==='Backspace'){qcKey('⌫');e.preventDefault()}
  else if(e.key==='Enter'){qcNext();e.preventDefault()}else if(e.key==='Escape'){qcClose();e.stopPropagation()}},true);
 map.on('move zoom',qcPlace);addEventListener('resize',qcPlace);
+if(window.visualViewport){visualViewport.addEventListener('resize',qcPlace);visualViewport.addEventListener('scroll',qcPlace)}
+// keyboard opening/closing animates, so re-place a couple of times after focus changes
+qcBox.addEventListener('focusin',()=>{qcPlace();setTimeout(qcPlace,120);setTimeout(qcPlace,400)});
+qcBox.addEventListener('focusout',()=>setTimeout(()=>{qcPlace();if(!qcKb())setTimeout(qcPlace,400)},60));
 // refresh the card's notes box after using the predefined-notes picker
 {const nc=$('nClose').onclick;$('nClose').onclick=()=>{nc();if(!qcBox.hidden&&qcK==='notes')qcRender()}}
 
