@@ -77,6 +77,15 @@ aside.collapsed>*:not(#handle){display:none}
 #tSafe label,#tBs label{display:block;font-size:12px;color:#555;margin:6px 0 2px}#tpanel .row{display:flex;gap:6px;margin-top:12px}
 
 .aer-ctrl button{display:flex;align-items:center;gap:4px;padding:5px 9px;border:0;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.4);background:#fff;font-size:13px;font-weight:600;color:#555;min-height:0}.aer-ctrl button span{font-size:12px}.aer-ctrl button.on{background:#ffd54a;color:#222}#map.noaer{background:#fff}
+#bform[hidden]{display:none}#bform{display:flex;flex-direction:column;gap:6px;font-size:12px}#bBatch.on{background:#00e5ff;border-color:#008aa0}
+#bform .bhd{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;background:#e0fbff;border:1px solid #9fe7f2;border-radius:6px;padding:6px}#bform .bhd span{display:flex;gap:4px}
+#bform .bsec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#1f3d2b;background:#e3efe6;padding:4px 6px;border-radius:4px;margin-top:4px}#bform .bsec small{text-transform:none;font-weight:400;letter-spacing:0;color:#555}
+#bform .brule{display:flex;flex-direction:column;gap:4px}#bform .brule span{display:flex;gap:4px}#bform .brule select[hidden]{display:none}
+#bFields{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px}#bFields label{display:flex;flex-direction:column;font-size:11px;color:#555}#bFields .bsm{color:#0a7ab0;font-size:10px;min-height:12px}
+#bform .bchips{display:flex;flex-wrap:wrap;gap:4px}#bform .bchips span{background:#e0fbff;border:1px solid #9fe7f2;border-radius:10px;padding:2px 8px}#bform .bchips i{color:#888}
+#bRecs label{display:flex;gap:6px;align-items:center;font-size:12px;padding:2px 0}#bRecs input{width:auto}
+#bform .brow{display:flex;gap:6px;margin-top:4px}#bform .bgo{background:#1f3d2b;color:#fff;font-weight:700;border-color:#1f3d2b;flex:1}#bform .bgo:disabled{opacity:.45}
+#list .lcb{width:auto;margin:0 6px 0 0;vertical-align:middle;pointer-events:none}
 @media(pointer:coarse){.h{transform:scale(1.7)}input,select,textarea{font-size:16px}button{min-height:40px}#list div{padding:9px 6px}}
 @media(max-width:800px){main{flex-direction:column}aside{width:100%;height:44%;border:0;border-top:1px solid #ccc;padding:0 8px max(8px,env(safe-area-inset-bottom))}#list{max-height:110px}
  #handle{position:sticky;left:0;right:0;top:0;bottom:auto;width:100%;height:24px;z-index:16}
@@ -129,7 +138,7 @@ body.locked>:not(#login){visibility:hidden}
 <div class="row"><b class="ttl">🌳 <span>TreePlotta</span></b>
 <span class="sr"><input id="q" type="search" placeholder="Search site address / postcode ⏎"><div id="res" hidden></div></span>
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
-<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
+<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
 </header>
 <div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><div class="mh">Map</div><button id="bOff">📶 Offline maps…</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
@@ -144,7 +153,7 @@ body.locked>:not(#login){visibility:hidden}
 <hr><div id="oStore"></div><button id="oClear" class="danger">Clear all offline tiles</button>
 </div></div>
 <input type="file" id="fi" accept=".xlsx,.xls" hidden><input type="file" id="tFi" accept=".dxf" hidden>
-<main><div id="map"></div><div id="bn" hidden></div><aside><div id="handle" title="Minimise / maximise survey data panel" data-icon="&laquo;&laquo;"></div><div id="ah"><b id="ahT">Survey data</b><span><button id="bPrev" title="Select previous tree">‹</button><button id="bNext" title="Select next tree">›</button><button id="bMax">⤢ Full screen</button></span></div><div id="list"></div><div id="form"></div><div id="pform" hidden></div></aside></main>
+<main><div id="map"></div><div id="bn" hidden></div><aside><div id="handle" title="Minimise / maximise survey data panel" data-icon="&laquo;&laquo;"></div><div id="ah"><b id="ahT">Survey data</b><span><button id="bPrev" title="Select previous tree">‹</button><button id="bNext" title="Select next tree">›</button><button id="bMax">⤢ Full screen</button></span></div><div id="list"></div><div id="form"></div><div id="pform" hidden></div><div id="bform" hidden></div></aside></main>
 <div id="novl" hidden><div id="npanel">
 <h3>Predefined notes</h3>
 <input id="nFilter" type="search" placeholder="Filter notes&#8230;">
@@ -211,6 +220,7 @@ $('nFilter').oninput=e=>renderNotesList(e.target.value);
 $('nList').addEventListener('change',e=>{const cb=e.target.closest('[data-note]');if(!cb||!notesTarget)return;toggleNote(notesTarget,cb.dataset.note,cb.checked);
  if(notesTarget===sel){fm.querySelector('[data-k="notes"]').value=sel.notes;draw(sel)}
  else if(notesTarget===selP){pf.querySelector('[data-k="notes"]').value=selP.notes;drawP(selP)}
+ else if(notesTarget===BN){bRefresh();return}
  list();save()});
 $('nAdd').onclick=()=>{const c=$('nNewCat').value.trim().toUpperCase(),t=$('nNewText').value.trim();if(!c||!t)return alert('Enter both a category and note text.');
  if(NOTES.some(n=>n[0]==c&&n[1]==t))return alert('That note already exists in this category.');
@@ -306,6 +316,7 @@ function confirmLeave(reason){const o=sel||selP;if(!o||(sel&&sel.lat==null))retu
  return confirm(m+'\n'+reason)}
 function wantSelect(t){if(sel===t)return true;if(!confirmLeave('Move on to '+(t?t.ref:'another tree')+' anyway?'))return false;select(t);return true}
 let PG=[],selP=null,clip=null,site=null,SM=null,T=[],sel=null,mode=null,G=new Map(),HL=L.layerGroup(),dirty=0;
+let batch=false;const BSEL=new Set();// batch edit mode and its selection
 // ---------- calcs
 const eqd=t=>Math.sqrt([1,2,3,4,5].reduce((s,i)=>s+num(t['d'+i])**2,0));
 const rpr=t=>Math.min(eqd(t)*0.012,15),rpa=t=>Math.PI*rpr(t)**2,off=t=>rpr(t)-(t.cn+t.ce+t.cs+t.cw)/4;
@@ -345,7 +356,7 @@ const PanCtrl=L.Control.extend({options:{position:'topleft'},onAdd(){
  return d}});
 new PanCtrl().addTo(map);
 map.on('moveend',save);
-map.on('click',e=>{
+map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle selection, empty map does nothing */
  const sn=snap(e.latlng);
  if(mode==='add'){if(!confirmLeave('Add a new tree anyway?'))return;const t=newTree();t.lat=sn.lat;t.lon=sn.lng;T.push(t);select(t);save()}
  else if(mode==='queue'){const t=sel&&sel.lat==null?sel:T.find(x=>x.lat==null);if(!t)return setMode('queue');
@@ -369,10 +380,10 @@ function draw(t){
  if(G.has(t)){map.removeLayer(G.get(t));G.delete(t)}
  if(t.lat==null)return;const c=colour(t),s=t===sel,ll=[t.lat,t.lon],pts=[];
  for(let a=0;a<=360;a+=5){const r=a*Math.PI/180,sn=Math.sin(r),cs=Math.cos(r);pts.push(m2ll(t,(sn>=0?t.ce:t.cw)*sn,(cs>=0?t.cn:t.cs)*cs))}
- const go=e=>{if(!mode){L.DomEvent.stopPropagation(e);wantSelect(t)}};
+ const go=e=>{if(!mode){L.DomEvent.stopPropagation(e);batch?bToggle(t):wantSelect(t)}};
  const g=L.layerGroup([
   ...(isSafe()?[]:[L.circle(ll,{radius:rpr(t),color:'#ff0000',weight:2,fill:false,interactive:false})]),
-  L.polygon(pts,{color:c,weight:s?3:2,fillOpacity:s?.25:.1}).on('click',go),
+  L.polygon(pts,BSEL.has(t)?{color:'#00e5ff',fillColor:c,weight:4,fillOpacity:.4}:{color:c,weight:s?3:2,fillOpacity:s?.25:.1}).on('click',go),
   L.circle(ll,{radius:eqd(t)/2000,color:c,weight:1,fillOpacity:.9,interactive:false}),
   L.circleMarker(ll,{radius:4,color:'#fff',weight:1,fillColor:c,fillOpacity:1}).on('click',go).bindTooltip(t.ref,{permanent:true,direction:'right',className:lblCls(t),offset:[6,0]})
  ]).addTo(map);G.set(t,g)}
@@ -416,20 +427,21 @@ function ro(){const t=sel;if(!t){$('ro').textContent='Select a tree on the map o
 function refSeq(r){const m=/\d+$/.exec(r||'');return m?+m[0]:Infinity}
 function natCmp(a,b){return refSeq(a)-refSeq(b)}
 const tdot=o=>{if(!isSafe())return'';const q=qtra(o);return q?`<span class="td" style="background:${TOLC[q.tol]}" title="${q.tol}"></span>`:''};
-function list(){const entries=[...T.map((t,i)=>({ref:t.ref,html:`<div data-i="${i}" class="${t===sel?'s':''}">${t.ref} – ${esc(t.sp||'(no species)')}${tdot(t)} ${t.lat==null?'<i>unplotted</i>':''}</div>`})),
- ...PG.map((p,i)=>({ref:p.ref,html:`<div data-p="${i}" class="${p===selP?'s':''}">▱ ${p.ref} – ${p.kind}${p.sp?' – '+esc(p.sp):''}${tdot(p)}</div>`}))];
+const bcb=o=>batch?`<input type="checkbox" class="lcb" ${BSEL.has(o)?'checked':''}>`:'';
+function list(){const entries=[...T.map((t,i)=>({ref:t.ref,html:`<div data-i="${i}" class="${t===sel||BSEL.has(t)?'s':''}">${bcb(t)}${t.ref} – ${esc(t.sp||'(no species)')}${tdot(t)} ${t.lat==null?'<i>unplotted</i>':''}</div>`})),
+ ...PG.map((p,i)=>({ref:p.ref,html:`<div data-p="${i}" class="${p===selP||BSEL.has(p)?'s':''}">${bcb(p)}▱ ${p.ref} – ${p.kind}${p.sp?' – '+esc(p.sp):''}${tdot(p)}</div>`}))];
  entries.sort((x,y)=>natCmp(x.ref,y.ref));
  $('list').innerHTML=entries.map(e=>e.html).join('')||'<div>Nothing yet – press “＋ Add” or “▱ Polygon”.</div>';banner()}
-$('list').onclick=e=>{const i=e.target.closest('[data-i]');if(i){const t=T[i.dataset.i];if(wantSelect(t)&&t.lat!=null)map.setView([t.lat,t.lon],Math.max(map.getZoom(),20))}};
+$('list').onclick=e=>{const i=e.target.closest('[data-i]');if(i){const t=T[i.dataset.i];if(batch)return bToggle(t);if(wantSelect(t)&&t.lat!=null)map.setView([t.lat,t.lon],Math.max(map.getZoom(),20))}};
 function select(t){const p=sel,q=selP;sel=t;selP=null;if(p&&T.includes(p))draw(p);if(q&&PG.includes(q))drawP(q);if(t)draw(t);fill(t);$('pform').hidden=true;fm.hidden=false;list();handles()}
-function setMode(m){mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);$('bPoly').classList.toggle('on',mode=='poly');$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();banner()}
+function setMode(m){if(batch&&m)exitBatch();mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);$('bPoly').classList.toggle('on',mode=='poly');$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();banner()}
 $('bCopy').onclick=()=>{if(mode=='paste')return setMode('paste');
  if(sel)clip={kind:'tree',data:{...sel}};
  else if(selP)clip={kind:'poly',data:{...selP,ll:selP.ll.map(v=>v.slice())}};
  else return alert('Select a tree or a group/woodland/hedge to copy first');
  setMode('paste')};
 $('bAdd').onclick=()=>setMode('add');$('bMeas').onclick=()=>setMode('meas');
-document.onkeydown=e=>{if(e.key=='Escape'){if(document.querySelector('aside.max'))maxi(false);else setMode(mode)}};
+document.onkeydown=e=>{if(e.key=='Escape'){if(document.querySelector('aside.max'))maxi(false);else if(batch)exitBatch();else setMode(mode)}};
 $('bDel').onclick=()=>{if(selP){if(!confirm('Delete '+selP.ref+'?'))return;const p=selP;if(GP.has(p))map.removeLayer(GP.get(p));GP.delete(p);PG=PG.filter(x=>x!==p);selectP(null);save();return}if(!sel||!confirm('Delete tree '+sel.ref+'?'))return;const t=sel;if(G.has(t))map.removeLayer(G.get(t));G.delete(t);T=T.filter(x=>x!==t);select(null);save()};
 function setSite(x,go){site=x;if(SM){map.removeLayer(SM);SM=null}if(!x)return;
  SM=L.marker([x.lat,x.lon],{interactive:false,icon:L.divIcon({className:'',html:'<div style="font-size:24px;margin:-26px 0 0 -9px">📍</div>',iconSize:[0,0]})}).addTo(map);if(go)map.setView([x.lat,x.lon],19)}
@@ -445,7 +457,7 @@ $('q').onkeydown=async e=>{if(e.key!='Enter')return;const val=e.target.value.tri
  try{const r=await(await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=6&q='+encodeURIComponent(val))).json();
  b._r=r;b.innerHTML=r.length?r.map((x,i)=>`<div data-i="${i}">${x.display_name}</div>`).join(''):'<div>No match – add the town or postcode, or try a grid reference like SU471129</div>';b.hidden=false}catch(x){alert('Search failed (offline?) – a grid reference (e.g. SU471129) works without a connection')}};
 $('res').onclick=e=>{const i=e.target.dataset.i;if(i==null)return;const x=$('res')._r[i];setSite({name:x.display_name,lat:+x.lat,lon:+x.lon},true);$('res').hidden=true;$('q').value='';save();banner()};
-function banner(){const u=T.filter(t=>t.lat==null),n=$('bn');let m='';
+function banner(){if(batch)return bRefresh();const u=T.filter(t=>t.lat==null),n=$('bn');let m='';
  if(mode=='queue'&&sel&&sel.lat==null)m=`Click the map to place ${sel.ref} (${u.length} left) · pick another in the list to skip · Esc to stop`;
  else if(mode=='paste'&&clip)m=`Click the map to paste a copy of ${clip.data.ref} (new ref assigned) · Esc to stop`;
  else if(mode=='poly')m=`Click to add corner points (${pts.length}) · ✓ Finish when done · Esc to cancel`;
@@ -465,7 +477,7 @@ function buf(p){const r=off(p);if(!r)return null;try{const g=turf.buffer(feat(p)
 function drawP(p){if(GP.has(p)){map.removeLayer(GP.get(p));GP.delete(p)}
  const c=colour(p),s=p===selP,ds={Woodland:'10 5',Hedge:'3 5'}[p.kind]||null,ls=[],b=isSafe()?null:buf(p);
  if(b)ls.push(L.polygon(b,{color:'#ff0000',weight:2,fill:false,interactive:false}));
- ls.push(L.polygon(p.ll,{color:c,weight:s?3:2,dashArray:ds,fillOpacity:s?.28:.12}).on('click',e=>{if(!mode){L.DomEvent.stopPropagation(e);wantSelectAny(p,false)}}));
+ ls.push(L.polygon(p.ll,BSEL.has(p)?{color:'#00e5ff',fillColor:c,weight:4,fillOpacity:.4}:{color:c,weight:s?3:2,dashArray:ds,fillOpacity:s?.28:.12}).on('click',e=>{if(!mode){L.DomEvent.stopPropagation(e);batch?bToggle(p):wantSelectAny(p,false)}}));
  const lp=turf.pointOnFeature(feat(p)).geometry.coordinates;
  ls.push(L.circleMarker([lp[1],lp[0]],{radius:1,opacity:0,fillOpacity:0,interactive:false}).bindTooltip(p.ref,{permanent:true,direction:'center',className:lblCls(p)}));
  GP.set(p,L.layerGroup(ls).addTo(map))}
@@ -507,7 +519,7 @@ pf.addEventListener('change',e=>{const el=e.target;if(el.dataset.act!='rec'||!se
 function fillP(p){pf.querySelectorAll('[data-k],[data-act]').forEach(el=>{const v=el.dataset.k?p[el.dataset.k]:'';el.type=='checkbox'?el.checked=v=='Y':el.value=v??''});$('bPNotes').disabled=!p;refresh(pf,p);proro()}
 function proro(){const p=selP;if(!p)return;const c=turf.centerOfMass(feat(p)).geometry.coordinates,e=proj4('EPSG:4326','EPSG:27700',c),a=gA(p),bd=off(p);
  $('pro').innerHTML=`Area <b>${a.toFixed(0)} m²</b> (${(a/1e4).toFixed(3)} ha) · Perimeter <b>${gPer(p).toFixed(0)} m</b><br>${isSafe()?`Avg crown radius <b>${crownR(p).toFixed(2)} m</b>`:`RPR <b>${rpr(p).toFixed(2)} m</b> · Avg crown radius <b>${crownR(p).toFixed(2)} m</b> · RPA buffer from crown extent <b>${bd>=0?'+':''}${bd.toFixed(2)} m</b>${bd<0?' (RPA sits within crown extent)':''}`}<br>${p.ll.length} vertices · Centre OSGB E ${e[0].toFixed(0)} N ${e[1].toFixed(0)}`}
-$('list').addEventListener('click',e=>{const i=e.target.closest('[data-p]');if(i){const p=PG[i.dataset.p];if(!wantSelectAny(p,false))return;map.fitBounds(L.latLngBounds(p.ll).pad(.4),{maxZoom:20})}});
+$('list').addEventListener('click',e=>{const i=e.target.closest('[data-p]');if(i){const p=PG[i.dataset.p];if(batch)return bToggle(p);if(!wantSelectAny(p,false))return;map.fitBounds(L.latLngBounds(p.ll).pad(.4),{maxZoom:20})}});
 let pts=[];const dl=L.layerGroup().addTo(map);
 function draft(m){dl.clearLayers();if(!pts.length)return;L.polyline(m?[...pts,m]:pts,{color:'#ff0',weight:2,dashArray:'4 4',interactive:false}).addTo(dl);
  pts.forEach(v=>L.circleMarker(v,{radius:5,color:'#000',weight:1,fillColor:'#ff0',fillOpacity:1,interactive:false}).addTo(dl))}
@@ -725,16 +737,97 @@ $('tFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)re
   topoPanel()}catch(x){alert('Topo import failed: '+x.message)}finally{save()}};
 (async()=>{const d=await tdbDo('readonly',s=>s.get('topo'));if(!d||!d.txt)return;try{TOPO=topoFromText(d.name,d.txt);topoShow()}catch(x){}})();
 
-$('bNew').onclick=()=>{if(!T.length&&!PG.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
+$('bNew').onclick=()=>{exitBatch();if(!T.length&&!PG.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
  if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s), the project details and the site pin from this device.\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
  try{localStorage.setItem(KEY+'_backup',localStorage.getItem(KEY)||'')}catch(x){}
  select(null);
  T.forEach(t=>{if(G.has(t))map.removeLayer(G.get(t))});G.clear();T=[];
  PG.forEach(p=>{if(GP.has(p))map.removeLayer(GP.get(p))});GP.clear();PG=[];
  META={};setSite(null);$('menu').hidden=true;list();save();openType()};
+
+// ---------- batch edit: tap trees / polygons (or select by rule), then change descriptive fields for all of them at once
+/* Measured fields (stems, crown spreads, height, clearance, FSB height) are deliberately NOT batch-editable. Notes and recommendations are only ever ADDED to. */
+const BN={notes:''};// scratch target for the predefined-notes picker while in batch mode
+let BREC=new Set(),BUNDO=[];
+const bfields=()=>isSafe()?[['sd','Survey date','d'],['sp','Species','sp'],['age','Age class','s',fo('age')],['cond','Physiological condition','s',fo('cond')],
+ ['qs','QTRA - Size','q',QS],['qt','QTRA - Target range','q',QT],['qp','QTRA - Probability of failure','q',QP],['wp','Work priority','s',WP],['st','Status','s',['Proposed','Assigned','Cancelled','Complete']]]
+ :[['sp','Species','sp'],['age','Age class','s',fo('age')],['cond','Physiological condition','s',fo('cond')],['cat','Retention category','s',fo('cat')],['fd','FSB direction','s',fo('fd')]];
+const bItems=()=>[...T,...PG].filter(o=>BSEL.has(o));
+function bSumm(k){const it=bItems();if(!it.length)return'';const m=new Map();it.forEach(o=>{const v=String(o[k]??'').trim()||'blank';m.set(v,(m.get(v)||0)+1)});
+ const e=[...m.entries()].sort((a,b)=>b[1]-a[1]);if(e.length===1)return'All: '+(k==='sd'&&e[0][0]!=='blank'?ukD(e[0][0]):e[0][0]);
+ return'Mixed: '+e.slice(0,4).map(([v,n])=>(k==='sd'&&v!=='blank'?ukD(v):v)+' ×'+n).join(', ')+(e.length>4?', …':'')}
+function buildBatch(){const f=bfields();const ruleF=[['notes','Notes'],...f.filter(x=>x[2]!=='d')];
+ $('bform').innerHTML=`<div class="bhd"><b id="bCount">0 selected</b><span><button id="bAll" type="button">All</button><button id="bNone" type="button">None</button><button id="bInv" type="button">Invert</button></span></div>
+ <div class="bsec">Select by rule</div>
+ <div class="brule"><select id="bRule"><option value="nonotes">No notes recorded</option><option value="incomplete">Incomplete (missing data)</option><option value="trees">Individual trees only</option><option value="polys">Groups / woodlands / hedges only</option>${isSafe()?'<option value="tol">Tolerability is…</option>':''}<option value="eq">Field is…</option></select>
+ <select id="bRF" hidden>${ruleF.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select><select id="bRV" hidden></select>
+ <span><button id="bRSet" type="button">Select</button><button id="bRAdd" type="button">+ Add to selection</button></span></div>
+ <div class="bsec">Change for all selected <small>(fields left on “leave unchanged” are not touched)</small></div>
+ <div id="bFields">${f.map(([k,l,t,o])=>{let i;
+  if(t==='s')i=`<select data-bk="${k}"><option value="">— leave unchanged —</option>${o.map(x=>`<option>${esc(x)}</option>`).join('')}</select>`;
+  else if(t==='q')i=`<select data-bk="${k}"><option value="">— leave unchanged —</option>${o.map(x=>`<option value="${x[0]}">${x[0]} · ${esc(x[2])}</option>`).join('')}</select>`;
+  else if(t==='d')i=`<input type="date" data-bk="${k}">`;else i=`<input data-bk="${k}" list="spl" placeholder="— leave unchanged —">`;
+  return`<label>${l}${i}<small class="bsm" data-bs="${k}"></small></label>`}).join('')}</div>
+ <div class="bsec">Add notes <small>(added to existing notes – duplicates skipped)</small></div>
+ <button id="bNotesPick" type="button">📋 Choose predefined notes…</button><div id="bNotesSel" class="bchips"></div>
+ <input id="bNoteFree" placeholder="…or type another note to add">
+ ${isSafe()?`<div class="bsec">Add recommendations <small>(added to existing)</small></div><div id="bRecs">${REC.map(r=>`<label><input type="checkbox" data-rec="${esc(r)}"> ${esc(r)}${r==='None'?' <small>(only where no recommendation yet)</small>':''}</label>`).join('')}</div>`:''}
+ <div class="brow"><button id="bApply" type="button" class="bgo">Apply to selected</button><button id="bxUndo" type="button">↶ Undo last batch</button></div>
+ <div id="bMsg" class="ro"></div>`;
+ BN.notes='';BREC=new Set();bRefresh()}
+function bRefresh(){if(!batch)return;const n=BSEL.size,el=$('bCount');if(!el)return;const nt=[...BSEL].filter(o=>T.includes(o)).length;
+ el.textContent=n?`${n} selected (${nt} tree${nt==1?'':'s'}, ${n-nt} polygon${n-nt==1?'':'s'})`:'Tap trees or polygons to select them';
+ $('bform').querySelectorAll('[data-bs]').forEach(s=>s.textContent=n?bSumm(s.dataset.bs):'');
+ const chosen=NOTES.map(x=>x[1]).filter((t,i,a)=>a.indexOf(t)===i&&hasNote(BN,t));
+ $('bNotesSel').innerHTML=chosen.length?chosen.map(t=>`<span>${esc(t)}</span>`).join(''):'<i>None chosen</i>';
+ $('bApply').disabled=!n;$('bxUndo').disabled=!BUNDO.length;$('bxUndo').textContent='↶ Undo last batch'+(BUNDO.length?` (${BUNDO.length})`:'');
+ $('bn').hidden=false;$('bn').innerHTML=`Batch edit · <b>${n}</b> selected · tap features to select · Esc or ☑ to finish`}
+function bRuleVals(){const k=$('bRF').value,f=bfields().find(x=>x[0]===k);let vals;
+ if(k==='notes'){vals=[...new Set(NOTES.map(x=>x[1]))];$('bRV').innerHTML=vals.map(v=>`<option value="${esc(v)}">contains: ${esc(v)}</option>`).join('');return}
+ const have=[...new Set([...T,...PG].map(o=>String(o[k]??'').trim()))].sort();
+ $('bRV').innerHTML=have.map(v=>`<option value="${esc(v)}">${v?esc(f&&f[2]==='q'?v+' · '+qdesc(f[3],v):v):'(blank)'}</option>`).join('')}
+function bRuleMatch(o){const r=$('bRule').value;
+ if(r==='nonotes')return!String(o.notes||'').trim();if(r==='incomplete')return!!missingTreeFields(o).length;
+ if(r==='trees')return T.includes(o);if(r==='polys')return PG.includes(o);
+ if(r==='tol'){const q=qtra(o);return(q?q.tol:'')===$('bRV').value}
+ const k=$('bRF').value,v=$('bRV').value;if(k==='notes')return hasNote(o,v);return String(o[k]??'').trim()===v}
+function bRuleUI(){const r=$('bRule').value;$('bRF').hidden=r!=='eq';$('bRV').hidden=!(r==='eq'||r==='tol');
+ if(r==='eq')bRuleVals();else if(r==='tol')$('bRV').innerHTML=['Unacceptable','Tolerable if ALARP (risk reduction required)','Tolerable if ALARP','Broadly Acceptable',''].map(v=>`<option value="${v}">${v||'(not assessed)'}</option>`).join('')}
+function bToggle(o){BSEL.has(o)?BSEL.delete(o):BSEL.add(o);T.includes(o)?draw(o):drawP(o);list();bRefresh()}
+function bRedrawAll(){T.forEach(draw);PG.forEach(drawP);list();bRefresh()}
+function recAdd(o,v){const cur=String(o.rec||'').trim();if(/^none$/i.test(v)){if(!cur)o.rec='None';return}const t=v+'.';if(cur.includes(t))return;o.rec=(cur&&!noWork(o)?cur+' ':'')+t}
+function enterBatch(){if(batch)return;if(!confirmLeave('Start batch editing anyway?'))return;if(mode)setMode(mode);select(null);batch=true;BSEL.clear();
+ $('form').hidden=true;$('pform').hidden=true;$('bform').hidden=false;$('bBatch').classList.add('on');$('ahT').textContent='Batch edit';buildBatch();pane(true);list()}
+function exitBatch(){if(!batch)return;batch=false;BSEL.clear();$('bform').hidden=true;$('bform').innerHTML='';$('form').hidden=false;$('bBatch').classList.remove('on');
+ $('ahT').textContent=isSafe()?'Safety survey data':'BS5837 survey data';bRedrawAll();fill(null);banner()}
+$('bBatch').onclick=()=>batch?exitBatch():enterBatch();
+$('bform').addEventListener('change',e=>{const t=e.target;if(t.id==='bRule'||t.id==='bRF')bRuleUI();if(t.dataset.rec!=null){t.checked?BREC.add(t.dataset.rec):BREC.delete(t.dataset.rec)}});
+$('bform').addEventListener('click',e=>{const id=e.target.id;
+ if(id==='bAll'){[...T.filter(t=>t.lat!=null),...PG].forEach(o=>BSEL.add(o));bRedrawAll()}
+ else if(id==='bNone'){BSEL.clear();bRedrawAll()}
+ else if(id==='bInv'){[...T.filter(t=>t.lat!=null),...PG].forEach(o=>BSEL.has(o)?BSEL.delete(o):BSEL.add(o));bRedrawAll()}
+ else if(id==='bRSet'||id==='bRAdd'){if(id==='bRSet')BSEL.clear();let n=0;[...T.filter(t=>t.lat!=null),...PG].forEach(o=>{if(bRuleMatch(o)){BSEL.add(o);n++}});bRedrawAll();$('bMsg').textContent=n+' feature(s) matched.'}
+ else if(id==='bNotesPick'){notesTarget=BN;$('nFilter').value='';renderNotesList();$('novl').hidden=false}
+ else if(id==='bApply')bApply();
+ else if(id==='bxUndo')bxUndo()});
+function bApply(){const it=bItems();if(!it.length)return;const set={},lab=[];
+ $('bform').querySelectorAll('[data-bk]').forEach(el=>{const v=el.value.trim();if(!v)return;const k=el.dataset.bk,f=bfields().find(x=>x[0]===k);set[k]=v;lab.push(f[1]+' → '+(k==='sd'?ukD(v):f[2]==='q'?v+' · '+qdesc(f[3],v):v))});
+ const notes=[...NOTES.map(x=>x[1]).filter((t,i,a)=>a.indexOf(t)===i&&hasNote(BN,t))],free=$('bNoteFree').value.trim();if(free)notes.push(/[.!?]$/.test(free)?free:free+'.');
+ notes.forEach(t=>lab.push('Notes + “'+t+'”'));const recs=[...BREC];recs.forEach(r=>lab.push('Recommendations + “'+r+'”'));
+ if(!lab.length)return alert('Nothing to change – choose a value for at least one field, or pick notes to add.');
+ if(!confirm(`Apply to ${it.length} selected feature(s)?\n\n• `+lab.join('\n• ')+'\n\nYou can undo this with ↶ Undo last batch.'))return;
+ const keys=[...Object.keys(set),'notes','rec'];BUNDO.push(it.map(o=>({o,b:Object.fromEntries(keys.map(k=>[k,o[k]]))})));if(BUNDO.length>10)BUNDO.shift();
+ let changed=0;it.forEach(o=>{const before=JSON.stringify(keys.map(k=>o[k]));Object.assign(o,set);notes.forEach(t=>toggleNote(o,t,true));recs.forEach(r=>recAdd(o,r));if(JSON.stringify(keys.map(k=>o[k]))!==before)changed++});
+ save();$('bform').querySelectorAll('[data-bk]').forEach(el=>el.value='');$('bNoteFree').value='';BN.notes='';BREC.clear();$('bform').querySelectorAll('[data-rec]').forEach(c=>c.checked=false);bRedrawAll();
+ const inc=it.filter(o=>missingTreeFields(o).length);
+ $('bMsg').innerHTML=`Updated ${changed} of ${it.length} feature(s).`+(inc.length?`<br>${inc.length} of the selected still have missing data: ${inc.slice(0,12).map(o=>esc(o.ref)).join(', ')}${inc.length>12?'…':''} <button id="bSelInc" type="button">Select just these</button>`:'');
+ const b=$('bSelInc');if(b)b.onclick=()=>{BSEL.clear();inc.forEach(o=>BSEL.add(o));bRedrawAll()}}
+function bxUndo(){const u=BUNDO.pop();if(!u)return;if(!confirm(`Undo the last batch change (${u.length} feature(s))?`)){BUNDO.push(u);return}
+ u.forEach(({o,b})=>Object.assign(o,b));save();bRedrawAll();$('bMsg').textContent='Last batch change undone.'}
+
 // ---------- survey type switching
 function dsCount(t){try{const d=JSON.parse(localStorage.getItem(dsKey(t))||'null');return d?(d.T||[]).length+(d.PG||[]).length:0}catch(x){return 0}}
-function switchType(nt){if(nt===ST)return true;if(!confirmLeave('Switch survey type anyway?'))return false;
+function switchType(nt){if(nt===ST)return true;exitBatch();if(!confirmLeave('Switch survey type anyway?'))return false;
  save();if(mode)setMode(mode);select(null);
  T.forEach(t=>{if(G.has(t))map.removeLayer(G.get(t))});G.clear();PG.forEach(p=>{if(GP.has(p))map.removeLayer(GP.get(p))});GP.clear();
  ST=nt;T=[];PG=[];META={};
@@ -851,7 +944,7 @@ $('bExp').onclick=()=>{if(!T.length&&!PG.length)return alert('Nothing to export'
  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Project number',META.pno||''],['Project name',META.pname||'']]),'Project');
  if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');XLSX.writeFile(wb,expName('xlsx'))};
 $('bImp').onclick=()=>$('fi').click();
-$('fi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+$('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value='';if(!f)return;
  try{const wb=XLSX.read(await f.arrayBuffer()),safeBook=isSafetyBook(wb);
   if(safeBook!==isSafe()){const to=safeBook?'safety':'bs5837';if(!confirm(`This looks like a ${safeBook?'Safety (QTRA)':'BS5837'} survey file.\n\nSwitch to the ${safeBook?'Safety':'BS5837'} survey type and import it there?`))return;if(!switchType(to))return}
   const ss=wb.Sheets['Site'];if(ss&&!site){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ss,{header:1}).filter(r=>r[0]).map(r=>[r[0],r[1]]));if(a.Latitude&&a.Longitude)setSite({name:a['Site address']||'',lat:+a.Latitude,lon:+a.Longitude})}
@@ -902,7 +995,7 @@ function wantSelectAny(item,isTree){
  if(selP===item)return true;
  if(!confirmLeave('Move on to '+(item?item.ref:'another feature')+' anyway?'))return false;
  selectP(item);return true}
-function navTree(dir){const list=[...T,...PG].sort((a,b)=>natCmp(a.ref,b.ref));if(!list.length)return;
+function navTree(dir){if(batch)return;const list=[...T,...PG].sort((a,b)=>natCmp(a.ref,b.ref));if(!list.length)return;
  const cur=sel||selP;let i=cur?list.indexOf(cur):-1;i=(i+dir+list.length)%list.length;
  const item=list[i],isTree=T.includes(item);
  if(!wantSelectAny(item,isTree))return;
