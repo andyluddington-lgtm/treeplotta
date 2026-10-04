@@ -282,7 +282,7 @@ const F=[['ref','Tree ref','t'],['sp','Species','sp'],
 ['__s1','Stems','sec'],['n','Number of stems','n'],['d1','Stem diameter 1 (mm)','n',10],['d2','Stem diameter 2 (mm)','n',10],['d3','Stem diameter 3 (mm)','n',10],['d4','Stem diameter 4 (mm)','n',10],['d5','Stem diameter 5 (mm)','n',10],
 ['__s2','Crown spread','sec'],['cn','Crown spread N (m)','n',0.5],['ce','Crown spread E (m)','n',0.5],['cs','Crown spread S (m)','n',0.5],['cw','Crown spread W (m)','n',0.5],
 ['__s3','Height, clearance \u0026 FSB','sec'],['h','Height (m)','n',0.5],['cc','Crown clearance (m)','n',0.5],['fd','FSB direction','s',['N','NE','E','SE','S','SW','W','NW']],['fh','FSB height (m)','n',0.5],
-['__s4','Condition \u0026 category','sec'],['age','Age class','s',['Young','Semi mature','Early mature','Mature','Ancient']],['cond','Physiological condition','s',['Good','Fair','Poor','Dead']],
+['__s4','Condition \u0026 category','sec'],['age','Age class','s',['Young','Semi mature','Early mature','Mature','Veteran','Ancient']],['cond','Physiological condition','s',['Good','Fair','Poor','Dead']],
 ['cat','Retention category','s',['U','A1','A2','A3','B1','B2','B3','C1','C2','C3']],
 ['notes','Notes','a'],['__nb','','nb']];
 const HD=['Ref','Species','Number of stems','Stem diameter 1 (mm)','Stem diameter 2 (mm)','Stem diameter 3 (mm)','Stem diameter 4 (mm)','Stem diameter 5 (mm)','Crown spread north (m)','Crown spread east (m)','Crown spread south (m)','Crown spread west (m)','Crown clearance (m)','Height (m)','Age class','Physiological condition','Notes','FSB Direction','FSB Height (m)','Retention category','RPR (m)','RPA (m2)','Group RPA offset'];
@@ -322,7 +322,7 @@ const STEMS=[['__s1','Stems','sec'],['n','Number of stems','n'],['d1','Stem 1 di
 ['__s2','Crown spread','sec'],['cn','Crown spread N (m)','n',0.5],['ce','Crown spread E (m)','n',0.5],['cs','Crown spread S (m)','n',0.5],['cw','Crown spread W (m)','n',0.5]];
 const SAFE_BODY=[['__s0','Survey','sec'],['sd','Survey date','d'],['sp','Species','sp'],...STEMS,
 ['__s3','Height & clearance','sec'],['h','Height (m)','n',0.5],['cc','Crown clearance (m)','n',0.5],
-['__s4','Condition','sec'],['age','Age class','s',['Young','Semi mature','Early mature','Mature','Ancient']],['cond','Physiological condition','s',['Good','Fair','Poor','Dead']],['notes','Notes','a'],['__nb','','nb'],
+['__s4','Condition','sec'],['age','Age class','s',['Young','Semi mature','Early mature','Mature','Veteran','Ancient']],['cond','Physiological condition','s',['Good','Fair','Poor','Dead']],['notes','Notes','a'],['__nb','','nb'],
 ['__s5','QTRA','sec'],['qs','QTRA - Size','s',qopts(QS),1],['qt','QTRA - Target range','s',qopts(QT,[['Human – pedestrians / occupancy','P'],['Property – repair cost','$'],['Vehicles','V'],['No target','N/A']]),1],['qp','QTRA - Probability of failure','s',qopts(QP),1],['__qr','','qr'],
 ['__s6','Recommendations & action','sec'],['rec','Recommendations','a'],['__rp','','rp'],['wp','Work priority','s',WP],['st','Status','s',['Proposed','Assigned','Cancelled','Complete']],['ph','Photo filename','t',null,1]];
 const SF=[['ref','Tree ref','t'],...SAFE_BODY];
