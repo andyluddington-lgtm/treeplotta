@@ -400,7 +400,7 @@ new PanCtrl().addTo(map);
 map.on('moveend',save);
 map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle selection, empty map does nothing */
  const sn=snap(e.latlng);
- if(mode==='add'){if(!confirmLeave('Add a new tree anyway?'))return;const t=newTree();t.lat=sn.lat;t.lon=sn.lng;T.push(t);select(t);save()}
+ if(mode==='add'){if(!confirmLeave('Add a new tree anyway?'))return;const t=newTree();t.lat=sn.lat;t.lon=sn.lng;T.push(t);setMode('add');/* one tree per press of ＋ Add */select(t);save()}
  else if(mode==='queue'){const t=sel&&sel.lat==null?sel:T.find(x=>x.lat==null);if(!t)return setMode('queue');
   const im=issueText(t);
   if(im&&!confirm(im+'\nPlot anyway?'))return;
@@ -410,7 +410,7 @@ map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle select
  else if(mode==='paste'&&clip&&clip.kind=='poly'){const src=clip.data,c=turf.centerOfMass(feat(src)).geometry.coordinates,dLat=e.latlng.lat-c[1],dLon=e.latlng.lng-c[0];
   const pre={Group:'G',Woodland:'W',Hedge:'H'}[src.kind]||'G';
   const p={...src,ref:nextRef(pre),ll:src.ll.map(v=>[v[0]+dLat,v[1]+dLon])};PG.push(p);selectP(p);save()}
- else if(mode==='poly'){pts.push([e.latlng.lat,e.latlng.lng]);draft();banner()}
+ else if(mode==='poly'){if(pts.length>=3){const a=map.latLngToContainerPoint(pts[0]),b=map.latLngToContainerPoint(e.latlng),tol=matchMedia('(pointer:coarse)').matches?24:14;if(a.distanceTo(b)<=tol)return $('bFin').click()}/* tap the first corner again to finish */pts.push([e.latlng.lat,e.latlng.lng]);draft();banner()}
  else if(mode==='meas'){mpts.push([e.latlng.lat,e.latlng.lng]);mdraw();}
  else if(mode==='addv'&&selP){const c=e.latlng,n=selP.ll,C=map.latLngToLayerPoint(c);let b=0,bd=1e9;n.forEach((a,i)=>{const d=L.LineUtil.pointToSegmentDistance(C,map.latLngToLayerPoint(a),map.latLngToLayerPoint(n[(i+1)%n.length]));if(d<bd){bd=d;b=i}});n.splice(b+1,0,[c.lat,c.lng]);drawP(selP);handlesP();proro();save()}
 
@@ -512,11 +512,11 @@ $('res').onclick=e=>{const i=e.target.dataset.i;if(i==null)return;const x=$('res
 function banner(){if(batch)return bRefresh();const u=T.filter(t=>t.lat==null),n=$('bn');let m='';
  if(mode=='queue'&&sel&&sel.lat==null)m=`Click the map to place ${sel.ref} (${u.length} left) · pick another in the list to skip · Esc to stop`;
  else if(mode=='paste'&&clip)m=`Click the map to paste a copy of ${clip.data.ref} (new ref assigned) · Esc to stop`;
- else if(mode=='poly')m=`Click to add corner points (${pts.length}) · ✓ Finish when done · Esc to cancel`;
+ else if(mode=='poly')m=pts.length>=3?`Corner points: ${pts.length} · tap the green first corner or ✓ Finish to complete · Esc to cancel`:`Tap to add corner points (${pts.length}) · Esc to cancel`;
  else if(mode=='meas')m=mpts.length?`Measuring – total <b>${mtot.toFixed(2)} m</b> (${mpts.length} point${mpts.length>1?'s':''}) · tap to continue · tap 📏 or Esc to stop`:'Tap points along the feature to measure · Esc to cancel';
  else if(mode=='addv')m='Click on or near an edge to add a vertex · Esc to stop';
  else if(mode=='delv')m='Tap a numbered vertex to delete it · Esc to stop';
- else if(mode=='add')m='Click the map to add a tree · Esc to stop';
+ else if(mode=='add')m='Tap the map to place one tree · Esc to cancel';
  else if(site)m='<span>📍 '+esc(site.name)+'</span> <button id="bPinX" title="Clear site pin (map position is kept)">✕</button>';
  n.innerHTML=m;n.hidden=!m;const bx=document.getElementById('bPinX');if(bx)bx.onclick=e=>{e.stopPropagation();setSite(null);save();banner()};const bq=$('bQ');bq.textContent=(mode=='queue'?'⏹':'📍')+(u.length?' '+u.length:'');bq.title=mode=='queue'?'Stop plotting unplotted trees':`Plot unplotted trees (${u.length} left)`;bq.hidden=!u.length&&mode!='queue'}
 $('bQ').onclick=()=>{if(mode=='queue')return setMode('queue');const u=T.find(t=>t.lat==null);if(!u)return;setMode('queue');select(sel&&sel.lat==null?sel:u)};
@@ -577,7 +577,7 @@ function proro(){const p=selP;if(!p)return;const c=turf.centerOfMass(feat(p)).ge
 $('list').addEventListener('click',e=>{const i=e.target.closest('[data-p]');if(i){const p=PG[i.dataset.p];if(batch)return bToggle(p);if(!wantSelectAny(p,false))return;map.fitBounds(L.latLngBounds(p.ll).pad(.4),{maxZoom:20})}});
 let pts=[];const dl=L.layerGroup().addTo(map);
 function draft(m){dl.clearLayers();if(!pts.length)return;L.polyline(m?[...pts,m]:pts,{color:'#ff0',weight:2,dashArray:'4 4',interactive:false}).addTo(dl);
- pts.forEach(v=>L.circleMarker(v,{radius:5,color:'#000',weight:1,fillColor:'#ff0',fillOpacity:1,interactive:false}).addTo(dl))}
+ pts.forEach((v,i)=>L.circleMarker(v,i===0&&pts.length>=3?{radius:9,color:'#000',weight:2,fillColor:'#7cff7c',fillOpacity:1,interactive:false}:{radius:5,color:'#000',weight:1,fillColor:'#ff0',fillOpacity:1,interactive:false}).addTo(dl))}
 function cancelDraft(){pts=[];dl.clearLayers()}
 map.on('mousemove',e=>{snapRing(['add','queue','paste'].includes(mode)&&!(mode=='paste'&&clip&&clip.kind=='poly')?e.latlng:null);if(mode=='poly')draft([e.latlng.lat,e.latlng.lng]);else if(mode=='meas'&&mpts.length)mdraw([e.latlng.lat,e.latlng.lng])});
 let mpts=[],mtot=0;const mdl=L.layerGroup().addTo(map);
