@@ -119,6 +119,7 @@ aside.collapsed>#abody{display:none}
 @media(pointer:coarse){.meas{font-size:14px;padding:6px 10px}.meas b{font-size:17px}}
 #qc .qsps button b{color:#0a7ab0}
 #qc .qchips.qrec{max-height:24vh;gap:4px}#qc .qchips.qrec button{min-height:34px;padding:5px 10px;font-size:12.5px}#qc .qchips.qrec button.on{background:#fff3c4}
+/* Close sits alone in the bottom-right corner, well apart from Import/Export */#npanel .nfoot{align-items:center}#nClose{margin-left:auto;background:#1f3d2b;color:#fff;border-color:#1f3d2b;font-weight:700;padding:8px 18px}#nClose:hover{background:#2a5239}
 @media(pointer:coarse){.h{transform:scale(1.7)}input,select,textarea{font-size:16px}button{min-height:40px}#list div{padding:9px 6px}}
 @media(max-width:800px){main{flex-direction:column}aside{width:100%;height:44%;flex-direction:column;border:0;border-top:1px solid #ccc}#list{max-height:110px}
  #handle{width:auto;height:var(--hw);align-self:stretch}
@@ -201,7 +202,7 @@ aside.max{padding:env(safe-area-inset-top) 0 0 env(safe-area-inset-left)}
 <input id="nFilter" type="search" placeholder="Filter notes&#8230;">
 <div id="nList"></div>
 <div class="row"><input id="nNewCat" placeholder="Category"><input id="nNewText" placeholder="New note text"><button id="nAdd">+ Add</button></div>
-<div class="row"><button id="nImp">&#11014; Import xlsx</button><button id="nExp">&#11015; Export xlsx</button><button id="nClose">Close</button></div>
+<div class="row nfoot"><button id="nImp">&#11014; Import xlsx</button><button id="nExp">&#11015; Export xlsx</button><button id="nClose" type="button">Close</button></div>
 </div></div>
 <input type="file" id="nFi" accept=".xlsx,.xls" hidden>
 <div id="tovl" hidden><div id="tpanel">
