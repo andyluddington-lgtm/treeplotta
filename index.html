@@ -384,11 +384,10 @@ const map=L.map('map',{maxZoom:22,doubleClickZoom:false,zoomSnap:0.25,zoomDelta:
 /* FSB arrows sit in a pane just under the vector layers, so the trunk dot draws over the arrow's base */
 map.createPane('fsbPane').style.zIndex=399;map.getPane('fsbPane').style.pointerEvents='none';
 const FSB_DEG={N:0,NE:45,E:90,SE:135,S:180,SW:225,W:270,NW:315};
-function fsbArrow(t,c){const d=FSB_DEG[String(t.fd||'').trim().toUpperCase()];if(d==null)return null;const L2=matchMedia('(pointer:coarse)').matches?34:28;
- const svg=`<svg width="${2*L2}" height="${2*L2}" viewBox="${-L2} ${-L2} ${2*L2} ${2*L2}" style="overflow:visible;display:block"><g transform="rotate(${d})" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M0 0V${-(L2-9)}" stroke="#fff" stroke-width="6" fill="none"/><path d="M-6 ${-(L2-11)}L0 ${-L2}L6 ${-(L2-11)}Z" stroke="#fff" stroke-width="3" fill="#fff"/>
-  <path d="M0 0V${-(L2-9)}" stroke="${c}" stroke-width="3" fill="none"/><path d="M-6 ${-(L2-11)}L0 ${-L2}L6 ${-(L2-11)}Z" stroke="${c}" stroke-width="1" fill="${c}"/></g></svg>`;
- return L.marker([t.lat,t.lon],{pane:'fsbPane',interactive:false,keyboard:false,icon:L.divIcon({className:'fsbA',html:svg,iconSize:[2*L2,2*L2],iconAnchor:[L2,L2]})})}
+/* Thin arrow drawn to ground scale (metres), so it shrinks as you zoom out: from the trunk edge 1.5 m out, with a 0.4 m head */
+function fsbArrow(t,c){const d=FSB_DEG[String(t.fd||'').trim().toUpperCase()];if(d==null)return[];const a=d*Math.PI/180,ux=Math.sin(a),uy=Math.cos(a),px=uy,py=-ux;
+ const r0=eqd(t)/2000,r1=r0+1.5,hb=r1-0.4,P=(r,w=0)=>m2ll(t,ux*r+px*w,uy*r+py*w),o={pane:'fsbPane',color:c,interactive:false};
+ return[L.polyline([P(0),P(hb)],{...o,weight:1.5,opacity:.9}),L.polygon([P(r1),P(hb,0.2),P(hb,-0.2)],{...o,weight:1,opacity:.9,fillOpacity:.9})]}
 const PH=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.fillStyle='#d8d8d8';x.fillRect(0,0,256,256);x.strokeStyle='#bbb';x.strokeRect(4,4,248,248);x.fillStyle='#888';x.font='13px sans-serif';x.textAlign='center';x.fillText('No offline tile',128,122);x.fillText('at this zoom/area',128,140);return c.toDataURL()})();
 const DB='bs5837_tiles_v1',STORE='tiles';
 function idb(){return new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore(STORE);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
@@ -448,7 +447,7 @@ function draw(t){
   ...(isSafe()?[]:[L.circle(ll,{radius:rpr(t),color:'#ff0000',weight:2,fill:false,interactive:false})]),
   ...(isVet(t)?[L.polygon(vetRing(t).map(p=>m2ll(t,p[0],p[1])),{color:'#ff0000',weight:2,dashArray:'8 5',fill:false,interactive:false})]:[]),
   L.polygon(pts,BSEL.has(t)?{color:'#00e5ff',fillColor:c,weight:4,fillOpacity:.4}:{color:c,weight:s?3:2,fillOpacity:s?.25:.1}).on('click',go),
-  ...(isSafe()?[]:[fsbArrow(t,c)].filter(Boolean)),
+  ...(isSafe()?[]:fsbArrow(t,c)),
   L.circle(ll,{radius:eqd(t)/2000,color:c,weight:1,fillOpacity:.9,interactive:false}),
   L.circleMarker(ll,{radius:4,color:'#fff',weight:1,fillColor:c,fillOpacity:1}).on('click',go).bindTooltip(t.ref,{permanent:true,direction:'right',className:lblCls(t),offset:[6,0]})
  ]).addTo(map);G.set(t,g)}
