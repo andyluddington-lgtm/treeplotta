@@ -53,6 +53,8 @@ aside.collapsed>#abody{display:none}
 #form .w{grid-column:1/3}input,select,textarea{font:13px system-ui;padding:4px;border:1px solid #bbb;border-radius:4px;width:100%}
 #form input[type=checkbox]{width:auto}.ro{background:#eef;padding:6px;border-radius:5px;grid-column:1/3;font-size:12px;line-height:1.5}
 .h{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #d22;font:700 10px/14px sans-serif;text-align:center;cursor:grab}.h.s{border-radius:3px;border-color:#06c}
+/* polygon vertex: small plain white square, full-size touch target kept around it */
+.h.v{background:transparent;border:none;position:relative}.h.v::after{content:'';position:absolute;inset:3px;background:#fff;border:2px solid #06c;border-radius:2px;box-shadow:0 0 2px rgba(0,0,0,.5)}
 .lbl{background:none;border:0;box-shadow:none;font-weight:700;color:#a4c;text-shadow:0 0 3px #fff,0 0 3px #fff}.lblA{color:#00ff00;text-shadow:0 0 3px #000,0 0 3px #000}.lblB{color:#0000ff}.lblC{color:#5b5b5b}.lblU{color:#7f0000}.lbl:before{display:none}
 #res{position:absolute;top:38px;left:0;width:max(100%,300px);max-width:92vw;background:#fff;color:#222;z-index:2000;border-radius:5px;box-shadow:0 2px 8px #0006;max-height:220px;overflow:auto}#res[hidden],#bn[hidden],#bQ[hidden]{display:none}#res div{padding:5px 8px;cursor:pointer;border-bottom:1px solid #eee}#res div:hover{background:#cfe8d5}
 #bn{position:absolute;z-index:1000;top:8px;left:50px;right:60px;margin:auto;width:max-content;max-width:70%;background:#fffd;padding:4px 10px;border-radius:5px;box-shadow:0 1px 5px #0006;pointer-events:none}#bn button{pointer-events:auto}main{position:relative}
@@ -527,7 +529,7 @@ function banner(){if(batch)return bRefresh();const u=T.filter(t=>t.lat==null),n=
  else if(mode=='poly')m=pts.length>=3?`Corner points: ${pts.length} · tap the green first corner or ✓ Finish to complete · Esc to cancel`:`Tap to add corner points (${pts.length}) · Esc to cancel`;
  else if(mode=='meas')m=mpts.length?`Measuring – total <b>${mtot.toFixed(2)} m</b> (${mpts.length} point${mpts.length>1?'s':''}) · tap to continue · tap 📏 or Esc to stop`:'Tap points along the feature to measure · Esc to cancel';
  else if(mode=='addv')m='Click on or near an edge to add a vertex · Esc to stop';
- else if(mode=='delv')m='Tap a numbered vertex to delete it · Esc to stop';
+ else if(mode=='delv')m='Tap a vertex (white square) to delete it · Esc to stop';
  else if(mode=='add')m='Tap the map to place one tree · Esc to cancel';
  else if(site)m='<span>📍 '+esc(site.name)+'</span> <button id="bPinX" title="Clear site pin (map position is kept)">✕</button>';
  n.innerHTML=m;n.hidden=!m;const bx=document.getElementById('bPinX');if(bx)bx.onclick=e=>{e.stopPropagation();setSite(null);save();banner()};const bq=$('bQ');bq.textContent=(mode=='queue'?'⏹':'📍')+(u.length?' '+u.length:'');bq.title=mode=='queue'?'Stop plotting unplotted trees':`Plot unplotted trees (${u.length} left)`;bq.hidden=!u.length&&mode!='queue'}
@@ -550,7 +552,7 @@ function selectP(p){if(p!==selP)qcClose();select(null);selP=p;if(!p){list();retu
 function handlesP(){HL.clearLayers();const p=selP;if(!p)return;const vm=[];
  const qbs=matchMedia('(pointer:coarse)').matches?44:34;
  const mk=(h,ll,z)=>L.marker(ll,{draggable:true,zIndexOffset:z,icon:L.divIcon({className:'',html:h,iconSize:[18,18],iconAnchor:[9,9]})}).addTo(HL);
- p.ll.forEach((v,i)=>{const m=mk('<div class="h s">'+(i+1)+'</div>',v,1000);vm.push(m);
+ p.ll.forEach((v,i)=>{const m=mk('<div class="h v"></div>',v,1000);vm.push(m);
   m.on('drag',e=>{p.ll[i]=[e.latlng.lat,e.latlng.lng];drawP(p);proro()});m.on('dragend',save);
   m.on('click',()=>{if(mode!='delv')return;if(p.ll.length<=3)return alert('A polygon needs at least 3 vertices');p.ll.splice(i,1);drawP(p);handlesP();proro();save()})});
  const cc=turf.centerOfMass(feat(p)).geometry.coordinates,cm=mk('<div class="h">✥</div>',[cc[1],cc[0]],1100);let st;
