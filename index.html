@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-title" content="TreePlotta">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#1f3d2b">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <style>
@@ -198,7 +198,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
 <div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bNote" title="Site note – tap the map for a point note, or draw an area note">📝</button><button id="bLbl" title="Move tree reference labels – tap a tree, then pick a compass direction">🏷</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
 </header>
-<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><div class="mh">Map</div><button id="bOff">📶 Offline maps…</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
+<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><div class="mh">Map</div><button id="bOff">📶 Offline maps…</button><button id="bScr">📐 Screen check</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
@@ -854,6 +854,12 @@ $('tFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)re
   topoPanel()}catch(x){alert('Topo import failed: '+x.message)}finally{save()}};
 (async()=>{const d=await tdbDo('readonly',s=>s.get('topo'));if(!d||!d.txt)return;try{TOPO=topoFromText(d.name,d.txt);topoShow()}catch(x){}})();
 
+/* 📐 Screen check: reports what the device says about its screen, so layout problems on new iOS / iPadOS versions can be fixed precisely */
+$('bScr').onclick=()=>{$('menu').hidden=true;const pr=document.createElement('div');pr.style.cssText='position:fixed;visibility:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)';document.body.appendChild(pr);
+ const c=getComputedStyle(pr),ins=['Top','Right','Bottom','Left'].map(k=>parseFloat(c['padding'+k])||0);pr.remove();const vv=window.visualViewport,R=e=>{const r=e.getBoundingClientRect();return Math.round(r.top)+'–'+Math.round(r.bottom)};
+ alert(['Screen check – screenshot this and send it if the layout looks wrong','',`Window ${innerWidth} × ${innerHeight}`,vv?`Visible area ${Math.round(vv.width)} × ${Math.round(vv.height)}, offset ${Math.round(vv.offsetTop)}`:'',`Screen ${screen.width} × ${screen.height} @${devicePixelRatio}x`,
+  `Safe area T ${ins[0]} R ${ins[1]} B ${ins[2]} L ${ins[3]}`,`Home Screen app: ${navigator.standalone||matchMedia('(display-mode: standalone)').matches?'yes':'no'}`,`Header ${R(document.querySelector('header'))} · Map ${R($('map'))} · Page ${R(document.body)}`,
+  (navigator.userAgent.match(/OS [\d_]+|Version\/[\d.]+/g)||[]).join(' ')].filter(Boolean).join('\n'))};
 $('bNew').onclick=()=>{exitBatch();if(!T.length&&!PG.length&&!SN.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
  if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s), ${SN.length} site note(s), the project details and the site pin from this device.\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
  try{localStorage.setItem(KEY+'_backup',localStorage.getItem(KEY)||'')}catch(x){}
