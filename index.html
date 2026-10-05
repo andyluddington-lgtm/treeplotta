@@ -21,6 +21,7 @@ header{display:flex;flex-direction:column;gap:6px;padding:6px max(8px,env(safe-a
 button{padding:6px 10px;border:1px solid #999;border-radius:6px;background:#fff;cursor:pointer;white-space:nowrap;touch-action:manipulation;flex:none}
 header button{font-size:17px;line-height:1;min-width:40px;min-height:36px;padding:6px 9px;text-align:center}
 header .row.tools button{font-size:18px}
+@media(max-width:520px){header .row.tools{gap:4px}header .row.tools button{min-width:0;flex:1 1 0;padding:6px 2px;font-size:17px}header .row.tools #bType{flex:1.25 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:14px;padding:3px 1px}#bType small{font-size:10px;margin-left:0;line-height:1}}
 button.on{background:#ffd54a;border-color:#a80}button.danger{color:#b00}
 main{flex:1;display:flex;min-height:0}#map{flex:1}#map.add{cursor:crosshair}
 :root{--hw:30px}@media(pointer:coarse){:root{--hw:46px}}/* chevron bar width: wider on touch screens */
@@ -56,6 +57,17 @@ aside.collapsed>#abody{display:none}
 /* polygon vertex: small plain white square, full-size touch target kept around it */
 .h.v{background:transparent;border:none;position:relative}.h.v::after{content:'';position:absolute;inset:3px;background:#fff;border:2px solid #06c;border-radius:2px;box-shadow:0 0 2px rgba(0,0,0,.5)}
 .lbl{background:none;border:0;box-shadow:none;font-weight:700;color:#a4c;text-shadow:0 0 3px #fff,0 0 3px #fff}.lblA{color:#00ff00;text-shadow:0 0 3px #000,0 0 3px #000}.lblB{color:#0000ff}.lblC{color:#5b5b5b}.lblU{color:#7f0000}.lbl:before{display:none}
+#ncard{position:fixed;z-index:1500;background:#fff;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.35);padding:10px;font:14px system-ui,sans-serif;width:300px;max-width:calc(100vw - 16px);box-sizing:border-box}
+#ncard .lh{display:flex;align-items:center;gap:6px;margin-bottom:6px}#ncard .lh b{flex:1;color:#b34700}#ncard .lh button{border:0;background:none;font-size:18px;min-height:0;padding:2px 6px;cursor:pointer}
+#ncard textarea{width:100%;box-sizing:border-box;font:16px system-ui,sans-serif;padding:7px;border:1px solid #bbb;border-radius:6px;resize:vertical;min-height:84px}
+#ncard .nmeta{font-size:11px;color:#666;margin:5px 0 8px}#ncard .nbtns{display:flex;gap:8px}#ncard .nbtns button{flex:1;min-height:40px;border-radius:8px;border:1px solid #bbb;background:#f4f4f4;font-weight:600;cursor:pointer}
+#ncard .nbtns .nok{background:#1f4d36;color:#fff;border-color:#1f4d36}#ncard .nbtns .ndel{color:#b00}
+.snpt{width:18px;height:18px;border-radius:50%;background:#ff6f00;border:2px solid #fff;box-shadow:0 0 3px rgba(0,0,0,.6);color:#fff;font:700 11px/18px sans-serif;text-align:center;cursor:pointer}.snpt.on{border-color:#00e5ff;transform:scale(1.25)}
+.lblN{color:#ff6f00;text-shadow:0 0 3px #000,0 0 3px #000}
+#lpad{position:fixed;z-index:1500;background:#fff;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.35);padding:8px;font:14px system-ui,sans-serif;width:186px}
+#lpad .lh{display:flex;align-items:center;gap:6px;margin-bottom:6px}#lpad .lh b{flex:1}#lpad .lh button{border:0;background:none;font-size:18px;min-height:0;padding:2px 6px;cursor:pointer}
+#lpad .lg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}#lpad .lg button{height:48px;min-height:48px;border:1px solid #bbb;border-radius:8px;background:#f4f4f4;font-weight:700;font-size:15px;cursor:pointer;padding:0}
+#lpad .lg button.on{background:#1f4d36;color:#fff;border-color:#1f4d36}#lpad .lg button.auto{font-size:11px;font-weight:600}#lpad small{display:block;color:#666;margin-top:6px;font-size:11px;line-height:1.3}
 #res{position:absolute;top:38px;left:0;width:max(100%,300px);max-width:92vw;background:#fff;color:#222;z-index:2000;border-radius:5px;box-shadow:0 2px 8px #0006;max-height:220px;overflow:auto}#res[hidden],#bn[hidden],#bQ[hidden]{display:none}#res div{padding:5px 8px;cursor:pointer;border-bottom:1px solid #eee}#res div:hover{background:#cfe8d5}
 #bn{position:absolute;z-index:1000;top:8px;left:50px;right:60px;margin:auto;width:max-content;max-width:70%;background:#fffd;padding:4px 10px;border-radius:5px;box-shadow:0 1px 5px #0006;pointer-events:none}#bn button{pointer-events:auto}main{position:relative}
 #pk{width:auto;flex:none;padding:6px;border-radius:6px}
@@ -183,7 +195,7 @@ aside.max{padding:env(safe-area-inset-top) 0 0 env(safe-area-inset-left)}
 <div class="row"><b class="ttl">🌳 <span>TreePlotta</span></b>
 <span class="sr"><input id="q" type="search" placeholder="Search site address / postcode ⏎"><div id="res" hidden></div></span>
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
-<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
+<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bNote" title="Site note – tap the map for a point note, or draw an area note">📝</button><button id="bLbl" title="Move tree reference labels – tap a tree, then pick a compass direction">🏷</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
 </header>
 <div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><div class="mh">Map</div><button id="bOff">📶 Offline maps…</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
@@ -360,6 +372,7 @@ function issueText(o){const miss=missingTreeFields(o),chk=limitIssues(o);let m='
 function confirmLeave(reason){const o=sel||selP;if(!o||(sel&&sel.lat==null))return true;const m=issueText(o);if(!m)return true;
  return confirm(m+'\n'+reason)}
 function wantSelect(t){if(sel===t)return true;if(!confirmLeave('Move on to '+(t?t.ref:'another tree')+' anyway?'))return false;select(t);return true}
+let SN=[],selN=null,noteDraw=false;/* site notes */
 let PG=[],selP=null,clip=null,site=null,SM=null,T=[],sel=null,mode=null,G=new Map(),HL=L.layerGroup(),dirty=0;
 let batch=false;const BSEL=new Set();// batch edit mode and its selection
 // ---------- calcs
@@ -384,6 +397,10 @@ const map=L.map('map',{maxZoom:22,doubleClickZoom:false,zoomSnap:0.25,zoomDelta:
 /* FSB arrows sit in a pane just under the vector layers, so the trunk dot draws over the arrow's base */
 map.createPane('fsbPane').style.zIndex=399;map.getPane('fsbPane').style.pointerEvents='none';
 const FSB_DEG={N:0,NE:45,E:90,SE:135,S:180,SW:225,W:270,NW:315};
+/* Tree reference label position: set by the 🏷 tool (t.lp), otherwise opposite the FSB arrow (BS5837), otherwise east */
+const LBL_OPP={N:'S',NE:'SW',E:'W',SE:'NW',S:'N',SW:'NE',W:'E',NW:'SE'};
+function lblDir(t){const lp=String(t.lp||'').toUpperCase();if(FSB_DEG[lp]!=null)return lp;const f=String(t.fd||'').trim().toUpperCase();return!isSafe()&&LBL_OPP[f]?LBL_OPP[f]:'E'}
+const LBL_TT={E:['right',[6,0]],W:['left',[-6,0]],N:['top',[0,-3]],S:['bottom',[0,3]],NE:['right',[2,-11]],SE:['right',[2,11]],NW:['left',[-2,-11]],SW:['left',[-2,11]]};
 /* Thin arrow drawn to ground scale (metres), so it shrinks as you zoom out: from the trunk edge 1.5 m out, with a 0.4 m head */
 function fsbArrow(t,c){const d=FSB_DEG[String(t.fd||'').trim().toUpperCase()];if(d==null)return[];const a=d*Math.PI/180,ux=Math.sin(a),uy=Math.cos(a),px=uy,py=-ux;
  const r0=eqd(t)/2000,r1=r0+1.5,hb=r1-0.4,P=(r,w=0)=>m2ll(t,ux*r+px*w,uy*r+py*w),o={pane:'fsbPane',color:c,interactive:false};
@@ -431,6 +448,7 @@ map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle select
   const pre={Group:'G',Woodland:'W',Hedge:'H'}[src.kind]||'G';
   const p={...src,ref:nextRef(pre),ll:src.ll.map(v=>[v[0]+dLat,v[1]+dLon])};PG.push(p);selectP(p);save()}
  else if(mode==='poly'){if(pts.length>=3){const a=map.latLngToContainerPoint(pts[0]),b=map.latLngToContainerPoint(e.latlng),tol=matchMedia('(pointer:coarse)').matches?24:14;if(a.distanceTo(b)<=tol)return $('bFin').click()}/* tap the first corner again to finish */pts.push([e.latlng.lat,e.latlng.lng]);draft();banner()}
+ else if(mode==='note'){const n={ref:noteRef(),kind:'Point',notes:'',lat:e.latlng.lat,lon:e.latlng.lng};SN.push(n);setMode('note');nSelect(n,true);save()}
  else if(mode==='meas'){mpts.push([e.latlng.lat,e.latlng.lng]);mdraw();}
  else if(mode==='addv'&&selP){const c=e.latlng,n=selP.ll,C=map.latLngToLayerPoint(c);let b=0,bd=1e9;n.forEach((a,i)=>{const d=L.LineUtil.pointToSegmentDistance(C,map.latLngToLayerPoint(a),map.latLngToLayerPoint(n[(i+1)%n.length]));if(d<bd){bd=d;b=i}});n.splice(b+1,0,[c.lat,c.lng]);drawP(selP);handlesP();proro();save()}
 
@@ -442,14 +460,14 @@ function draw(t){
  if(G.has(t)){map.removeLayer(G.get(t));G.delete(t)}
  if(t.lat==null)return;const c=colour(t),s=t===sel,ll=[t.lat,t.lon],pts=[];
  for(let a=0;a<=360;a+=5){const r=a*Math.PI/180,sn=Math.sin(r),cs=Math.cos(r);pts.push(m2ll(t,(sn>=0?t.ce:t.cw)*sn,(cs>=0?t.cn:t.cs)*cs))}
- const go=e=>{if(!mode){L.DomEvent.stopPropagation(e);batch?bToggle(t):wantSelect(t)}};
+ const go=e=>{if(mode=='label'){L.DomEvent.stopPropagation(e);return lpOpen(t)}if(!mode){L.DomEvent.stopPropagation(e);batch?bToggle(t):wantSelect(t)}};
  const g=L.layerGroup([
   ...(isSafe()?[]:[L.circle(ll,{radius:rpr(t),color:'#ff0000',weight:2,fill:false,interactive:false})]),
   ...(isVet(t)?[L.polygon(vetRing(t).map(p=>m2ll(t,p[0],p[1])),{color:'#ff0000',weight:2,dashArray:'8 5',fill:false,interactive:false})]:[]),
   L.polygon(pts,BSEL.has(t)?{color:'#00e5ff',fillColor:c,weight:4,fillOpacity:.4}:{color:c,weight:s?3:2,fillOpacity:s?.25:.1}).on('click',go),
   ...(isSafe()?[]:fsbArrow(t,c)),
   L.circle(ll,{radius:eqd(t)/2000,color:c,weight:1,fillOpacity:.9,interactive:false}),
-  L.circleMarker(ll,{radius:4,color:'#fff',weight:1,fillColor:c,fillOpacity:1}).on('click',go).bindTooltip(t.ref,{permanent:true,direction:'right',className:lblCls(t),offset:[6,0]})
+  L.circleMarker(ll,{radius:4,color:'#fff',weight:1,fillColor:c,fillOpacity:1}).on('click',go).bindTooltip(t.ref,{permanent:true,direction:LBL_TT[lblDir(t)][0],className:lblCls(t),offset:LBL_TT[lblDir(t)][1]})
  ]).addTo(map);G.set(t,g)}
 // crown-spread drag readout: dashed line from trunk centre to the node and a small distance label just above it
 const measL=L.layerGroup().addTo(map);let measT=null;
@@ -507,16 +525,32 @@ function list(){const entries=[...T.map((t,i)=>({ref:t.ref,html:`<div data-i="${
  entries.sort((x,y)=>natCmp(x.ref,y.ref));
  $('list').innerHTML=entries.map(e=>e.html).join('')||'<div>Nothing yet – press “＋ Add” or “▱ Polygon”.</div>';banner()}
 $('list').onclick=e=>{const i=e.target.closest('[data-i]');if(i){const t=T[i.dataset.i];if(batch)return bToggle(t);if(wantSelect(t)&&t.lat!=null)map.setView([t.lat,t.lon],Math.max(map.getZoom(),20))}};
-function select(t){if(t!==sel)qcClose();const p=sel,q=selP;sel=t;selP=null;if(p&&T.includes(p))draw(p);if(q&&PG.includes(q))drawP(q);if(t)draw(t);fill(t);$('pform').hidden=true;fm.hidden=false;list();handles()}
-function setMode(m){qcClose();if(batch&&m)exitBatch();mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);$('bPoly').classList.toggle('on',mode=='poly');$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();banner()}
+function select(t){if(t!==sel)qcClose();if(selN)nDesel();const p=sel,q=selP;sel=t;selP=null;if(p&&T.includes(p))draw(p);if(q&&PG.includes(q))drawP(q);if(t)draw(t);fill(t);$('pform').hidden=true;fm.hidden=false;list();handles()}
+function setMode(m){qcClose();if(batch&&m)exitBatch();mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);if(mode!='poly')noteDraw=false;$('bPoly').classList.toggle('on',mode=='poly'&&!noteDraw);$('bNote').classList.toggle('on',mode=='note'||(mode=='poly'&&noteDraw));$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();$('bLbl').classList.toggle('on',mode=='label');if(mode!='label')lpClose();banner()}
 $('bCopy').onclick=()=>{if(mode=='paste')return setMode('paste');
  if(sel)clip={kind:'tree',data:{...sel}};
  else if(selP)clip={kind:'poly',data:{...selP,ll:selP.ll.map(v=>v.slice())}};
  else return alert('Select a tree or a group/woodland/hedge to copy first');
  setMode('paste')};
 $('bAdd').onclick=()=>setMode('add');$('bMeas').onclick=()=>setMode('meas');
+// ---------- 🏷 label tool: tap a tree, then a compass pad sets where its reference label sits (stored as t.lp; Auto clears it)
+const lpBox=document.createElement('div');lpBox.id='lpad';lpBox.hidden=true;document.body.appendChild(lpBox);let lpT=null;
+$('bLbl').onclick=()=>{setMode('label');if(mode=='label'&&sel&&sel.lat!=null)lpOpen(sel)};
+function lpClose(){lpBox.hidden=true;lpT=null}
+function lpOpen(t){lpT=t;lpRender();lpBox.hidden=false;lpPlace()}
+function lpRender(){const t=lpT;if(!t)return;const cur=String(t.lp||'').toUpperCase(),auto=lblDir({...t,lp:''});
+ lpBox.innerHTML=`<div class="lh"><b>${esc(t.ref)} label</b><button type="button" data-x="1" title="Close">✕</button></div><div class="lg">`+
+ ['NW','N','NE','W','','E','SW','S','SE'].map(d=>d?`<button type="button" data-d="${d}" class="${(cur||auto)===d?'on':''}">${d}</button>`:`<button type="button" data-d="" class="auto${cur?'':' on'}" title="Default position">Auto</button>`).join('')+
+ `</div><small>${cur?'Set to '+cur+' · Auto puts it back':'Auto: '+(!isSafe()&&String(t.fd||'').trim()?'opposite the FSB arrow':'east of the trunk')}. Tap another tree to move its label.</small>`}
+function lpPlace(){if(lpBox.hidden||!lpT)return;const r=$('map').getBoundingClientRect(),p=map.latLngToContainerPoint([lpT.lat,lpT.lon]),w=lpBox.offsetWidth,h=lpBox.offsetHeight;
+ if(r.width<560){lpBox.style.left=Math.max(8,(innerWidth-w)/2)+'px';lpBox.style.top=Math.max(r.top+8,r.bottom-h-8)+'px';const ty=r.top+p.y,lim=r.bottom-h-60;if(ty>lim)map.panBy([0,ty-lim],{animate:false});return}
+ let x=r.left+p.x+70;if(x+w>r.right-8)x=r.left+p.x-70-w;x=Math.max(r.left+8,Math.min(x,r.right-w-8));let y=r.top+p.y-h/2;y=Math.max(r.top+8,Math.min(y,r.bottom-h-8));lpBox.style.left=x+'px';lpBox.style.top=y+'px'}
+lpBox.addEventListener('pointerdown',e=>e.stopPropagation());
+lpBox.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('button');if(!b||!lpT)return;if(b.dataset.x)return setMode('label');
+ const d=b.dataset.d;if(d)lpT.lp=d;else delete lpT.lp;draw(lpT);lpRender();save()});
+map.on('move zoom',()=>{if(!lpBox.hidden){const r=$('map').getBoundingClientRect();if(r.width>=560)lpPlace()}});
 document.onkeydown=e=>{if(e.key=='Escape'){if(document.querySelector('aside.max'))maxi(false);else if(batch)exitBatch();else setMode(mode)}};
-$('bDel').onclick=()=>{if(selP){if(!confirm('Delete '+selP.ref+'?'))return;const p=selP;if(GP.has(p))map.removeLayer(GP.get(p));GP.delete(p);PG=PG.filter(x=>x!==p);selectP(null);save();return}if(!sel||!confirm('Delete tree '+sel.ref+'?'))return;const t=sel;if(G.has(t))map.removeLayer(G.get(t));G.delete(t);T=T.filter(x=>x!==t);select(null);save()};
+$('bDel').onclick=()=>{if(selN)return nDelete();if(selP){if(!confirm('Delete '+selP.ref+'?'))return;const p=selP;if(GP.has(p))map.removeLayer(GP.get(p));GP.delete(p);PG=PG.filter(x=>x!==p);selectP(null);save();return}if(!sel||!confirm('Delete tree '+sel.ref+'?'))return;const t=sel;if(G.has(t))map.removeLayer(G.get(t));G.delete(t);T=T.filter(x=>x!==t);select(null);save()};
 function setSite(x,go){site=x;if(SM){map.removeLayer(SM);SM=null}if(!x)return;
  SM=L.marker([x.lat,x.lon],{interactive:false,icon:L.divIcon({className:'',html:'<div style="font-size:24px;margin:-26px 0 0 -9px">📍</div>',iconSize:[0,0]})}).addTo(map);if(go)map.setView([x.lat,x.lon],19)}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -534,11 +568,13 @@ $('res').onclick=e=>{const i=e.target.dataset.i;if(i==null)return;const x=$('res
 function banner(){if(batch)return bRefresh();const u=T.filter(t=>t.lat==null),n=$('bn');let m='';
  if(mode=='queue'&&sel&&sel.lat==null)m=`Click the map to place ${sel.ref} (${u.length} left) · pick another in the list to skip · Esc to stop`;
  else if(mode=='paste'&&clip)m=`Click the map to paste a copy of ${clip.data.ref} (new ref assigned) · Esc to stop`;
- else if(mode=='poly')m=pts.length>=3?`Corner points: ${pts.length} · tap the green first corner or ✓ Finish to complete · Esc to cancel`:`Tap to add corner points (${pts.length}) · Esc to cancel`;
+ else if(mode=='note')m='Tap the map to drop a point note · <button id="bNArea" type="button">▱ Draw an area note instead</button> · Esc to cancel';
+ else if(mode=='poly')m=(noteDraw?'<b>Area site note</b> · ':'')+(pts.length>=3?`Corner points: ${pts.length} · tap the green first corner or ✓ Finish to complete · Esc to cancel`:`Tap to add corner points (${pts.length}) · Esc to cancel`);
  else if(mode=='meas')m=mpts.length?`Measuring – total <b>${mtot.toFixed(2)} m</b> (${mpts.length} point${mpts.length>1?'s':''}) · tap to continue · tap 📏 or Esc to stop`:'Tap points along the feature to measure · Esc to cancel';
  else if(mode=='addv')m='Click on or near an edge to add a vertex · Esc to stop';
  else if(mode=='delv')m='Tap a vertex (white square) to delete it · Esc to stop';
  else if(mode=='add')m='Tap the map to place one tree · Esc to cancel';
+ else if(mode=='label')m='Tap a tree, then pick where its reference label goes · tap 🏷 or Esc to finish';
  else if(site)m='<span>📍 '+esc(site.name)+'</span> <button id="bPinX" title="Clear site pin (map position is kept)">✕</button>';
  n.innerHTML=m;n.hidden=!m;const bx=document.getElementById('bPinX');if(bx)bx.onclick=e=>{e.stopPropagation();setSite(null);save();banner()};const bq=$('bQ');bq.textContent=(mode=='queue'?'⏹':'📍')+(u.length?' '+u.length:'');bq.title=mode=='queue'?'Stop plotting unplotted trees':`Plot unplotted trees (${u.length} left)`;bq.hidden=!u.length&&mode!='queue'}
 $('bQ').onclick=()=>{if(mode=='queue')return setMode('queue');const u=T.find(t=>t.lat==null);if(!u)return;setMode('queue');select(sel&&sel.lat==null?sel:u)};
@@ -616,7 +652,8 @@ function mdraw(cursor){mdl.clearLayers();if(!mpts.length){mtot=0;banner();return
  banner()}
 function cancelMeas(){mpts=[];mtot=0;mdl.clearLayers()}
 $('bPoly').onclick=()=>setMode('poly');$('bUndo').onclick=()=>{pts.pop();draft();banner()};$('bAV').onclick=()=>setMode('addv');$('bDV').onclick=()=>setMode('delv');
-$('bFin').onclick=()=>{if(pts.length<3)return alert('Add at least 3 points');if(!confirmLeave('Create the new polygon anyway?'))return;const kind='Group';
+$('bFin').onclick=()=>{if(pts.length<3)return alert('Add at least 3 points');
+ if(noteDraw){const n={ref:noteRef(),kind:'Area',notes:'',ll:pts.slice()};SN.push(n);cancelDraft();setMode('poly');nSelect(n,true);save();return}if(!confirmLeave('Create the new polygon anyway?'))return;const kind='Group';
  const p={ref:nextRef('G'),kind,sp:'',n:1,d1:300,d2:0,d3:0,d4:0,d5:0,h:0,cn:3,ce:3,cs:3,cw:3,cc:0,age:'',cond:'',notes:'',fd:'',fh:0,cat:'',...extraFields(),ll:pts.slice()};PG.push(p);cancelDraft();setMode('poly');selectP(p);save();pf.querySelector('[data-k=kind]').focus()};
 
 // ---------- offline maps
@@ -663,10 +700,11 @@ $('bLoc').onclick=()=>{
  },e=>{alert('Could not get your location: '+e.message+(location.protocol=='file:'?' \u2013 on-device location often needs the page to be opened over https rather than as a local file.':''));locStop()},
  {enableHighAccuracy:true,maximumAge:3000,timeout:20000})};
 // ---------- persistence
-function save(){try{localStorage.setItem(dsKey(),JSON.stringify({T,PG,site,meta:META,v:[map.getCenter(),map.getZoom()]}));localStorage.setItem(TYPE_KEY,ST);$('st').textContent='Saved locally '+new Date().toLocaleTimeString('en-GB')+' · '+T.length+' trees';$('dot').className='';$('dot').title=$('st').textContent}catch(x){$('st').textContent='⚠ Local save failed – export xlsx!';$('dot').className='bad';$('dot').title=$('st').textContent}}
+function save(){try{localStorage.setItem(dsKey(),JSON.stringify({T,PG,SN,site,meta:META,v:[map.getCenter(),map.getZoom()]}));localStorage.setItem(TYPE_KEY,ST);$('st').textContent='Saved locally '+new Date().toLocaleTimeString('en-GB')+' · '+T.length+' trees';$('dot').className='';$('dot').title=$('st').textContent}catch(x){$('st').textContent='⚠ Local save failed – export xlsx!';$('dot').className='bad';$('dot').title=$('st').textContent}}
 addEventListener('beforeunload',e=>{if(dirty){save()}});
 function load(){try{const ty=localStorage.getItem(TYPE_KEY);if(ty==='safety'&&ST!=='safety'){ST='safety';buildForms()}}catch(x){}
- try{const d=JSON.parse(localStorage.getItem(dsKey())||'null');if(d){T=d.T||[];PG=d.PG||[];META=d.meta||{};if(d.site)setSite(d.site);if(d.v)map.setView(d.v[0],d.v[1])}}catch(x){}
+ try{const d=JSON.parse(localStorage.getItem(dsKey())||'null');if(d){T=d.T||[];PG=d.PG||[];SN=d.SN||[];META=d.meta||{};if(d.site)setSite(d.site);if(d.v)map.setView(d.v[0],d.v[1])}}catch(x){}
+ SN.forEach(drawN);
  T.forEach(t=>{if(t.lat===0&&t.lon===0)t.lat=t.lon=null;draw(t)});PG.forEach(drawP);list();fill(null);save();
  if(!T.length&&!PG.length&&metaMissing(META).length)setTimeout(openType,0)}
 // ---------- snapping: new / pasted / plotted / dragged trees snap to topo circle centres
@@ -815,12 +853,12 @@ $('tFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)re
   topoPanel()}catch(x){alert('Topo import failed: '+x.message)}finally{save()}};
 (async()=>{const d=await tdbDo('readonly',s=>s.get('topo'));if(!d||!d.txt)return;try{TOPO=topoFromText(d.name,d.txt);topoShow()}catch(x){}})();
 
-$('bNew').onclick=()=>{exitBatch();if(!T.length&&!PG.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
- if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s), the project details and the site pin from this device.\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
+$('bNew').onclick=()=>{exitBatch();if(!T.length&&!PG.length&&!SN.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
+ if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s), ${SN.length} site note(s), the project details and the site pin from this device.\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
  try{localStorage.setItem(KEY+'_backup',localStorage.getItem(KEY)||'')}catch(x){}
  select(null);
  T.forEach(t=>{if(G.has(t))map.removeLayer(G.get(t))});G.clear();T=[];
- PG.forEach(p=>{if(GP.has(p))map.removeLayer(GP.get(p))});GP.clear();PG=[];
+ PG.forEach(p=>{if(GP.has(p))map.removeLayer(GP.get(p))});GP.clear();PG=[];nClearAll();
  META={};setSite(null);$('menu').hidden=true;list();save();openType()};
 
 // ---------- batch edit: tap trees / polygons (or select by rule), then change descriptive fields for all of them at once
@@ -1055,11 +1093,11 @@ qcBox.addEventListener('focusout',()=>setTimeout(()=>{qcPlace();if(!qcKb())setTi
 function dsCount(t){try{const d=JSON.parse(localStorage.getItem(dsKey(t))||'null');return d?(d.T||[]).length+(d.PG||[]).length:0}catch(x){return 0}}
 function switchType(nt){if(nt===ST)return true;exitBatch();qcClose();if(!confirmLeave('Switch survey type anyway?'))return false;
  save();if(mode)setMode(mode);select(null);
- T.forEach(t=>{if(G.has(t))map.removeLayer(G.get(t))});G.clear();PG.forEach(p=>{if(GP.has(p))map.removeLayer(GP.get(p))});GP.clear();
+ T.forEach(t=>{if(G.has(t))map.removeLayer(G.get(t))});G.clear();PG.forEach(p=>{if(GP.has(p))map.removeLayer(GP.get(p))});GP.clear();nClearAll();
  ST=nt;T=[];PG=[];META={};
- try{const d=JSON.parse(localStorage.getItem(dsKey())||'null');if(d){T=d.T||[];PG=d.PG||[];META=d.meta||{};if(d.site)setSite(d.site)}}catch(x){}
+ try{const d=JSON.parse(localStorage.getItem(dsKey())||'null');if(d){T=d.T||[];PG=d.PG||[];SN=d.SN||[];META=d.meta||{};if(d.site)setSite(d.site)}}catch(x){}
  T.forEach(t=>{if(t.lat===0&&t.lon===0)t.lat=t.lon=null;if(isSafe()&&t.sd===undefined)Object.assign(t,extraFields())});PG.forEach(p=>{if(isSafe()&&p.sd===undefined)Object.assign(p,extraFields())});
- buildForms();T.forEach(draw);PG.forEach(drawP);list();fill(null);save();return true}
+ buildForms();T.forEach(draw);PG.forEach(drawP);SN.forEach(drawN);list();fill(null);save();return true}
 const META_F={safety:[['sid','Site ID'],['sname','Site name'],['reason','Reason for survey']],bs5837:[['pno','Project number'],['pname','Project name']]};
 function metaMissing(m,t){return META_F[t||ST].filter(([k])=>!String((m||{})[k]||'').trim()).map(([,l])=>l)}
 function tChk(){const safe=document.querySelector('input[name=stype]:checked').value==='safety';$('tSafe').hidden=!safe;$('tBs').hidden=safe;
@@ -1085,7 +1123,7 @@ function projOK(){const miss=metaMissing(META);if(!miss.length)return true;retur
 // ---------- DXF (AutoCAD R12 ASCII: opens in all AutoCAD versions incl. LT)
 function stamp(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())}
 function dxf(){
- const P=T.filter(t=>t.lat!=null);if(!P.length&&!PG.length)return alert('Nothing plotted to export');if(!projOK())return;
+ const P=T.filter(t=>t.lat!=null);if(!P.length&&!PG.length&&!SN.length)return alert('Nothing plotted to export');if(!projOK())return;
  const AC={A:3,B:5,C:251,U:14},L={};let e='';const E=(c,v)=>{e+=c+'\n'+v+'\n'};
  const lay=(f,c,col)=>{const n=`TREE_${f}_${c}`;L[n]=/RPA$|VETBUFFER$/.test(f)?1:col;return n},f3=v=>(+v).toFixed(3);
  const cls=o=>{if(isSafe()){const q=qtra(o),t=q&&q.tol;return t=='Unacceptable'?['UNACCEPTABLE',1]:t=='Tolerable if ALARP (risk reduction required)'?['ALARP_REDUCE',30]:t=='Tolerable if ALARP'?['ALARP',2]:t=='Broadly Acceptable'?['ACCEPTABLE',3]:['NONE',7]}const k=(o.cat||'')[0];return AC[k]?[k,AC[k]]:['NONE',7]};
@@ -1097,12 +1135,14 @@ function dxf(){
   E(0,'SEQEND');E(8,n);
   n=lay('TRUNK',c,col);E(0,'POLYLINE');E(8,n);E(62,col);E(66,1);E(70,1);E(10,0);E(20,0);E(30,0);
   [-1,1].forEach(s=>{E(0,'VERTEX');E(8,n);E(10,f3(x+s*td/2));E(20,f3(y));E(30,0);E(40,f3(td));E(41,f3(td));E(42,1)});E(0,'SEQEND');E(8,n);
-  n=lay('REF',c,col);E(0,'TEXT');E(8,n);E(62,col);E(10,f3(x+td+0.3));E(20,f3(y+0.3));E(30,0);E(40,1);E(1,t.ref);E(7,'TREEREF')});
+  n=lay('REF',c,col);{const a=FSB_DEG[lblDir(t)]*Math.PI/180,ux=Math.sin(a),uy=Math.cos(a),gx=x+ux*(td/2+0.4),gy=y+uy*(td/2+0.4),h=ux>0.1?0:ux<-0.1?2:1,v=uy>0.1?1:uy<-0.1?3:2;
+   E(0,'TEXT');E(8,n);E(62,col);E(10,f3(gx));E(20,f3(gy));E(30,0);E(40,1);E(1,t.ref);E(7,'TREEREF');E(72,h);E(11,f3(gx));E(21,f3(gy));E(31,0);E(73,v)}});
  PG.forEach(p=>{const[c,col]=cls(p),pl=(n,cl,ring)=>{E(0,'POLYLINE');E(8,n);E(62,cl);E(66,1);E(70,1);E(10,0);E(20,0);E(30,0);
   ring.forEach(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);E(0,'VERTEX');E(8,n);E(10,f3(q[0]));E(20,f3(q[1]));E(30,0)});E(0,'SEQEND');E(8,n)};
   pl(lay('GROUP',c,col),col,p.ll);const b=isSafe()?null:buf(p);if(b)pl(lay('GROUPRPA',c,col),1,b);const vb=isVet(p)?buf(p,voff(p)):null;if(vb)pl(lay('GROUPVETBUFFER',c,col),1,vb);
   const q=proj4('EPSG:4326','EPSG:27700',turf.pointOnFeature(feat(p)).geometry.coordinates),rn=lay('GROUPREF',c,col);
   E(0,'TEXT');E(8,rn);E(62,col);E(10,f3(q[0]));E(20,f3(q[1]));E(30,0);E(40,1);E(1,p.ref);E(7,'TREEREF')});
+ dxfNotes(E,L,f3);
  let h='';const H=(c,v)=>{h+=c+'\n'+v+'\n'},names=Object.keys(L).sort();
  H(0,'SECTION');H(2,'HEADER');H(9,'$ACADVER');H(1,'AC1009');H(0,'ENDSEC');H(0,'SECTION');H(2,'TABLES');
  H(0,'TABLE');H(2,'LTYPE');H(70,1);H(0,'LTYPE');H(2,'CONTINUOUS');H(70,0);H(3,'Solid line');H(72,65);H(73,0);H(40,0);H(0,'ENDTAB');
@@ -1136,7 +1176,7 @@ function expSafety(){const all=[...T.map(t=>[t,'Tree']),...PG.map(p=>[p,p.kind])
  const ws=XLSX.utils.aoa_to_sheet([[...SHD,...SXH],...all.map(([o,ty])=>safeRow(o,ty))]);
  for(let r=1;r<=all.length;r++)[3,30].forEach(c=>{const cell=ws[XLSX.utils.encode_cell({r,c})];if(cell&&cell.t=='n')cell.z='dd/mm/yyyy'});
  ws['!cols']=[...SHD,...SXH].map((h,i)=>({wch:[22,24].includes(i)?40:i==32?30:Math.max(10,Math.min(28,h.length))}));
- const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Survey data');
+ const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Survey data');nSheet(wb);
  const qa=[['Code','Value','Description'],...QS,[],['Code','Value','Description'],...QT,[],['Code','Value','Description'],...QP];XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(qa),'QTRA');
  if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');
  const fn=s=>String(s||'').trim().replace(/[\\\/:*?"<>|]+/g,'').replace(/\s+/g,'_');
@@ -1160,14 +1200,14 @@ function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
   if(v.length<3&&la!=null){const c={lat:la,lon:lo};v=[m2ll(c,-5,5),m2ll(c,5,5),m2ll(c,5,-5),m2ll(c,-5,-5)]}
   if(v.length<3){skipped++;return}np.push({...b,kind:type,ll:v})});
  return{nt,np,meta,skipped}}
-$('bExp').onclick=()=>{if(!T.length&&!PG.length)return alert('Nothing to export');if(isSafe())return expSafety();if(!projOK())return;
- const DH=['Type',...HD,'Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
- const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo];
+$('bExp').onclick=()=>{if(!T.length&&!PG.length&&!SN.length)return alert('Nothing to export');if(isSafe())return expSafety();if(!projOK())return;
+ const DH=['Type',...HD,'Label position','Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
+ const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),type==='Tree'?(o.lp||''):'',...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo];
  const tRows=T.map(t=>{const e=t.lat!=null?en(t):['',''];
   return row('Tree',t,[t.lat==null?'':+t.lat.toFixed(8),t.lat==null?'':+t.lon.toFixed(8),e[0]===''?'':+e[0].toFixed(2),e[1]===''?'':+e[1].toFixed(2),'','','',''])});
  const pRows=PG.map(p=>row(p.kind,p,['','','','',+gA(p).toFixed(1),+gPer(p).toFixed(1),p.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),p.ll.map(v=>{const e=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return e[0].toFixed(2)+','+e[1].toFixed(2)}).join('; ')]));
  const wb=XLSX.utils.book_new(),ws=XLSX.utils.aoa_to_sheet([DH,...tRows,...pRows]);ws['!cols']=DH.map(h=>({wch:Math.max(10,h.length)}));
- XLSX.utils.book_append_sheet(wb,ws,'DATA');
+ XLSX.utils.book_append_sheet(wb,ws,'DATA');nSheet(wb);
  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Project number',META.pno||''],['Project name',META.pname||'']]),'Project');
  if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');XLSX.writeFile(wb,expName('xlsx'))};
 $('bImp').onclick=()=>$('fi').click();
@@ -1187,6 +1227,7 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
      const la=o['Latitude (WGS84)'],lo=o['Longitude (WGS84)'],E=o['Easting (OSGB36)'],N=o['Northing (OSGB36)'];
      const ok=v=>v!==undefined&&v!==''&&!isNaN(parseFloat(v));
      if(ok(la)&&ok(lo)&&!(num(la)==0&&num(lo)==0)){t.lat=num(la);t.lon=num(lo)}else if(ok(E)&&ok(N)){const pp=proj4('EPSG:27700','EPSG:4326',[num(E),num(N)]);t.lon=pp[0];t.lat=pp[1]}
+     {const lp=String(o['Label position']||'').trim().toUpperCase();if(FSB_DEG[lp]!=null)t.lp=lp}
      nt.push(t);
     }else{
      const v=String(o['Vertices (lat,lon)']).split(';').map(x=>x.split(',').map(Number)).filter(a=>a.length==2&&!isNaN(a[0])&&!isNaN(a[1]));
@@ -1206,11 +1247,13 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
     if(ok(la)&&ok(lo)&&!(num(la)==0&&num(lo)==0)){t.lat=num(la);t.lon=num(lo)}else if(ok(E)&&ok(N)){const pp=proj4('EPSG:27700','EPSG:4326',[num(E),num(N)]);t.lon=pp[0];t.lat=pp[1]}
     nt.push(t)});
   }
-  if(!nt.length&&!np.length)return alert('No tree or polygon rows found in this file');
+  const nn=nParse(wb);
+  if(!nt.length&&!np.length&&!nn.length)return alert('No tree, polygon or site note rows found in this file');
   try{localStorage.setItem(KEY+'_backup',localStorage.getItem(KEY)||'')}catch(x){}
-  const rep=T.length&&confirm((nt.length+np.length)+' feature(s) found.\nOK = replace current data (a backup is kept)\nCancel = add to current data');
+  const rep=(T.length||SN.length)&&confirm((nt.length+np.length+nn.length)+' feature(s) found.\nOK = replace current data (a backup is kept)\nCancel = add to current data');
   if(rep||!T.length){T.forEach(t=>G.has(t)&&map.removeLayer(G.get(t)));G.clear();T=[];if(np.length){PG.forEach(p=>GP.has(p)&&map.removeLayer(GP.get(p)));GP.clear();PG=[]}}
-  T.push(...nt);PG.push(...np);select(null);T.forEach(draw);PG.forEach(drawP);const p=T.filter(t=>t.lat!=null),pl=[...p.map(t=>[t.lat,t.lon]),...PG.flatMap(g=>g.ll)];
+  if(nn.length&&(rep||!SN.length))nClearAll();SN.push(...nn);
+  T.push(...nt);PG.push(...np);select(null);T.forEach(draw);PG.forEach(drawP);SN.forEach(drawN);const p=T.filter(t=>t.lat!=null),pl=[...p.map(t=>[t.lat,t.lon]),...PG.flatMap(g=>g.ll)];
   if(pl.length)map.fitBounds(L.latLngBounds(pl).pad(.3),{maxZoom:20});else if(site)map.setView([site.lat,site.lon],19);save();
   if(skipped)alert(skipped+' group/woodland/hedge row(s) had no vertices or coordinates and were not imported.');
   const u=nt.filter(t=>t.lat==null).length;if(u)alert(u+' trees have no coordinates – search for the site address, then press “Plot unplotted”.')
@@ -1237,6 +1280,66 @@ addEventListener('resize',()=>pane(!document.querySelector('aside').classList.co
 $('bMenu').onclick=e=>{e.stopPropagation();const m=$('menu');m.hidden=!m.hidden;m.style.top=document.querySelector('header').getBoundingClientRect().bottom+4+'px'};
 $('menu').onclick=e=>{if(e.target.closest('button'))$('menu').hidden=true};
 document.addEventListener('click',e=>{if(!e.target.closest('#menu'))$('menu').hidden=true});
+// ---------- 📝 site notes: a point or area that carries text notes only. Stored per survey as SN, exported to a "Site notes" sheet and the DXF layer SITE_NOTES.
+const NG=new Map(),NCOL='#ff6f00';
+const nCard=document.createElement('div');nCard.id='ncard';nCard.hidden=true;document.body.appendChild(nCard);
+function noteRef(){let m=0;SN.forEach(n=>{const x=/^N(\d+)$/i.exec(n.ref||'');if(x)m=Math.max(m,+x[1])});return'N'+(m+1)}
+function drawN(n){if(NG.has(n)){map.removeLayer(NG.get(n));NG.delete(n)}const s=n===selN,ls=[];
+ const go=e=>{if(mode||batch)return;L.DomEvent.stopPropagation(e);nSelect(n)};
+ if(n.kind==='Area'){if(!n.ll||n.ll.length<3)return;
+  ls.push(L.polygon(n.ll,{color:s?'#00e5ff':NCOL,weight:s?3:2,dashArray:'6 4',fillColor:NCOL,fillOpacity:s?.22:.1}).on('click',go));
+  const c=turf.pointOnFeature(feat(n)).geometry.coordinates;ls.push(L.circleMarker([c[1],c[0]],{radius:1,opacity:0,fillOpacity:0,interactive:false}).bindTooltip(esc(n.ref),{permanent:true,direction:'center',className:'lbl lblN'}))}
+ else{if(n.lat==null)return;const m=L.marker([n.lat,n.lon],{draggable:s,keyboard:false,zIndexOffset:500,icon:L.divIcon({className:'',html:`<div class="snpt${s?' on':''}">✎</div>`,iconSize:[22,22],iconAnchor:[11,11]})}).on('click',go);
+  m.on('dragend',e=>{const q=e.target.getLatLng();n.lat=q.lat;n.lon=q.lng;nMeta();save()});
+  m.bindTooltip(esc(n.ref),{permanent:true,direction:'right',offset:[10,0],className:'lbl lblN'});ls.push(m)}
+ NG.set(n,L.layerGroup(ls).addTo(map))}
+function nClearAll(){nDesel();NG.forEach(g=>map.removeLayer(g));NG.clear();SN=[]}
+function nSelect(n,isNew){select(null);selN=n;drawN(n);nHandles();nRender();nCard.hidden=false;nPlace(true);
+ if(isNew){const ta=nCard.querySelector('textarea');if(ta)setTimeout(()=>ta.focus(),50)}}
+function nDesel(){if(!selN)return;const n=selN;selN=null;nCard.hidden=true;HL.clearLayers();if(SN.includes(n))drawN(n)}
+function nDelete(){const n=selN;if(!n||!confirm('Delete site note '+n.ref+'?'))return;nDesel();if(NG.has(n)){map.removeLayer(NG.get(n));NG.delete(n)}SN=SN.filter(x=>x!==n);save()}
+function nHandles(){HL.clearLayers();const n=selN;if(!n||n.kind!=='Area')return;
+ n.ll.forEach((v,i)=>{const m=L.marker(v,{draggable:true,zIndexOffset:1000,icon:L.divIcon({className:'',html:'<div class="h v"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(HL);
+  m.on('drag',e=>{n.ll[i]=[e.latlng.lat,e.latlng.lng];drawN(n)});m.on('dragend',()=>{nMeta();save()})})}
+function nGeo(n){if(n.kind==='Area')return`Area ${gA(n).toFixed(0)} m² · perimeter ${gPer(n).toFixed(0)} m · drag the white squares to reshape`;const e=en(n);return`OSGB E ${e[0].toFixed(1)} N ${e[1].toFixed(1)} · drag the marker to move it`}
+function nMeta(){const m=nCard.querySelector('.nmeta');if(m&&selN)m.textContent=nGeo(selN)}
+function nRender(){const n=selN;if(!n)return;
+ nCard.innerHTML=`<div class="lh"><b>📝 ${esc(n.ref)} · ${n.kind==='Area'?'Area':'Point'} site note</b><button type="button" data-x="1" title="Close">✕</button></div>
+ <textarea data-nt="1" rows="4" placeholder="Type site notes…">${esc(n.notes||'')}</textarea><div class="nmeta"></div>
+ <div class="nbtns"><button type="button" data-del="1" class="ndel">🗑 Delete</button><button type="button" data-x="1" class="nok">Done</button></div>`;nMeta()}
+function nPlace(pan){if(nCard.hidden||!selN)return;const n=selN,r=$('map').getBoundingClientRect(),w=nCard.offsetWidth,h=nCard.offsetHeight;
+ const ll=n.kind==='Area'?(()=>{const c=turf.centerOfMass(feat(n)).geometry.coordinates;return[c[1],c[0]]})():[n.lat,n.lon],p=map.latLngToContainerPoint(ll);
+ if(r.width<560){/* phone: dock at the top of the map so the keyboard never covers it; keep the feature visible below the card */
+  const top=r.top+8;nCard.style.left=Math.max(8,(innerWidth-w)/2)+'px';nCard.style.top=top+'px';
+  if(pan){const fy=r.top+p.y,lim=top+h+40;if(fy<lim)map.panBy([0,fy-lim],{animate:false})}return}
+ let x=r.left+p.x+40;if(x+w>r.right-8)x=r.left+p.x-40-w;x=Math.max(r.left+8,Math.min(x,r.right-w-8));let y=r.top+p.y-h/2;y=Math.max(r.top+8,Math.min(y,r.bottom-h-8));nCard.style.left=x+'px';nCard.style.top=y+'px'}
+map.on('move zoom',()=>nPlace(false));addEventListener('resize',()=>nPlace(false));
+nCard.addEventListener('pointerdown',e=>e.stopPropagation());
+nCard.addEventListener('input',e=>{if(e.target.dataset.nt&&selN){selN.notes=e.target.value;save()}});
+nCard.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('button');if(!b)return;if(b.dataset.x)return nDesel();if(b.dataset.del)return nDelete()});
+$('bNote').onclick=()=>{if(mode=='poly'&&noteDraw)return setMode('poly');setMode('note')};
+$('bn').addEventListener('click',e=>{if(e.target.id==='bNArea'){e.stopPropagation();noteDraw=true;setMode('poly')}});
+const NHD=['Ref','Type','Notes','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
+function nSheet(wb){const rows=[...SN].sort((a,b)=>natCmp(a.ref,b.ref)).map(n=>{if(n.kind==='Area'){const c=turf.centerOfMass(feat(n)).geometry.coordinates,e=proj4('EPSG:4326','EPSG:27700',c);
+  return[n.ref,'Area',n.notes||'',+c[1].toFixed(8),+c[0].toFixed(8),+e[0].toFixed(2),+e[1].toFixed(2),+gA(n).toFixed(1),+gPer(n).toFixed(1),n.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),n.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; ')]}
+  const e=en(n);return[n.ref,'Point',n.notes||'',+n.lat.toFixed(8),+n.lon.toFixed(8),+e[0].toFixed(2),+e[1].toFixed(2),'','','','']});
+ const ws=XLSX.utils.aoa_to_sheet([NHD,...rows]);ws['!cols']=NHD.map((h,i)=>({wch:i==2?60:i>=9?40:Math.max(10,h.length)}));XLSX.utils.book_append_sheet(wb,ws,'Site notes')}
+function nParse(wb){const ws=wb.Sheets['Site notes'];if(!ws)return[];const out=[],used=new Set(SN.map(n=>n.ref));
+ XLSX.utils.sheet_to_json(ws,{defval:''}).forEach(o=>{const y=k=>String(o[k]??'').trim(),ok=v=>v!==''&&!isNaN(parseFloat(v));let ref=y('Ref');const notes=String(o['Notes']??'');
+  if(y('Type').toLowerCase()==='area'){const v=y('Vertices (lat,lon)').split(';').map(x=>x.split(',').map(Number)).filter(a=>a.length==2&&!isNaN(a[0])&&!isNaN(a[1]));if(v.length<3)return;out.push({ref,kind:'Area',notes,ll:v})}
+  else{let la=o['Latitude (WGS84)'],lo=o['Longitude (WGS84)'];if(!(ok(la)&&ok(lo))){const E=o['Easting (OSGB36)'],N=o['Northing (OSGB36)'];if(!(ok(E)&&ok(N)))return;const q=proj4('EPSG:27700','EPSG:4326',[num(E),num(N)]);lo=q[0];la=q[1]}out.push({ref,kind:'Point',notes,lat:num(la),lon:num(lo)})}});
+ return out}
+/* DXF: everything on one layer, SITE_NOTES (orange). Points = POINT + small circle; areas = closed polyline. Ref label plus the note text beneath it. */
+function dxfNotes(E,Ly,f3){if(!SN.length)return;const n0='SITE_NOTES';Ly[n0]=30;
+ const asc=s=>String(s).replace(/[^\x20-\x7e]/g,c=>'\\U+'+c.charCodeAt(0).toString(16).toUpperCase().padStart(4,'0'));
+ const wrap=s=>String(s||'').split(/\r?\n/).flatMap(l=>{const o=[];let cur='';l.trim().split(/\s+/).forEach(w=>{if(!w)return;if((cur+' '+w).trim().length>50&&cur){o.push(cur);cur=w}else cur=(cur+' '+w).trim()});if(cur)o.push(cur);return o});
+ const txt=(x,y,h,s)=>{E(0,'TEXT');E(8,n0);E(62,30);E(10,f3(x));E(20,f3(y));E(30,0);E(40,h);E(1,asc(s));E(7,'TREEREF')};
+ SN.forEach(n=>{let x,y;
+  if(n.kind==='Area'){if(!n.ll||n.ll.length<3)return;E(0,'POLYLINE');E(8,n0);E(62,30);E(66,1);E(70,1);E(10,0);E(20,0);E(30,0);
+   n.ll.forEach(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);E(0,'VERTEX');E(8,n0);E(10,f3(q[0]));E(20,f3(q[1]));E(30,0)});E(0,'SEQEND');E(8,n0);
+   [x,y]=proj4('EPSG:4326','EPSG:27700',turf.pointOnFeature(feat(n)).geometry.coordinates)}
+  else{if(n.lat==null)return;[x,y]=en(n);E(0,'POINT');E(8,n0);E(62,30);E(10,f3(x));E(20,f3(y));E(30,0);E(0,'CIRCLE');E(8,n0);E(62,30);E(10,f3(x));E(20,f3(y));E(30,0);E(40,0.3);x+=0.5}
+  txt(x,y,0.8,n.ref);wrap(n.notes).forEach((l,i)=>txt(x,y-0.8-0.7*(i+1),0.5,l))})}
 load();try{if(localStorage.getItem(KEY+'_pane')==='0')pane(false)}catch(x){}
 $('handle').dataset.icon=handleIcon(!document.querySelector('aside').classList.contains('collapsed'));
 </script></body></html>
