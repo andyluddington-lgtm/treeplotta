@@ -994,7 +994,7 @@ const QF={ref:{lab:'Ref',t:'text'},sp:{lab:'Species',t:'sp'},sd:{lab:'Survey dat
  d1:{lab:'Stem 1',t:'num',u:'mm',dec:false,max:4},d2:{lab:'Stem 2',t:'num',u:'mm',dec:false,max:4},d3:{lab:'Stem 3',t:'num',u:'mm',dec:false,max:4},d4:{lab:'Stem 4',t:'num',u:'mm',dec:false,max:4},d5:{lab:'Stem 5',t:'num',u:'mm',dec:false,max:4},
  cn:{lab:'North',t:'num',u:'m',dec:true,max:3},ce:{lab:'East',t:'num',u:'m',dec:true,max:3},cs:{lab:'South',t:'num',u:'m',dec:true,max:3},cw:{lab:'West',t:'num',u:'m',dec:true,max:3},
  h:{lab:'Height',t:'num',u:'m',dec:true,max:3},cc:{lab:'Clearance',t:'num',u:'m',dec:true,max:3},kind:{lab:'Type',t:'chips'},fd:{lab:'FSB dir',t:'chips'},fh:{lab:'FSB ht',t:'num',u:'m',dec:true,max:3},
- age:{lab:'Age',t:'chips'},cond:{lab:'Condition',t:'chips'},cat:{lab:'Category',t:'chips'},notes:{lab:'Notes',t:'notes'},
+ age:{lab:'Age',t:'chips'},cond:{lab:'Physiological',t:'chips'},cat:{lab:'Category',t:'chips'},notes:{lab:'Notes',t:'notes'},
  qs:{lab:'Size',t:'chips'},qt:{lab:'Target',t:'chips'},qp:{lab:'Probability',t:'chips'},rec:{lab:'Recommendations',t:'rec'},wp:{lab:'Work priority',t:'chips'},st:{lab:'Status',t:'chips'},ph:{lab:'Photo',t:'text'}};
 const STEMS_G=['n','d1','d2','d3','d4','d5'],CROWN_G=['cn','ce','cs','cw'];
 const qcGroups=()=>{const pg=!!selP;return isSafe()?[['Survey',pg?['sd','ref','kind','sp']:['sd','ref','sp']],['Stems',STEMS_G],['Crown',CROWN_G],['Height',['h','cc']],['Condition',['age','cond']],['Notes',['notes']],['QTRA',['qs','qt','qp']],['Action',['rec','wp','st','ph']]]
@@ -1026,7 +1026,7 @@ function qcRender(){if(!qo())return qcClose();const f=qcFields(),k=qcK,g=qcGroup
  let h=`<div class="qh"><b>${selP?'▱ ':''}${esc(qo().ref)}</b>${selP?` <span>${esc(qo().kind)}</span>`:''}${qo().sp?` <span>${esc(qo().sp)}</span>`:''}<button type="button" class="qx" data-q="x" title="Close">✕</button></div>
  <div class="qgroups">${qcGroups().map(([gl,fs])=>{const v=fs.filter(qcShow),miss=v.some(qcMiss);return`<button type="button" data-tab="${v[0]}" class="${g&&g[0]===gl?'on':''}${miss?' miss':''}">${gl}</button>`}).join('')}</div>`;
  const gf=g[1].filter(qcShow);if(gf.length>1)h+=`<div class="qtabs">${gf.map(x=>`<button type="button" data-tab="${x}" class="${x===k?'on':''}${qcMiss(x)?' miss':''}">${QF[x].lab}</button>`).join('')}</div>`;
- const F=QF[k];h+=`<div class="qlab">${F.lab}${g[0]==='Crown'?' crown spread':''}</div>`;
+ const F=QF[k];h+=`<div class="qlab">${F.lab}${g[0]==='Crown'?' crown spread':k==='cond'?' condition':''}</div>`;
  if(F.t==='num'){const shown=qcBuf!==''?qcBuf:qcFmt(k,qo()[k]);
   h+=`<div class="qv${qcBuf!==''?' typing':''}"><span>${esc(shown)}</span><small>${F.u}</small></div>
   <div class="qnote">${qcBuf!==''?'Was '+qcFmt(k,qcOrig)+' '+F.u+' · C to undo':g[0]==='Crown'?'Type a value, or drag the crown nodes on the map':'Type a new value'}</div>
