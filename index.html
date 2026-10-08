@@ -325,7 +325,9 @@ function qtra(o){if(!o)return null;const s=qv(QS,o.qs),t=qv(QT,o.qt),p=qv(QP,o.q
  const tol=ri===0?'Broadly Acceptable':ri<1000?'Unacceptable':ri<=1e5?'Tolerable if ALARP (risk reduction required)':ri<=1e6?'Tolerable if ALARP':'Broadly Acceptable';
  return{ri,tol}}
 const TOLC={'Unacceptable':'#ff0000','Tolerable if ALARP (risk reduction required)':'#ffc000','Tolerable if ALARP':'#ffff00','Broadly Acceptable':'#92d050'},TOLK={'Unacceptable':'UN','Tolerable if ALARP (risk reduction required)':'TR','Tolerable if ALARP':'TA','Broadly Acceptable':'BA'};
-const WP=['Emergency','Urgent','6-months','12-months','24-months'];
+const WP=['Emergency','Urgent','6-months','12-months','24-months','N/A'];
+/* choosing this recommendation sets Work priority to N/A (no action date) */
+const REINSPECT='Reinspect tree in accordance with site survey regime';
 const pad2=n=>String(n).padStart(2,'0'),isoD=d=>d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()),today=()=>isoD(new Date());
 const ukD=iso=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||'');return m?m[3]+'/'+m[2]+'/'+m[1]:''};
 function addMonths(d,m){const r=new Date(d.getFullYear(),d.getMonth()+m,1),last=new Date(r.getFullYear(),r.getMonth()+1,0).getDate();r.setDate(Math.min(d.getDate(),last));return r}
@@ -505,7 +507,7 @@ function buildFields(fs,pre){return fs.map(([k,l,ty,o,wide])=>{if(ty=='sec')retu
  `<input data-k="${k}" data-ac="sp" autocomplete="off" autocapitalize="sentences" placeholder="Start typing a tree name…">`;
  return `<label${w}>${l}${i}</label>`}).join('')}
 function addRec(root,obj,v){if(!obj||!v)return;if(/^none$/i.test(v))obj.rec='None';else{const t=v+'.',cur=(obj.rec||'').trim();if(!cur.includes(t))obj.rec=(cur&&!noWork(obj)?cur+' ':'')+t}
- root.querySelector('[data-k="rec"]').value=obj.rec}
+ root.querySelector('[data-k="rec"]').value=obj.rec;if(v===REINSPECT){obj.wp='N/A';const w=root.querySelector('[data-k="wp"]');if(w)w.value='N/A'}}
 fm.addEventListener('click',e=>{const b=e.target.closest('.stp');if(!b||!sel)return;const k=b.dataset.k,step=+b.dataset.s,inp=b.parentElement.querySelector('input');
  sel[k]=Math.max(0,rnd(num(inp.value)+step,Math.abs(step)));inp.value=sel[k];draw(sel);if(k[0]=='c'||k[0]=='d')handles();ro();list();refresh(fm,sel);save()});
 fm.addEventListener('input',e=>{const el=e.target,k=el.dataset.k;if(!k||!sel||el.type=='button')return;
@@ -923,7 +925,7 @@ function bRuleUI(){const r=$('bRule').value;$('bRF').hidden=r!=='eq';$('bRV').hi
  if(r==='eq')bRuleVals();else if(r==='tol')$('bRV').innerHTML=['Unacceptable','Tolerable if ALARP (risk reduction required)','Tolerable if ALARP','Broadly Acceptable',''].map(v=>`<option value="${v}">${v||'(not assessed)'}</option>`).join('')}
 function bToggle(o){BSEL.has(o)?BSEL.delete(o):BSEL.add(o);T.includes(o)?draw(o):drawP(o);list();bRefresh()}
 function bRedrawAll(){T.forEach(draw);PG.forEach(drawP);list();bRefresh()}
-function recAdd(o,v){const cur=String(o.rec||'').trim();if(/^none$/i.test(v)){if(!cur)o.rec='None';return}const t=v+'.';if(cur.includes(t))return;o.rec=(cur&&!noWork(o)?cur+' ':'')+t}
+function recAdd(o,v){if(v===REINSPECT)o.wp='N/A';const cur=String(o.rec||'').trim();if(/^none$/i.test(v)){if(!cur)o.rec='None';return}const t=v+'.';if(cur.includes(t))return;o.rec=(cur&&!noWork(o)?cur+' ':'')+t}
 function enterBatch(){if(batch)return;if(!confirmLeave('Start batch editing anyway?'))return;if(mode)setMode(mode);select(null);batch=true;BSEL.clear();
  $('form').hidden=true;$('pform').hidden=true;$('bform').hidden=false;$('bBatch').classList.add('on');$('ahT').textContent='Batch edit';buildBatch();pane(true);list()}
 function exitBatch(){if(!batch)return;batch=false;BSEL.clear();$('bform').hidden=true;$('bform').innerHTML='';$('form').hidden=false;$('bBatch').classList.remove('on');
@@ -944,7 +946,7 @@ function bApply(){const it=bItems();if(!it.length)return;const set={},lab=[];
  notes.forEach(t=>lab.push('Notes + “'+t+'”'));const recs=[...BREC];recs.forEach(r=>lab.push('Recommendations + “'+r+'”'));
  if(!lab.length)return alert('Nothing to change – choose a value for at least one field, or pick notes to add.');
  if(!confirm(`Apply to ${it.length} selected feature(s)?\n\n• `+lab.join('\n• ')+'\n\nYou can undo this with ↶ Undo last batch.'))return;
- const keys=[...Object.keys(set),'notes','rec'];BUNDO.push(it.map(o=>({o,b:Object.fromEntries(keys.map(k=>[k,o[k]]))})));if(BUNDO.length>10)BUNDO.shift();
+ const keys=[...new Set([...Object.keys(set),'notes','rec','wp'])];BUNDO.push(it.map(o=>({o,b:Object.fromEntries(keys.map(k=>[k,o[k]]))})));if(BUNDO.length>10)BUNDO.shift();
  let changed=0;it.forEach(o=>{const before=JSON.stringify(keys.map(k=>o[k]));Object.assign(o,set);notes.forEach(t=>toggleNote(o,t,true));recs.forEach(r=>recAdd(o,r));if(JSON.stringify(keys.map(k=>o[k]))!==before)changed++});
  save();$('bform').querySelectorAll('[data-bk]').forEach(el=>el.value='');$('bNoteFree').value='';BN.notes='';BREC.clear();$('bform').querySelectorAll('[data-rec]').forEach(c=>c.checked=false);bRedrawAll();
  const inc=it.filter(o=>missingTreeFields(o).length);
@@ -1086,7 +1088,7 @@ qcBox.addEventListener('input',e=>{const k=e.target.dataset.qtext;if(!k)return;q
 qcBox.addEventListener('keydown',e=>{const k=e.target.dataset.qtext;if(!k||e.target.tagName==='TEXTAREA'||e.key!=='Enter')return;e.preventDefault();qcNext()});
 qcBox.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('button');if(!b||!qo())return;
  if(b.dataset.tab)return qcTab(b.dataset.tab);if(b.dataset.d)return qcKey(b.dataset.d);
- if(b.dataset.rec){recAdd(qo(),b.dataset.rec);qcSet('rec',qo().rec);qcRender();return}
+ if(b.dataset.rec){recAdd(qo(),b.dataset.rec);qcSet('rec',qo().rec);if(b.dataset.rec===REINSPECT)qcSet('wp','N/A');qcRender();return}
  if(b.dataset.v!=null){qcSet(qcK,b.dataset.v==='__today'?today():b.dataset.v);if(qcK==='kind'&&selP){drawP(selP);handlesP()}qcRender();setTimeout(qcNext,180);return}
  const q=b.dataset.q;if(q==='x')qcClose();else if(q==='c'){qcBuf='';qcSet(qcK,qcOrig);qcRender()}else if(q==='ok')qcNext();
  else if(q==='notes'){notesTarget=qo();$('nFilter').value='';renderNotesList();$('novl').hidden=false}});
