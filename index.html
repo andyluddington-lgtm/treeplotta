@@ -333,17 +333,17 @@ function addMonths(d,m){const r=new Date(d.getFullYear(),d.getMonth()+m,1),last=
 function actionDate(o){const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(o.sd||'');const b=m?new Date(+m[1],m[2]-1,+m[3]):new Date();
  switch(o.wp){case'Emergency':return isoD(b);case'Urgent':{const d=new Date(b);d.setDate(d.getDate()+7);return isoD(d)}
   case'6-months':return isoD(addMonths(b,6));case'12-months':return isoD(addMonths(b,12));case'24-months':return isoD(addMonths(b,24))}return''}
-const REC=['None','Sever ivy','Remove stake','Fell to ground level','Reduce to 5m habitat pole','Repollard to existing points','Crown lift to 2.5m above footpath','Crown lift to 5.2m above road','Remove major deadwood','Remove broken and suspended branch','Prune lateral branches to provide a 2m clearance from structure'];
+const REC=['None','Sever ivy','Remove stake','Fell to ground level','Reduce to 5m habitat pole','Repollard to existing points','Crown lift to 2.5m above footpath','Crown lift to 5.2m above road','Remove major deadwood','Remove broken and suspended branch','Prune lateral branches to provide a 2m clearance from structure','Reinspect tree in accordance with site survey regime'];
 const STEMS=[['__s1','Stems','sec'],['n','Number of stems','n'],['d1','Stem 1 diameter (mm)','n',10],['d2','Stem 2 diameter (mm)','n',10],['d3','Stem 3 diameter (mm)','n',10],['d4','Stem 4 diameter (mm)','n',10],['d5','Stem 5 diameter (mm)','n',10],
 ['__s2','Crown spread','sec'],['cn','Crown spread N (m)','n',0.5],['ce','Crown spread E (m)','n',0.5],['cs','Crown spread S (m)','n',0.5],['cw','Crown spread W (m)','n',0.5]];
 const SAFE_BODY=[['__s0','Survey','sec'],['sd','Survey date','d'],['sp','Species','sp'],...STEMS,
 ['__s3','Height & clearance','sec'],['h','Height (m)','n',0.5],['cc','Crown clearance (m)','n',0.5],
 ['__s4','Condition','sec'],['age','Age class','s',['Young','Semi mature','Early mature','Mature','Veteran','Ancient']],['cond','Physiological condition','s',['Good','Fair','Poor','Dead']],['notes','Notes','a'],['__nb','','nb'],
 ['__s5','QTRA','sec'],['qs','QTRA - Size','s',qopts(QS),1],['qt','QTRA - Target range','s',qopts(QT,[['Human – pedestrians / occupancy','P'],['Property – repair cost','$'],['Vehicles','V'],['No target','N/A']]),1],['qp','QTRA - Probability of failure','s',qopts(QP),1],['__qr','','qr'],
-['__s6','Recommendations & action','sec'],['rec','Recommendations','a'],['__rp','','rp'],['wp','Work priority','s',WP],['st','Status','s',['Proposed','Assigned','Cancelled','Complete']],['ph','Photo filename','t',null,1]];
+['__s6','Recommendations & action','sec'],['rec','Recommendations','a'],['__rp','','rp'],['wp','Work priority','s',WP],['ph','Photo filename','t',null,1]];
 const SF=[['ref','Tree ref','t'],...SAFE_BODY];
 const SPF=[['ref','Ref','t'],['kind','Object type','s',['Group','Woodland','Hedge']],...SAFE_BODY];
-const REQ_SAFE=[['sd','Survey date'],['sp','Species'],['h','Height'],['cn','Crown spread N'],['ce','Crown spread E'],['cs','Crown spread S'],['cw','Crown spread W'],['age','Age class'],['cond','Physiological condition'],['qs','QTRA - Size'],['qt','QTRA - Target range'],['qp','QTRA - Probability of failure'],['rec','Recommendations'],['wp','Work priority'],['st','Status']];
+const REQ_SAFE=[['sd','Survey date'],['sp','Species'],['h','Height'],['cn','Crown spread N'],['ce','Crown spread E'],['cs','Crown spread S'],['cw','Crown spread W'],['age','Age class'],['cond','Physiological condition'],['qs','QTRA - Size'],['qt','QTRA - Target range'],['qp','QTRA - Probability of failure'],['rec','Recommendations'],['wp','Work priority']];
 const noWork=o=>/^\s*none\.?\s*$/i.test(o.rec||'');
 const reqList=o=>isSafe()?REQ_SAFE.filter(([k])=>k!=='wp'||!o||!noWork(o)):REQ_TREE;
 const allReq=()=>isSafe()?REQ_SAFE:REQ_TREE;
@@ -860,6 +860,11 @@ $('bScr').onclick=()=>{$('menu').hidden=true;const pr=document.createElement('di
  alert(['Screen check – screenshot this and send it if the layout looks wrong','',`Window ${innerWidth} × ${innerHeight}`,vv?`Visible area ${Math.round(vv.width)} × ${Math.round(vv.height)}, offset ${Math.round(vv.offsetTop)}`:'',`Screen ${screen.width} × ${screen.height} @${devicePixelRatio}x`,
   `Safe area T ${ins[0]} R ${ins[1]} B ${ins[2]} L ${ins[3]}`,`Home Screen app: ${navigator.standalone||matchMedia('(display-mode: standalone)').matches?'yes':'no'}`,`Header ${R(document.querySelector('header'))} · Map ${R($('map'))} · Page ${R(document.body)}`,
   (navigator.userAgent.match(/OS [\d_]+|Version\/[\d.]+/g)||[]).join(' ')].filter(Boolean).join('\n'))};
+/* Photo filename: an empty field starts with IMG_ so only the number needs typing (number keypad on phones/tablets); a bare IMG_ is cleared again on leaving */
+const isPh=el=>el&&el.matches&&el.matches('input[data-k="ph"],input[data-qtext="ph"]');
+document.addEventListener('pointerdown',e=>{if(isPh(e.target))e.target.inputMode='numeric'},true);
+document.addEventListener('focusin',e=>{const el=e.target;if(!isPh(el))return;el.inputMode='numeric';if(!el.value){el.value='IMG_';el.dispatchEvent(new Event('input',{bubbles:true}))}setTimeout(()=>{try{el.setSelectionRange(el.value.length,el.value.length)}catch(x){}},0)});
+document.addEventListener('focusout',e=>{const el=e.target;if(isPh(el)&&el.value.trim()==='IMG_'){el.value='';el.dispatchEvent(new Event('input',{bubbles:true}))}});
 $('bNew').onclick=()=>{exitBatch();if(!T.length&&!PG.length&&!SN.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
  if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s), ${SN.length} site note(s), the project details and the site pin from this device.\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
  try{localStorage.setItem(KEY+'_backup',localStorage.getItem(KEY)||'')}catch(x){}
@@ -873,7 +878,7 @@ $('bNew').onclick=()=>{exitBatch();if(!T.length&&!PG.length&&!SN.length&&!site)r
 const BN={notes:''};// scratch target for the predefined-notes picker while in batch mode
 let BREC=new Set(),BUNDO=[];
 const bfields=()=>isSafe()?[['sd','Survey date','d'],['sp','Species','sp'],['age','Age class','s',fo('age')],['cond','Physiological condition','s',fo('cond')],
- ['qs','QTRA - Size','q',QS],['qt','QTRA - Target range','q',QT],['qp','QTRA - Probability of failure','q',QP],['wp','Work priority','s',WP],['st','Status','s',['Proposed','Assigned','Cancelled','Complete']]]
+ ['qs','QTRA - Size','q',QS],['qt','QTRA - Target range','q',QT],['qp','QTRA - Probability of failure','q',QP],['wp','Work priority','s',WP]]
  :[['sp','Species','sp'],['age','Age class','s',fo('age')],['cond','Physiological condition','s',fo('cond')],['cat','Retention category','s',fo('cat')],['fd','FSB direction','s',fo('fd')]];
 const bItems=()=>[...T,...PG].filter(o=>BSEL.has(o));
 function bSumm(k){const it=bItems();if(!it.length)return'';const m=new Map();it.forEach(o=>{const v=String(o[k]??'').trim()||'blank';m.set(v,(m.get(v)||0)+1)});
@@ -997,7 +1002,7 @@ const QF={ref:{lab:'Ref',t:'text'},sp:{lab:'Species',t:'sp'},sd:{lab:'Survey dat
  age:{lab:'Age',t:'chips'},cond:{lab:'Physiological',t:'chips'},cat:{lab:'Category',t:'chips'},notes:{lab:'Notes',t:'notes'},
  qs:{lab:'Size',t:'chips'},qt:{lab:'Target',t:'chips'},qp:{lab:'Probability',t:'chips'},rec:{lab:'Recommendations',t:'rec'},wp:{lab:'Work priority',t:'chips'},st:{lab:'Status',t:'chips'},ph:{lab:'Photo',t:'text'}};
 const STEMS_G=['n','d1','d2','d3','d4','d5'],CROWN_G=['cn','ce','cs','cw'];
-const qcGroups=()=>{const pg=!!selP;return isSafe()?[['Survey',pg?['sd','ref','kind','sp']:['sd','ref','sp']],['Stems',STEMS_G],['Crown',CROWN_G],['Height',['h','cc']],['Condition',['age','cond']],['Notes',['notes']],['QTRA',['qs','qt','qp']],['Action',['rec','wp','st','ph']]]
+const qcGroups=()=>{const pg=!!selP;return isSafe()?[['Survey',pg?['sd','ref','kind','sp']:['sd','ref','sp']],['Stems',STEMS_G],['Crown',CROWN_G],['Height',['h','cc']],['Condition',['age','cond']],['Notes',['notes']],['QTRA',['qs','qt','qp']],['Action',['rec','wp','ph']]]
  :[[pg?'Feature':'Tree',pg?['ref','kind','sp']:['ref','sp']],['Stems',STEMS_G],['Crown',CROWN_G],['Height & FSB',['h','cc','fd','fh']],['Condition',['age','cond','cat']],['Notes',['notes']]]};
 // stems 2–5 only appear when the number of stems needs them
 const qcShow=k=>{const m=/^d(\d)$/.exec(k);return!m||+m[1]<=Math.min(5,requiredStemCount(qo()))};
@@ -1038,7 +1043,7 @@ function qcRender(){if(!qo())return qcClose();const f=qcFields(),k=qcK,g=qcGroup
   <div class="qsugg">${qcSugg('',used)}</div>
   <div class="qact"><button type="button" data-q="ok" class="qok">${okTxt}</button></div>`}
  else if(F.t==='text'||F.t==='date'){
-  h+=`<input class="qsp" data-qtext="${k}" data-focus ${F.t==='date'?'type="date"':'autocomplete="off"'} value="${esc(qo()[k]??'')}" ${k==='ph'?'placeholder="e.g. IMG_1234.jpg"':k==='ref'?'autocapitalize="characters"':''}>
+  h+=`<input class="qsp" data-qtext="${k}" data-focus ${F.t==='date'?'type="date"':'autocomplete="off"'} value="${esc(qo()[k]??'')}" ${k==='ph'?'placeholder="IMG_ then the number" inputmode="numeric"':k==='ref'?'autocapitalize="characters"':''}>
   ${k==='sd'?'<div class="qchips qtxt"><button type="button" data-v="__today">Today</button></div>':''}
   <div class="qact"><button type="button" data-q="ok" class="qok">${okTxt}</button></div>`}
  else if(F.t==='notes'||F.t==='rec'){
