@@ -97,6 +97,7 @@ aside.collapsed>#abody{display:none}
 #tpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto}#tpanel h3{margin:0 0 6px}#tpanel h4{margin:12px 0 2px;color:#1f3d2b}
 #tpanel .tnote{font-size:12px;color:#555;margin:0 0 8px}.topt{display:flex;gap:8px;align-items:flex-start;border:1px solid #ccc;border-radius:6px;padding:8px;margin:6px 0;cursor:pointer}.topt input{width:auto;margin-top:3px}.topt small{color:#555}.topt:has(input:checked){border-color:#1f3d2b;background:#e3efe6}
 #tSafe label,#tBs label{display:block;font-size:12px;color:#555;margin:6px 0 2px}#tpanel .row{display:flex;gap:6px;margin-top:12px}
+#tpanel .timp{margin-top:12px;padding-top:10px;border-top:1px solid #ddd;display:flex;flex-direction:column;gap:5px}#tpanel .timp button{width:100%}#tpanel .timp small{color:#555;font-size:11px}
 
 .aer-ctrl button{display:flex;align-items:center;gap:4px;padding:5px 9px;border:0;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.4);background:#fff;font-size:13px;font-weight:600;color:#555;min-height:0}.aer-ctrl button span{font-size:12px}.aer-ctrl button.on{background:#ffd54a;color:#222}#map.noaer{background:#fff}
 #bform[hidden]{display:none}#bform{display:flex;flex-direction:column;gap:6px;font-size:12px}#bBatch.on{background:#00e5ff;border-color:#008aa0}
@@ -231,6 +232,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <label>Site ID<input id="tSid"></label><label>Site name<input id="tSname"></label><label>Reason for survey<input id="tReason" list="rsl"></label></div>
 <p class="tnote" style="margin-top:8px">These details start the export file names (xlsx and DXF).</p>
 <div class="row"><button id="tApply">Apply</button><button id="tClose">Cancel</button></div>
+<div class="timp"><button id="tImp">⬆ Import existing survey (xlsx)</button><small>BS5837 or Safety – the survey type is worked out from the file. Details typed above fill any the file is missing.</small></div>
 </div></div>
 <div id="kovl" hidden><div id="kpanel">
 <h3>Topo survey</h3><div id="kName" class="tnote"></div>
@@ -1292,10 +1294,12 @@ $('bExp').onclick=()=>{if(!T.length&&!PG.length&&!SN.length)return alert('Nothin
  XLSX.utils.book_append_sheet(wb,ws,'DATA');nSheet(wb);
  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Project number',META.pno||''],['Project name',META.pname||'']]),'Project');
  if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');XLSX.writeFile(wb,expName('xlsx'))};
-$('bImp').onclick=()=>$('fi').click();
-$('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value='';if(!f)return;
+let impStart=null;/* set when the import was started from the Survey type screen */
+$('bImp').onclick=()=>{impStart=null;$('fi').click()};
+$('tImp').onclick=()=>{impStart={bs5837:{pno:$('tPno').value.trim(),pname:$('tPname').value.trim()},safety:{sid:$('tSid').value.trim(),sname:$('tSname').value.trim(),reason:$('tReason').value.trim()}};$('tovl').hidden=true;$('fi').click()};
+$('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value='';const fromStart=impStart;impStart=null;if(!f)return;
  try{const wb=XLSX.read(await f.arrayBuffer()),safeBook=isSafetyBook(wb);
-  if(safeBook!==isSafe()){const to=safeBook?'safety':'bs5837';if(!confirm(`This looks like a ${safeBook?'Safety (QTRA)':'BS5837'} survey file.\n\nSwitch to the ${safeBook?'Safety':'BS5837'} survey type and import it there?`))return;if(!switchType(to))return}
+  if(safeBook!==isSafe()){const to=safeBook?'safety':'bs5837';if(fromStart){if(!switchType(to))return}else if(!confirm(`This looks like a ${safeBook?'Safety (QTRA)':'BS5837'} survey file.\n\nSwitch to the ${safeBook?'Safety':'BS5837'} survey type and import it there?`))return;if(!switchType(to))return}
   const ss=wb.Sheets['Site'];if(ss&&!site){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ss,{header:1}).filter(r=>r[0]).map(r=>[r[0],r[1]]));if(a.Latitude&&a.Longitude)setSite({name:a['Site address']||'',lat:+a.Latitude,lon:+a.Longitude})}
   let nt=[],np=[],skipped=0;const ds=wb.Sheets['DATA'],ps=wb.Sheets['Project'];
   if(ps&&!safeBook){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ps,{header:1}).filter(r=>r[0]).map(r=>[r[0],String(r[1]??'').trim()]));if((a['Project number']||a['Project name'])&&metaMissing(META).length)META={...META,pno:a['Project number']||META.pno||'',pname:a['Project name']||META.pname||''}}
@@ -1336,7 +1340,8 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
   if(rep||!T.length){T.forEach(t=>G.has(t)&&map.removeLayer(G.get(t)));G.clear();T=[];if(np.length){PG.forEach(p=>GP.has(p)&&map.removeLayer(GP.get(p)));GP.clear();PG=[]}}
   if(nn.length&&(rep||!SN.length))nClearAll();SN.push(...nn);
   T.push(...nt);PG.push(...np);select(null);T.forEach(draw);PG.forEach(drawP);SN.forEach(drawN);const p=T.filter(t=>t.lat!=null),pl=[...p.map(t=>[t.lat,t.lon]),...PG.flatMap(g=>g.ll)];
-  if(pl.length)map.fitBounds(L.latLngBounds(pl).pad(.3),{maxZoom:20});else if(site)map.setView([site.lat,site.lon],19);save();
+  if(pl.length)map.fitBounds(L.latLngBounds(pl).pad(.3),{maxZoom:20});else if(site)map.setView([site.lat,site.lon],19);
+  if(fromStart){const m=fromStart[ST]||{};Object.keys(m).forEach(k=>{if(m[k]&&!String(META[k]||'').trim())META[k]=m[k]})}save();
   if(skipped)alert(skipped+' group/woodland/hedge row(s) had no vertices or coordinates and were not imported.');
   const u=nt.filter(t=>t.lat==null).length;if(u)alert(u+' trees have no coordinates – search for the site address, then press “Plot unplotted”.')
  }catch(x){alert('Import failed: '+x.message)}};
