@@ -93,7 +93,14 @@ aside.collapsed>#abody{display:none}
 #list .td{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:4px;border:1px solid #0004;vertical-align:middle}
 #bType small{font-size:11px;font-weight:700;margin-left:4px;vertical-align:middle}#bType.safety{background:#ffe2b8;border-color:#c77d00}
 #kovl[hidden]{display:none}#kovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}#kpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:92vh;overflow:auto}#kpanel h3{margin:0 0 2px}#kpanel .tnote{font-size:12px;color:#555;margin:0 0 6px;word-break:break-all}#kpanel .row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}#kpanel .kc{display:flex;gap:6px;align-items:center;font-size:13px;margin:4px 0}#kpanel .kc input{width:auto}#kpanel .kl{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:#1f3d2b;margin:10px 0 3px}#kpanel .kl input{width:60%}#kpanel input[type=color]{width:42px;height:26px;padding:0}#kList{border:1px solid #ddd;border-radius:6px;max-height:34vh;overflow:auto}#kList label{display:flex;gap:7px;align-items:center;padding:5px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;cursor:pointer}#kList input{width:auto}#kList i{width:12px;height:12px;border:1px solid #0006;border-radius:2px;flex:none}#kList small{color:#888;margin-left:auto}#bTopo.on{background:#d6f3ff;border-color:#0a7ab0}
-#tovl[hidden]{display:none}#tovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}
+#tovl[hidden]{display:none}
+#hovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}#hovl[hidden]{display:none}
+#hpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:560px;width:100%;max-height:90vh;overflow:auto}#hpanel h3{margin:0 0 8px}
+#hpanel .row{display:flex;gap:6px;margin:10px 0}#hpanel .row button{flex:1}#hpanel label.hboth{display:flex!important;flex-direction:row!important;justify-content:flex-start;gap:8px;align-items:center;font-size:13px;margin:4px 0 8px;width:auto}#hpanel label.hboth input{width:auto;margin:0;flex:0 0 auto}
+#hStat{border-radius:8px;padding:10px;font-size:13px;line-height:1.45}#hStat.ok{background:#e6f4ea;border:1px solid #9ccfa8}#hStat.warn{background:#fff4e0;border:1px solid #f0b85a}#hStat.none{background:#fdecea;border:1px solid #e9a39b}
+#hStat .chg{font-size:12px;color:#444;margin-top:4px}
+#hList table{width:100%;border-collapse:collapse;font-size:12px}#hList th,#hList td{border-bottom:1px solid #e3e3e3;padding:5px 4px;text-align:left;vertical-align:top}#hList td.n{text-align:right;white-space:nowrap}#hList .fn{word-break:break-all;color:#555;font-size:11px}#hList tr.cur td{background:#eef7f0}
+#hClr{margin-top:10px;font-size:12px}#expInfo{font-size:11px;color:#555;padding:0 6px 2px;line-height:1.3}#expInfo b{color:#b35c00}#expInfo.ok b{color:#2e7d32}#tovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}
 #tpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto}#tpanel h3{margin:0 0 6px}#tpanel h4{margin:12px 0 2px;color:#1f3d2b}
 #tpanel .tnote{font-size:12px;color:#555;margin:0 0 8px}.topt{display:flex;gap:8px;align-items:flex-start;border:1px solid #ccc;border-radius:6px;padding:8px;margin:6px 0;cursor:pointer}.topt input{width:auto;margin-top:3px}.topt small{color:#555}.topt:has(input:checked){border-color:#1f3d2b;background:#e3efe6}
 #tSafe label,#tBs label{display:block;font-size:12px;color:#555;margin:6px 0 2px}#tpanel .row{display:flex;gap:6px;margin-top:12px}
@@ -199,7 +206,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
 <div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)">📋<small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)">▱</button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bNote" title="Site note – tap the map for a point note, or draw an area note">📝</button><button id="bLbl" title="Move tree reference labels – tap a tree, then pick a compass direction">🏷</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
 </header>
-<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><div class="mh">Map</div><button id="bOff">📶 Offline maps…</button><button id="bScr">📐 Screen check</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
+<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bHist">🕘 Export history…</button><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><div class="mh">Map</div><button id="bOff">📶 Offline maps…</button><button id="bScr">📐 Screen check</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
@@ -234,6 +241,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <div class="row"><button id="tApply">Apply</button><button id="tClose">Cancel</button></div>
 <div class="timp"><button id="tImp">⬆ Import existing survey (xlsx)</button><small>BS5837 or Safety – the survey type is worked out from the file. Details typed above fill any the file is missing.</small></div>
 </div></div>
+<div id="hovl" hidden><div id="hpanel"><h3 id="hTitle">Export history</h3><div id="hStat"></div><div class="row"><button id="hExp">⬇ Export xlsx now</button><button id="hClose">Close</button></div><label class="hboth"><input type="checkbox" id="hBoth"> Show both survey types</label><div id="hList"></div><button id="hClr" class="danger">Clear history</button></div></div>
 <div id="kovl" hidden><div id="kpanel">
 <h3>Topo survey</h3><div id="kName" class="tnote"></div>
 <label class="kc"><input type="checkbox" id="kOn"> Show topo survey</label>
@@ -1264,7 +1272,7 @@ function expSafety(){const all=[...T.map(t=>[t,'Tree']),...PG.map(p=>[p,p.kind])
  const qa=[['Code','Value','Description'],...QS,[],['Code','Value','Description'],...QT,[],['Code','Value','Description'],...QP];XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(qa),'QTRA');
  if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');
  const fn=s=>String(s||'').trim().replace(/[\\\/:*?"<>|]+/g,'').replace(/\s+/g,'_');
- XLSX.writeFile(wb,expName('xlsx'))}
+ logExport(wb,expName('xlsx'))}
 function isSafetyBook(wb){const ws=wb.Sheets['Survey data'];if(!ws)return false;const h=(XLSX.utils.sheet_to_json(ws,{header:1})[0]||[]).map(String);return h.includes('QTRA - Size')||h.includes('Tree Ref')&&h.includes('Object type')}
 function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
  XLSX.utils.sheet_to_json(wb.Sheets['Survey data'],{defval:''}).forEach(o=>{const ref=String(o['Tree Ref']).trim();if(!ref)return;
@@ -1293,7 +1301,7 @@ $('bExp').onclick=()=>{if(!T.length&&!PG.length&&!SN.length)return alert('Nothin
  const wb=XLSX.utils.book_new(),ws=XLSX.utils.aoa_to_sheet([DH,...tRows,...pRows]);ws['!cols']=DH.map(h=>({wch:Math.max(10,h.length)}));
  XLSX.utils.book_append_sheet(wb,ws,'DATA');nSheet(wb);
  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Project number',META.pno||''],['Project name',META.pname||'']]),'Project');
- if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');XLSX.writeFile(wb,expName('xlsx'))};
+ if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');logExport(wb,expName('xlsx'))};
 let impStart=null;/* set when the import was started from the Survey type screen */
 $('bImp').onclick=()=>{impStart=null;$('fi').click()};
 $('tImp').onclick=()=>{impStart={bs5837:{pno:$('tPno').value.trim(),pname:$('tPname').value.trim()},safety:{sid:$('tSid').value.trim(),sname:$('tSname').value.trim(),reason:$('tReason').value.trim()}};$('tovl').hidden=true;$('fi').click()};
@@ -1364,7 +1372,45 @@ function handleIcon(v){const col=mqCol.matches;return col?(v?'\u2304\u2304':'\u2
 function pane(v){if(!v)maxi(false);document.querySelector('aside').classList.toggle('collapsed',!v);$('handle').title=v?'Minimise survey data panel':'Maximise survey data panel';$('handle').dataset.icon=handleIcon(v);setTimeout(()=>map.invalidateSize(),50);try{localStorage.setItem(KEY+'_pane',v?1:0)}catch(x){}}
 $('handle').onclick=()=>pane(document.querySelector('aside').classList.contains('collapsed'));
 addEventListener('resize',()=>pane(!document.querySelector('aside').classList.contains('collapsed')));
-$('bMenu').onclick=e=>{e.stopPropagation();const m=$('menu');m.hidden=!m.hidden;m.style.top=document.querySelector('header').getBoundingClientRect().bottom+4+'px'};
+$('bMenu').onclick=e=>{e.stopPropagation();const m=$('menu');m.hidden=!m.hidden;m.style.top=document.querySelector('header').getBoundingClientRect().bottom+4+'px';if(!m.hidden)expInfo()};
+// ---------- export history: every xlsx export is logged on this device with a snapshot fingerprint of the data,
+// so you can see whether anything has changed since the last export (and what), and export again if needed.
+const HIST_KEY=KEY+'_exportlog';
+const fnv=str=>{let h=0x811c9dc5;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}return h.toString(36)};
+function expSnap(){const f={},key=(o,k)=>{let b=k+':'+(o.ref||'?'),n=b,i=2;while(f[n]!=null)n=b+'#'+i++;return n};
+ T.forEach(t=>f[key(t,'Tree')]=fnv(JSON.stringify(t)));PG.forEach(p=>f[key(p,p.kind||'Group')]=fnv(JSON.stringify(p)));SN.forEach(n=>f[key(n,'Note')]=fnv(JSON.stringify(n)));
+ return{f,m:fnv(JSON.stringify(META)),fp:fnv(JSON.stringify([f,META]))}}
+const histAll=()=>{try{return JSON.parse(localStorage.getItem(HIST_KEY)||'[]')}catch(x){return[]}};
+function logExport(wb,fn){XLSX.writeFile(wb,fn);const s=expSnap(),h=histAll();
+ h.push({t:new Date().toISOString(),ty:ST,fn,tr:T.length,pl:T.filter(t=>t.lat!=null).length,pg:PG.length,sn:SN.length,fp:s.fp,m:s.m,f:s.f});
+ /* keep the full feature snapshot only on the latest export of each survey type, to save space */
+ const last={};h.forEach((e,i)=>last[e.ty]=i);h.forEach((e,i)=>{if(last[e.ty]!==i)delete e.f});
+ try{localStorage.setItem(HIST_KEY,JSON.stringify(h.slice(-200)))}catch(x){}expInfo();if(!$('hovl').hidden)histRender()}
+function expDiff(){const h=histAll().filter(e=>e.ty===ST),last=h[h.length-1];if(!last)return null;const s=expSnap();
+ if(last.fp===s.fp)return{last,same:true};const a=[],r=[],c=[],lf=last.f||{};
+ Object.keys(s.f).forEach(k=>{if(!(k in lf))a.push(k);else if(lf[k]!==s.f[k])c.push(k)});Object.keys(lf).forEach(k=>{if(!(k in s.f))r.push(k)});
+ return{last,same:false,a,r,c,meta:last.m!==s.m,nof:!last.f}}
+const whenTxt=iso=>{const d=new Date(iso),now=new Date(),t=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+ if(d.toDateString()===now.toDateString())return'today '+t;const y=new Date(now);y.setDate(now.getDate()-1);if(d.toDateString()===y.toDateString())return'yesterday '+t;
+ return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' '+t};
+const refList=l=>l.map(k=>k.replace(/^[^:]+:/,'')).slice(0,30).join(', ')+(l.length>30?' …':'');
+function expInfo(){const el=$('expInfo');if(!el)return;const d=expDiff(),n=T.length+PG.length+SN.length;el.className='';
+ if(!d){el.innerHTML=n?'<b>Not exported yet on this device</b>':'';return}
+ if(d.same){el.className='ok';el.innerHTML='<b>✓ Backed up</b> – last export '+whenTxt(d.last.t);return}
+ const k=d.a.length+d.r.length+d.c.length+(d.meta?1:0);el.innerHTML='<b>'+(k||'Some')+' change'+(k===1?'':'s')+' since last export</b> ('+whenTxt(d.last.t)+')'}
+function histRender(){const both=$('hBoth').checked,d=expDiff(),st=$('hStat'),lab=isSafe()?'Safety':'BS5837',n=T.length+PG.length+SN.length;
+ $('hTitle').textContent='Export history – '+lab;
+ if(!d){st.className='none';st.innerHTML=`<b>Not exported yet.</b> This ${lab} survey (${T.length} tree(s), ${PG.length} group(s), ${SN.length} site note(s)) has no xlsx export recorded on this device.`}
+ else if(d.same){st.className='ok';st.innerHTML=`<b>✓ No changes since the last export</b> – ${whenTxt(d.last.t)}.<br>The data on this device matches <span class="fn">${esc(d.last.fn)}</span>, provided that file was saved.`}
+ else{st.className='warn';const L=[];if(d.a.length)L.push('<b>Added:</b> '+esc(refList(d.a)));if(d.c.length)L.push('<b>Edited:</b> '+esc(refList(d.c)));if(d.r.length)L.push('<b>Deleted:</b> '+esc(refList(d.r)));if(d.meta)L.push('<b>Project / site details changed</b>');if(d.nof&&!L.length)L.push('Data differs from the last export.');
+  st.innerHTML=`<b>⚠ Changed since the last export</b> (${whenTxt(d.last.t)}) – export again to back up.<div class="chg">${L.join('<br>')}</div>`}
+ const h=histAll().map((e,i)=>({...e,i})).filter(e=>both||e.ty===ST).reverse(),cur=expSnap().fp;
+ $('hList').innerHTML=h.length?`<table><tr><th>Exported</th>${both?'<th>Type</th>':''}<th>File</th><th class="n">Trees</th><th class="n">Groups</th><th class="n">Notes</th></tr>`+h.map(e=>`<tr class="${e.ty===ST&&e.fp===cur?'cur':''}"><td>${esc(whenTxt(e.t))}${e.ty===ST&&e.fp===cur?'<br><small>✓ matches current data</small>':''}</td>${both?`<td>${e.ty==='safety'?'Safety':'BS5837'}</td>`:''}<td class="fn">${esc(e.fn)}</td><td class="n">${e.tr}${e.pl!==e.tr?`<br><small>${e.pl} plotted</small>`:''}</td><td class="n">${e.pg}</td><td class="n">${e.sn}</td></tr>`).join('')+'</table>':'<p class="tnote">No exports recorded'+(both?'':' for this survey type')+' yet.</p>';
+ $('hClr').hidden=!histAll().length}
+$('bHist').onclick=()=>{$('menu').hidden=true;$('hBoth').checked=false;histRender();$('hovl').hidden=false};
+$('hBoth').onchange=histRender;$('hClose').onclick=()=>{$('hovl').hidden=true};
+$('hExp').onclick=()=>{if(!T.length&&!PG.length&&!SN.length)return alert('Nothing to export');$('bExp').onclick()};
+$('hClr').onclick=()=>{if(!confirm('Clear the export history on this device?\n\nThis only removes the log – no survey data or exported files are affected.'))return;try{localStorage.removeItem(HIST_KEY)}catch(x){}histRender();expInfo()};
 $('menu').onclick=e=>{if(e.target.closest('button'))$('menu').hidden=true};
 document.addEventListener('click',e=>{if(!e.target.closest('#menu'))$('menu').hidden=true});
 // ---------- 📝 site notes: a point or area that carries text notes only. Stored per survey as SN, exported to a "Site notes" sheet and the DXF layer SITE_NOTES.
