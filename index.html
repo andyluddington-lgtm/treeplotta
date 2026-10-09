@@ -236,7 +236,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 </header>
 <div id="mapTools" class="leaflet-bar maptools"><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bSVm" title="Street View – tap a road to open Google Street View">🚶</button></div>
 <div hidden><button id="bTable">📊 Data table (all features)…</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑ Batch edit – tap features on the map</button></div>
-<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bDxf">⬇ Export drawing (DXF)</button><button id="bHist">🕘 Export history…</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><button id="bOff">📶 Offline maps…</button><div class="mh">Device</div><button id="bScr">📐 Screen check</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
+<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bDxf">⬇ Export drawing (DXF)</button><button id="bHist">🕘 Export history…</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><button id="bOff">📶 Offline maps…</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
@@ -902,17 +902,6 @@ $('tFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)re
   topoPanel()}catch(x){alert('Topo import failed: '+x.message)}finally{save()}};
 (async()=>{const d=await tdbDo('readonly',s=>s.get('topo'));if(!d||!d.txt)return;try{TOPO=topoFromText(d.name,d.txt);topoShow()}catch(x){}})();
 
-/* 📐 Screen check: reports what the device says about its screen, so layout problems on new iOS / iPadOS versions can be fixed precisely */
-$('bScr').onclick=()=>{$('menu').hidden=true;const pr=document.createElement('div');pr.style.cssText='position:fixed;visibility:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)';document.body.appendChild(pr);
- const c=getComputedStyle(pr),ins=['Top','Right','Bottom','Left'].map(k=>parseFloat(c['padding'+k])||0);pr.remove();const vv=window.visualViewport,R=e=>{const r=e.getBoundingClientRect();return Math.round(r.top)+'–'+Math.round(r.bottom)};
- alert(['Screen check – screenshot this and send it if the layout looks wrong','',`Window ${innerWidth} × ${innerHeight}`,vv?`Visible area ${Math.round(vv.width)} × ${Math.round(vv.height)}, offset ${Math.round(vv.offsetTop)}`:'',`Screen ${screen.width} × ${screen.height} @${devicePixelRatio}x`,
-  `Safe area T ${ins[0]} R ${ins[1]} B ${ins[2]} L ${ins[3]}`,`Home Screen app: ${navigator.standalone||matchMedia('(display-mode: standalone)').matches?'yes':'no'}`,`Header ${R(document.querySelector('header'))} · Map ${R($('map'))} · Page ${R(document.body)}`,
-  (navigator.userAgent.match(/OS [\d_]+|Version\/[\d.]+/g)||[]).join(' ')].filter(Boolean).join('\n'))};
-/* Photo filename: an empty field starts with IMG_ so only the number needs typing (number keypad on phones/tablets); a bare IMG_ is cleared again on leaving */
-const isPh=el=>el&&el.matches&&el.matches('input[data-k="ph"],input[data-qtext="ph"]');
-document.addEventListener('pointerdown',e=>{if(isPh(e.target))e.target.inputMode='numeric'},true);
-document.addEventListener('focusin',e=>{const el=e.target;if(!isPh(el))return;el.inputMode='numeric';if(!el.value){el.value='IMG_';el.dispatchEvent(new Event('input',{bubbles:true}))}setTimeout(()=>{try{el.setSelectionRange(el.value.length,el.value.length)}catch(x){}},0)});
-document.addEventListener('focusout',e=>{const el=e.target;if(isPh(el)&&el.value.trim()==='IMG_'){el.value='';el.dispatchEvent(new Event('input',{bubbles:true}))}});
 $('bNew').onclick=()=>{exitBatch();if(!T.length&&!PG.length&&!SN.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
  if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s), ${SN.length} site note(s), the project details and the site pin from this device.\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
  try{localStorage.setItem(KEY+'_backup',localStorage.getItem(KEY)||'')}catch(x){}
