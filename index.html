@@ -271,7 +271,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <div class="row"><button id="tApply">Apply</button><button id="tClose">Cancel</button></div>
 <div class="timp"><button id="tImp">⬆ Import existing survey (xlsx)</button><small>BS5837 or Safety – the survey type is worked out from the file. Details typed above fill any the file is missing.</small></div>
 </div></div>
-<div id="dovl" hidden><div id="dpanel"><div class="dhead"><b id="dTitle">Survey data</b><span id="dCount"></span><button id="dClose" title="Close">✕</button></div><div class="dtools"><input id="dQ" type="search" placeholder="Filter – ref, species, category, notes…"><label class="dmiss"><input type="checkbox" id="dMiss"> Incomplete only</label></div><div class="dwrap"><table id="dTbl"></table></div><div class="dfoot"><span class="dhint">Tap a row to open it on the map · tick rows to batch edit · tap a heading to sort</span><button id="dClr" hidden>Clear ticks</button><button id="dBatch" disabled>☑ Batch edit selected</button></div></div></div>
+<div id="dovl" hidden><div id="dpanel"><div class="dhead"><b id="dTitle">Survey data</b><span id="dCount"></span><button id="dClose" title="Close">✕</button></div><div class="dtools"><input id="dQ" type="search" placeholder="Filter – ref, species, category, notes…"><label class="dmiss"><input type="checkbox" id="dMiss"> Incomplete only</label></div><div class="dwrap"><table id="dTbl"></table></div><div class="dfoot"><span class="dhint">Tap a row to open it on the map · tick rows to batch edit · tap a heading to sort</span><button id="dClr" hidden>Clear ticks</button><button id="dUndo" hidden>↶ Undo delete</button><button id="dDel" class="danger" hidden>🗑 Delete selected</button><button id="dBatch" disabled>☑ Batch edit selected</button></div></div></div>
 <div id="hovl" hidden><div id="hpanel"><h3 id="hTitle">Export history</h3><div id="hStat"></div><div class="row"><button id="hExp">⬇ Export xlsx now</button><button id="hClose">Close</button></div><label class="hboth"><input type="checkbox" id="hBoth"> Show both survey types</label><div id="hList"></div><button id="hClr" class="danger">Clear history</button></div></div>
 <div id="kovl" hidden><div id="kpanel">
 <h3>Topo survey</h3><div id="kName" class="tnote"></div>
@@ -1356,23 +1356,34 @@ function dtRender(){const C=dtCols(),R=dtRows(),cur=sel||selP;DT.sel.forEach(o=>
  $('dTbl').innerHTML=`<thead><tr><th class="dck"><input type="checkbox" id="dAll" ${all?'checked':''} title="Select all shown"></th>${C.map((c,i)=>`<th data-s="${i}" class="${i===0?'dref':''}${c[3]?' n':''}">${esc(c[0])}${DT.sort===i?(DT.dir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>`+
   R.map((x,ri)=>`<tr data-r="${ri}" class="${x.o===cur?'cur':''}${DT.sel.has(x.o)?' sel':''}"><td class="dck"><input type="checkbox" ${DT.sel.has(x.o)?'checked':''}></td>`+
    C.map((c,i)=>`<td class="${i===0?'dref':''}${c[3]?' n':''}${dtMiss(x.o,c[2])?' miss':''}${c[0]==='Notes'||c[0]==='Recommendations'?' long':''}"${c[0]==='Notes'||c[0]==='Recommendations'?` title="${esc(x.v[i])}"`:''}>${i===0?dot(x.o):''}${esc(x.v[i])}</td>`).join('')+'</tr>').join('')+'</tbody>';
- dtRowsCache=R;const n=DT.sel.size;$('dBatch').disabled=!n;$('dBatch').textContent='☑ Batch edit selected'+(n?' ('+n+')':'');$('dClr').hidden=!n}
+ dtRowsCache=R;const n=DT.sel.size;$('dBatch').disabled=!n;$('dBatch').textContent='☑ Batch edit selected'+(n?' ('+n+')':'');$('dClr').hidden=!n;dtDelBtn()}
 let dtRowsCache=[];
 function dtOpen(){$('menu').hidden=true;if(batch){DT.sel=new Set(BSEL)}$('dQ').value=DT.q;$('dMiss').checked=DT.miss;dtRender();$('dovl').hidden=false;
  const c=$('dTbl').querySelector('tr.cur');if(c)c.scrollIntoView({block:'center'})}
-function dtClose(){$('dovl').hidden=true}
+function dtClose(){$('dovl').hidden=true;dtUndo=null}
 function dtGo(o){const isT=T.includes(o);dtClose();if(batch)exitBatch();if(!wantSelectAny(o,isT))return;pane(true);
  if(isT){if(o.lat!=null)map.setView([o.lat,o.lon],Math.max(map.getZoom(),19))}else map.fitBounds(L.latLngBounds(o.ll).pad(.4),{maxZoom:20})}
 $('dTbl').addEventListener('click',e=>{const th=e.target.closest('th[data-s]');if(th){const i=+th.dataset.s;if(DT.sort===i)DT.dir=-DT.dir;else{DT.sort=i;DT.dir=1}return dtRender()}
  if(e.target.id==='dAll'){const on=e.target.checked;dtRowsCache.forEach(x=>on?DT.sel.add(x.o):DT.sel.delete(x.o));return dtRender()}
  const tr=e.target.closest('tr[data-r]');if(!tr)return;const x=dtRowsCache[+tr.dataset.r];if(!x)return;
- if(e.target.closest('.dck')){if(e.target.tagName!=='INPUT'){const cb=tr.querySelector('input');cb.checked=!cb.checked}DT.sel[tr.querySelector('input').checked?'add':'delete'](x.o);tr.classList.toggle('sel',DT.sel.has(x.o));const n=DT.sel.size;$('dBatch').disabled=!n;$('dBatch').textContent='☑ Batch edit selected'+(n?' ('+n+')':'');$('dClr').hidden=!n;$('dAll').checked=dtRowsCache.length&&dtRowsCache.every(r=>DT.sel.has(r.o));return}
+ if(e.target.closest('.dck')){if(e.target.tagName!=='INPUT'){const cb=tr.querySelector('input');cb.checked=!cb.checked}DT.sel[tr.querySelector('input').checked?'add':'delete'](x.o);tr.classList.toggle('sel',DT.sel.has(x.o));const n=DT.sel.size;$('dBatch').disabled=!n;$('dBatch').textContent='☑ Batch edit selected'+(n?' ('+n+')':'');$('dClr').hidden=!n;dtDelBtn();$('dAll').checked=dtRowsCache.length&&dtRowsCache.every(r=>DT.sel.has(r.o));return}
  dtGo(x.o)});
 $('dQ').addEventListener('input',e=>{DT.q=e.target.value;dtRender()});$('dMiss').onchange=e=>{DT.miss=e.target.checked;dtRender()};
 $('dClose').onclick=dtClose;$('dClr').onclick=()=>{DT.sel.clear();dtRender()};
 $('dBatch').onclick=()=>{const items=[...DT.sel].filter(o=>dtItems().includes(o));if(!items.length)return;dtClose();if(!batch)enterBatch();if(!batch)return;
  BSEL.clear();items.forEach(o=>BSEL.add(o));bRedrawAll();list();bRefresh();pane(true);
  const pts=items.flatMap(o=>T.includes(o)?(o.lat!=null?[[o.lat,o.lon]]:[]):o.ll);if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.2),{maxZoom:20})};
+/* delete ticked rows (trees and/or groups), with an undo while the table stays open */
+let dtUndo=null;
+function dtDelBtn(){const n=DT.sel.size;$('dDel').hidden=!n;$('dDel').textContent='🗑 Delete selected'+(n?' ('+n+')':'');$('dUndo').hidden=!dtUndo}
+$('dDel').onclick=()=>{const items=[...DT.sel].filter(o=>dtItems().includes(o));if(!items.length)return;
+ const refs=items.map(o=>o.ref);if(!confirm(`Delete ${items.length} feature${items.length>1?'s':''}?\n\n${refs.slice(0,40).join(', ')}${refs.length>40?' …':''}\n\nYou can undo this straight away with ↶ Undo delete (until you close the table).`))return;
+ if(batch)exitBatch();if(items.includes(sel))select(null);if(items.includes(selP))selectP(null);
+ dtUndo={t:items.filter(o=>T.includes(o)).map(o=>[o,T.indexOf(o)]),p:items.filter(o=>PG.includes(o)).map(o=>[o,PG.indexOf(o)])};
+ items.forEach(o=>{if(T.includes(o)){if(G.has(o))map.removeLayer(G.get(o));G.delete(o)}else{if(GP.has(o))map.removeLayer(GP.get(o));GP.delete(o)}});
+ T=T.filter(o=>!items.includes(o));PG=PG.filter(o=>!items.includes(o));DT.sel.clear();list();save();dtRender()};
+$('dUndo').onclick=()=>{if(!dtUndo)return;dtUndo.t.sort((a,b)=>a[1]-b[1]).forEach(([o,i])=>{T.splice(Math.min(i,T.length),0,o);draw(o)});dtUndo.p.sort((a,b)=>a[1]-b[1]).forEach(([o,i])=>{PG.splice(Math.min(i,PG.length),0,o);drawP(o)});
+ dtUndo=null;list();save();dtRender()};
 $('bTable').onclick=dtOpen;$('bTableT').onclick=dtOpen;
 /* selection tools (copy, label, delete) only show when there is something they can act on */
 function tbSync(){const ok=!batch,t=sel&&sel.lat!=null;
