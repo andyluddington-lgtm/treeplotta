@@ -23,6 +23,15 @@ button{padding:6px 10px;border:1px solid #999;border-radius:6px;background:#fff;
 header button{font-size:17px;line-height:1;min-width:40px;min-height:36px;padding:6px 9px;text-align:center}
 header .row.tools button{font-size:18px}
 header .ico{width:20px;height:20px;display:block;margin:auto}
+/* contextual selection tools: separated from the main tools by a thin divider */
+header .tools .ctx{border-color:#9fc3ab}header .tools #bCopy:not([hidden]){margin-left:10px}
+header .tools #bCopy:not([hidden])::before{content:'';position:absolute;left:-7px;top:6px;bottom:6px;width:1px;background:#ffffff55}header .tools #bCopy{position:relative}
+/* map tools under the zoom / pan controls */
+.maptools{display:flex;flex-direction:column;background:#fff}.maptools button{width:34px;height:34px;min-height:0;min-width:0;border:0;border-bottom:1px solid #ccc;background:#fff;font-size:17px;line-height:34px;padding:0;cursor:pointer;color:#222;border-radius:0}
+.maptools button:last-child{border-bottom:0}.maptools button.on{background:#ffd54f}.maptools button:hover{background:#f2f2f2}
+@media(pointer:coarse){.maptools button{width:42px;height:42px;line-height:42px;font-size:20px}}
+#bn #bxEnd{min-height:28px;padding:2px 10px;margin-left:4px;font-weight:700}
+@media(max-width:520px){header .row.tools button{max-width:56px}header .row.tools{justify-content:flex-start}}
 @media(max-width:520px){header .row.tools{gap:4px}header .row.tools button{min-width:0;flex:1 1 0;padding:6px 2px;font-size:17px}header .row.tools #bType{flex:1 1 0;display:flex;align-items:center;justify-content:center;padding:6px 2px}}
 button.on{background:#ffd54a;border-color:#a80}button.danger{color:#b00}
 main{flex:1;display:flex;min-height:0}#map{flex:1}#map.add{cursor:crosshair}
@@ -223,9 +232,10 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <div class="row"><b class="ttl">🌳 <span>TreePlotta</span></b>
 <span class="sr"><input id="q" type="search" placeholder="Search site address / postcode ⏎"><div id="res" hidden></div></span>
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
-<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)"><span id="bTypeI" aria-hidden="true">🏗️</span><small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 4.6C9.6 3.2 13.4 3.6 15.6 4.9 17.9 6.2 20.6 7.6 20.9 10.4 21.2 13.2 19.6 15.4 18.8 17.4 17.9 19.6 15.2 20.6 12.4 20.4 9.6 20.2 6.4 19.9 4.6 17.8 2.8 15.7 2.7 12.6 3.4 10.1 4.1 7.6 4.9 6 7.2 4.6Z" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><g fill="currentColor"><circle cx="7.2" cy="4.6" r="1.9"/><circle cx="20.9" cy="10.4" r="1.9"/><circle cx="12.4" cy="20.4" r="1.9"/><circle cx="3.4" cy="10.1" r="1.9"/></g></svg></button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bNote" title="Site note – tap the map for a point note, or draw an area note">📝</button><button id="bLbl" title="Move tree reference labels – tap a tree, then pick a compass direction">🏷</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
+<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)"><span id="bTypeI" aria-hidden="true">🏗️</span><small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 4.6C9.6 3.2 13.4 3.6 15.6 4.9 17.9 6.2 20.6 7.6 20.9 10.4 21.2 13.2 19.6 15.4 18.8 17.4 17.9 19.6 15.2 20.6 12.4 20.4 9.6 20.2 6.4 19.9 4.6 17.8 2.8 15.7 2.7 12.6 3.4 10.1 4.1 7.6 4.9 6 7.2 4.6Z" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><g fill="currentColor"><circle cx="7.2" cy="4.6" r="1.9"/><circle cx="20.9" cy="10.4" r="1.9"/><circle cx="12.4" cy="20.4" r="1.9"/><circle cx="3.4" cy="10.1" r="1.9"/></g></svg></button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bNote" title="Site note – tap the map for a point note, or draw an area note">📝</button><button id="bTableT" title="Data table – all trees and groups at a glance, filter, sort and batch edit">📊</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bCopy" class="ctx" hidden title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLbl" class="ctx" hidden title="Move tree reference labels – tap a tree, then pick a compass direction">🏷</button><button id="bDel" class="danger ctx" hidden title="Delete selected">🗑</button></div>
 </header>
-<div id="menu" hidden><div class="mh">Survey data</div><button id="bTable">📊 Data table (all features)…</button><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bHist">🕘 Export history…</button><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><div class="mh">Map</div><button id="bSV">🚶 Street View – tap a road…</button><button id="bOff">📶 Offline maps…</button><button id="bScr">📐 Screen check</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
+<div id="mapTools" class="leaflet-bar maptools"><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bSVm" title="Street View – tap a road to open Google Street View">🚶</button></div>
+<div id="menu" hidden><div class="mh">Survey data</div><button id="bTable">📊 Data table (all features)…</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑ Batch edit – tap features on the map</button><button id="bHist">🕘 Export history…</button><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><button id="bOff">📶 Offline maps…</button><div class="mh">Device</div><button id="bScr">📐 Screen check</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
@@ -467,6 +477,9 @@ const PanCtrl=L.Control.extend({options:{position:'topleft'},onAdd(){
  d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const sz=map.getSize(),dx=b.className=='pe'?sz.x*.4:b.className=='pw'?-sz.x*.4:0,dy=b.className=='ps'?sz.y*.4:b.className=='pn'?-sz.y*.4:0;map.panBy([dx,dy])}));
  return d}});
 new PanCtrl().addTo(map);
+/* map tools (live location, measure, Street View) sit on the map under the zoom and pan controls */
+const ToolCtrl=L.Control.extend({options:{position:'topleft'},onAdd(){const d=$('mapTools');d.classList.add('leaflet-control');L.DomEvent.disableClickPropagation(d);L.DomEvent.disableScrollPropagation(d);return d}});
+new ToolCtrl().addTo(map);
 map.on('moveend',save);
 map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle selection, empty map does nothing */
  const sn=snap(e.latlng);
@@ -554,13 +567,13 @@ function refSeq(r){const m=/\d+$/.exec(r||'');return m?+m[0]:Infinity}
 function natCmp(a,b){return refSeq(a)-refSeq(b)}
 const tdot=o=>{if(!isSafe())return'';const q=qtra(o);return q?`<span class="td" style="background:${TOLC[q.tol]}" title="${q.tol}"></span>`:''};
 const bcb=o=>batch?`<input type="checkbox" class="lcb" ${BSEL.has(o)?'checked':''}>`:'';
-function list(){const entries=[...T.map((t,i)=>({ref:t.ref,html:`<div data-i="${i}" class="${t===sel||BSEL.has(t)?'s':''}">${bcb(t)}${t.ref} – ${esc(t.sp||'(no species)')}${tdot(t)} ${t.lat==null?'<i>unplotted</i>':''}</div>`})),
+function list(){tbSync();const entries=[...T.map((t,i)=>({ref:t.ref,html:`<div data-i="${i}" class="${t===sel||BSEL.has(t)?'s':''}">${bcb(t)}${t.ref} – ${esc(t.sp||'(no species)')}${tdot(t)} ${t.lat==null?'<i>unplotted</i>':''}</div>`})),
  ...PG.map((p,i)=>({ref:p.ref,html:`<div data-p="${i}" class="${p===selP||BSEL.has(p)?'s':''}">${bcb(p)}▱ ${p.ref} – ${p.kind}${p.sp?' – '+esc(p.sp):''}${tdot(p)}</div>`}))];
  entries.sort((x,y)=>natCmp(x.ref,y.ref));
  $('list').innerHTML=entries.map(e=>e.html).join('')||'<div>Nothing yet – press “＋ Add” or “▱ Polygon”.</div>';banner()}
 $('list').onclick=e=>{const i=e.target.closest('[data-i]');if(i){const t=T[i.dataset.i];if(batch)return bToggle(t);if(wantSelect(t)&&t.lat!=null)map.setView([t.lat,t.lon],Math.max(map.getZoom(),20))}};
 function select(t){if(t!==sel)qcClose();if(selN)nDesel();const p=sel,q=selP;sel=t;selP=null;if(p&&T.includes(p))draw(p);if(q&&PG.includes(q))drawP(q);if(t)draw(t);fill(t);$('pform').hidden=true;fm.hidden=false;list();handles()}
-function setMode(m){qcClose();if(batch&&m)exitBatch();mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);if(mode!='poly')noteDraw=false;$('bPoly').classList.toggle('on',mode=='poly'&&!noteDraw);$('bNote').classList.toggle('on',mode=='note'||(mode=='poly'&&noteDraw));$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();$('bLbl').classList.toggle('on',mode=='label');if(mode!='label')lpClose();banner()}
+function setMode(m){qcClose();if(batch&&m)exitBatch();mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);if(mode!='poly')noteDraw=false;$('bPoly').classList.toggle('on',mode=='poly'&&!noteDraw);$('bNote').classList.toggle('on',mode=='note'||(mode=='poly'&&noteDraw));$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();$('bLbl').classList.toggle('on',mode=='label');$('bSVm').classList.toggle('on',mode=='sv');if(mode!='label')lpClose();banner();tbSync()}
 $('bCopy').onclick=()=>{if(mode=='paste')return setMode('paste');
  if(sel)clip={kind:'tree',data:{...sel}};
  else if(selP)clip={kind:'poly',data:{...selP,ll:selP.ll.map(v=>v.slice())}};
@@ -943,7 +956,7 @@ function bRefresh(){if(!batch)return;const n=BSEL.size,el=$('bCount');if(!el)ret
  const chosen=NOTES.map(x=>x[1]).filter((t,i,a)=>a.indexOf(t)===i&&hasNote(BN,t));
  $('bNotesSel').innerHTML=chosen.length?chosen.map(t=>`<span>${esc(t)}</span>`).join(''):'<i>None chosen</i>';
  $('bApply').disabled=!n;$('bxUndo').disabled=!BUNDO.length;$('bxUndo').textContent='↶ Undo last batch'+(BUNDO.length?` (${BUNDO.length})`:'');
- $('bn').hidden=false;$('bn').innerHTML=`Batch edit · <b>${n}</b> selected · tap features to select · Esc or ☑ to finish`}
+ $('bn').hidden=false;$('bn').innerHTML=`Batch edit · <b>${n}</b> selected · tap features to select · <button id="bxEnd" type="button">✓ Finish</button>`}
 function bRuleVals(){const k=$('bRF').value,f=bfields().find(x=>x[0]===k);let vals;
  if(k==='notes'){vals=[...new Set(NOTES.map(x=>x[1]))];$('bRV').innerHTML=vals.map(v=>`<option value="${esc(v)}">contains: ${esc(v)}</option>`).join('');return}
  const have=[...new Set([...T,...PG].map(o=>String(o[k]??'').trim()))].sort();
@@ -1370,7 +1383,10 @@ $('dClose').onclick=dtClose;$('dClr').onclick=()=>{DT.sel.clear();dtRender()};
 $('dBatch').onclick=()=>{const items=[...DT.sel].filter(o=>dtItems().includes(o));if(!items.length)return;dtClose();if(!batch)enterBatch();if(!batch)return;
  BSEL.clear();items.forEach(o=>BSEL.add(o));bRedrawAll();list();bRefresh();pane(true);
  const pts=items.flatMap(o=>T.includes(o)?(o.lat!=null?[[o.lat,o.lon]]:[]):o.ll);if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.2),{maxZoom:20})};
-$('bTable').onclick=dtOpen;
+$('bTable').onclick=dtOpen;$('bTableT').onclick=dtOpen;
+/* selection tools (copy, label, delete) only show when there is something they can act on */
+function tbSync(){const ok=!batch,t=sel&&sel.lat!=null;
+ $('bCopy').hidden=!(ok&&(t||selP||mode=='paste'));$('bLbl').hidden=!(ok&&(t||mode=='label'));$('bDel').hidden=!(ok&&(sel||selP||selN))}
 // ---------- 🚶 Street View: tap a road, a pin is dropped there and Google Street View opens at that spot
 // (in a new tab, or the Google Maps app on a phone). If a tree is selected the view faces it.
 let svPin=null;
@@ -1381,7 +1397,7 @@ function svOpen(ll){const lat=ll.lat.toFixed(6),lon=ll.lng.toFixed(6);let h='';
  svPin=L.marker(ll,{zIndexOffset:1500,icon:L.divIcon({className:'',html:'<div class="svpin" title="Street View from here – tap to reopen, ✕ to remove">🚶<b>✕</b></div>',iconSize:[30,30],iconAnchor:[15,30]})}).addTo(map);
  svPin.on('click',e=>{L.DomEvent.stop(e);if(e.originalEvent&&e.originalEvent.target.tagName==='B'){map.removeLayer(svPin);svPin=null;return}window.open(url,'_blank','noopener')});
  window.open(url,'_blank','noopener')}
-$('bSV').onclick=()=>{$('menu').hidden=true;setMode('sv')};
+$('bSVm').onclick=()=>setMode('sv');
 let impStart=null;/* set when the import was started from the Survey type screen */
 $('bImp').onclick=()=>{impStart=null;$('fi').click()};
 $('tImp').onclick=()=>{impStart={bs5837:{pno:$('tPno').value.trim(),pname:$('tPname').value.trim()},safety:{sid:$('tSid').value.trim(),sname:$('tSname').value.trim(),reason:$('tReason').value.trim()}};$('tovl').hidden=true;$('fi').click()};
@@ -1507,9 +1523,9 @@ function drawN(n){if(NG.has(n)){map.removeLayer(NG.get(n));NG.delete(n)}const s=
   m.bindTooltip(esc(n.ref),{permanent:true,direction:'right',offset:[10,0],className:'lbl lblN'});ls.push(m)}
  NG.set(n,L.layerGroup(ls).addTo(map))}
 function nClearAll(){nDesel();NG.forEach(g=>map.removeLayer(g));NG.clear();SN=[]}
-function nSelect(n,isNew){select(null);selN=n;drawN(n);nHandles();nRender();nCard.hidden=false;nPlace(true);
+function nSelect(n,isNew){select(null);selN=n;drawN(n);nHandles();nRender();nCard.hidden=false;nPlace(true);tbSync();
  if(isNew){const ta=nCard.querySelector('textarea');if(ta)setTimeout(()=>ta.focus(),50)}}
-function nDesel(){if(!selN)return;const n=selN;selN=null;nCard.hidden=true;HL.clearLayers();if(SN.includes(n))drawN(n)}
+function nDesel(){if(!selN)return;const n=selN;selN=null;nCard.hidden=true;HL.clearLayers();if(SN.includes(n))drawN(n);tbSync()}
 function nDelete(){const n=selN;if(!n||!confirm('Delete site note '+n.ref+'?'))return;nDesel();if(NG.has(n)){map.removeLayer(NG.get(n));NG.delete(n)}SN=SN.filter(x=>x!==n);save()}
 function nHandles(){HL.clearLayers();const n=selN;if(!n||n.kind!=='Area')return;
  n.ll.forEach((v,i)=>{const m=L.marker(v,{draggable:true,zIndexOffset:1000,icon:L.divIcon({className:'',html:'<div class="h v"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(HL);
@@ -1531,7 +1547,7 @@ nCard.addEventListener('pointerdown',e=>e.stopPropagation());
 nCard.addEventListener('input',e=>{if(e.target.dataset.nt&&selN){selN.notes=e.target.value;save()}});
 nCard.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('button');if(!b)return;if(b.dataset.x)return nDesel();if(b.dataset.del)return nDelete()});
 $('bNote').onclick=()=>{if(mode=='poly'&&noteDraw)return setMode('poly');setMode('note')};
-$('bn').addEventListener('click',e=>{if(e.target.id==='bNArea'){e.stopPropagation();noteDraw=true;setMode('poly')}});
+$('bn').addEventListener('click',e=>{if(e.target.id==='bxEnd'){e.stopPropagation();return exitBatch()}if(e.target.id==='bNArea'){e.stopPropagation();noteDraw=true;setMode('poly')}});
 const NHD=['Ref','Type','Notes','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
 function nSheet(wb){const rows=[...SN].sort((a,b)=>natCmp(a.ref,b.ref)).map(n=>{if(n.kind==='Area'){const c=turf.centerOfMass(feat(n)).geometry.coordinates,e=proj4('EPSG:4326','EPSG:27700',c);
   return[n.ref,'Area',n.notes||'',+c[1].toFixed(8),+c[0].toFixed(8),+e[0].toFixed(2),+e[1].toFixed(2),+gA(n).toFixed(1),+gPer(n).toFixed(1),n.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),n.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; ')]}
