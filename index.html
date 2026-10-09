@@ -110,6 +110,9 @@ aside.collapsed>#abody{display:none}
 #dTbl tbody tr{cursor:pointer}#dTbl tbody tr:hover td{background:#f3f8f4}#dTbl tr.sel td{background:#e1f0ff}#dTbl tr.cur td.dref{box-shadow:inset 4px 0 0 #1f3d2b}
 #dTbl .dtdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle;border:1px solid #0003}
 #dpanel .dfoot{display:flex;gap:8px;align-items:center;padding:8px 10px;border-top:1px solid #ddd;flex-wrap:wrap}#dpanel .dhint{font-size:11px;color:#666;flex:1 1 200px}#dBatch{font-weight:700}#dBatch:not(:disabled){background:#1f3d2b;color:#fff;border-color:#1f3d2b}
+
+.svpin{position:relative;width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#fbbc04;border:2px solid #fff;box-shadow:0 1px 4px #0008;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer}
+.svpin{transform:none;border-radius:15px 15px 15px 2px}.svpin b{position:absolute;top:-8px;right:-10px;width:18px;height:18px;border-radius:50%;background:#333;color:#fff;font:700 11px/18px sans-serif;text-align:center}
 #hovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}#hovl[hidden]{display:none}
 #hpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:560px;width:100%;max-height:90vh;overflow:auto}#hpanel h3{margin:0 0 8px}
 #hpanel .row{display:flex;gap:6px;margin:10px 0}#hpanel .row button{flex:1}#hpanel label.hboth{display:flex!important;flex-direction:row!important;justify-content:flex-start;gap:8px;align-items:center;font-size:13px;margin:4px 0 8px;width:auto}#hpanel label.hboth input{width:auto;margin:0;flex:0 0 auto}
@@ -222,7 +225,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
 <div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)"><span id="bTypeI" aria-hidden="true">🏗️</span><small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree">＋</button><button id="bPoly" title="Draw polygon (group / woodland / hedge)"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 4.6C9.6 3.2 13.4 3.6 15.6 4.9 17.9 6.2 20.6 7.6 20.9 10.4 21.2 13.2 19.6 15.4 18.8 17.4 17.9 19.6 15.2 20.6 12.4 20.4 9.6 20.2 6.4 19.9 4.6 17.8 2.8 15.7 2.7 12.6 3.4 10.1 4.1 7.6 4.9 6 7.2 4.6Z" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><g fill="currentColor"><circle cx="7.2" cy="4.6" r="1.9"/><circle cx="20.9" cy="10.4" r="1.9"/><circle cx="12.4" cy="20.4" r="1.9"/><circle cx="3.4" cy="10.1" r="1.9"/></g></svg></button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bCopy" title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bNote" title="Site note – tap the map for a point note, or draw an area note">📝</button><button id="bLbl" title="Move tree reference labels – tap a tree, then pick a compass direction">🏷</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑</button><button id="bDel" class="danger" title="Delete selected">🗑</button></div>
 </header>
-<div id="menu" hidden><div class="mh">Survey data</div><button id="bTable">📊 Data table (all features)…</button><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bHist">🕘 Export history…</button><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><div class="mh">Map</div><button id="bOff">📶 Offline maps…</button><button id="bScr">📐 Screen check</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
+<div id="menu" hidden><div class="mh">Survey data</div><button id="bTable">📊 Data table (all features)…</button><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bHist">🕘 Export history…</button><button id="bDxf">⬇ Export drawing (DXF)</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><div class="mh">Map</div><button id="bSV">🚶 Street View – tap a road…</button><button id="bOff">📶 Offline maps…</button><button id="bScr">📐 Screen check</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
@@ -478,6 +481,7 @@ map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle select
   const pre={Group:'G',Woodland:'W',Hedge:'H'}[src.kind]||'G';
   const p={...src,ref:nextRef(pre),ll:src.ll.map(v=>[v[0]+dLat,v[1]+dLon])};PG.push(p);selectP(p);save()}
  else if(mode==='poly'){if(pts.length>=3){const a=map.latLngToContainerPoint(pts[0]),b=map.latLngToContainerPoint(e.latlng),tol=matchMedia('(pointer:coarse)').matches?24:14;if(a.distanceTo(b)<=tol)return $('bFin').click()}/* tap the first corner again to finish */pts.push([e.latlng.lat,e.latlng.lng]);draft();banner()}
+ else if(mode==='sv'){svOpen(e.latlng);setMode('sv')}
  else if(mode==='note'){const n={ref:noteRef(),kind:'Point',notes:'',lat:e.latlng.lat,lon:e.latlng.lng};SN.push(n);setMode('note');nSelect(n,true);save()}
  else if(mode==='meas'){mpts.push([e.latlng.lat,e.latlng.lng]);mdraw();}
  else if(mode==='addv'&&selP){const c=e.latlng,n=selP.ll,C=map.latLngToLayerPoint(c);let b=0,bd=1e9;n.forEach((a,i)=>{const d=L.LineUtil.pointToSegmentDistance(C,map.latLngToLayerPoint(a),map.latLngToLayerPoint(n[(i+1)%n.length]));if(d<bd){bd=d;b=i}});n.splice(b+1,0,[c.lat,c.lng]);drawP(selP);handlesP();proro();save()}
@@ -604,6 +608,7 @@ function banner(){if(batch)return bRefresh();const u=T.filter(t=>t.lat==null),n=
  else if(mode=='addv')m='Click on or near an edge to add a vertex · Esc to stop';
  else if(mode=='delv')m='Tap a vertex (white square) to delete it · Esc to stop';
  else if(mode=='add')m='Tap the map to place one tree · Esc to cancel';
+ else if(mode=='sv')m='Tap a road to open Google Street View there'+(sel&&sel.lat!=null?` (it will face ${esc(sel.ref)})`:'')+' · Esc to cancel';
  else if(mode=='label')m='Tap a tree, then pick where its reference label goes · tap 🏷 or Esc to finish';
  else if(site)m='<span>📍 '+esc(site.name)+'</span> <button id="bPinX" title="Clear site pin (map position is kept)">✕</button>';
  n.innerHTML=m;n.hidden=!m;const bx=document.getElementById('bPinX');if(bx)bx.onclick=e=>{e.stopPropagation();setSite(null);save();banner()};const bq=$('bQ');bq.textContent=(mode=='queue'?'⏹':'📍')+(u.length?' '+u.length:'');bq.title=mode=='queue'?'Stop plotting unplotted trees':`Plot unplotted trees (${u.length} left)`;bq.hidden=!u.length&&mode!='queue'}
@@ -1366,6 +1371,17 @@ $('dBatch').onclick=()=>{const items=[...DT.sel].filter(o=>dtItems().includes(o)
  BSEL.clear();items.forEach(o=>BSEL.add(o));bRedrawAll();list();bRefresh();pane(true);
  const pts=items.flatMap(o=>T.includes(o)?(o.lat!=null?[[o.lat,o.lon]]:[]):o.ll);if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.2),{maxZoom:20})};
 $('bTable').onclick=dtOpen;
+// ---------- 🚶 Street View: tap a road, a pin is dropped there and Google Street View opens at that spot
+// (in a new tab, or the Google Maps app on a phone). If a tree is selected the view faces it.
+let svPin=null;
+function svOpen(ll){const lat=ll.lat.toFixed(6),lon=ll.lng.toFixed(6);let h='';
+ if(sel&&sel.lat!=null){const y=Math.sin((sel.lon-ll.lng)*Math.PI/180)*Math.cos(sel.lat*Math.PI/180),x=Math.cos(ll.lat*Math.PI/180)*Math.sin(sel.lat*Math.PI/180)-Math.sin(ll.lat*Math.PI/180)*Math.cos(sel.lat*Math.PI/180)*Math.cos((sel.lon-ll.lng)*Math.PI/180);h='&heading='+Math.round((Math.atan2(y,x)*180/Math.PI+360)%360)%360}
+ const url=`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}${h}`;
+ if(svPin)map.removeLayer(svPin);
+ svPin=L.marker(ll,{zIndexOffset:1500,icon:L.divIcon({className:'',html:'<div class="svpin" title="Street View from here – tap to reopen, ✕ to remove">🚶<b>✕</b></div>',iconSize:[30,30],iconAnchor:[15,30]})}).addTo(map);
+ svPin.on('click',e=>{L.DomEvent.stop(e);if(e.originalEvent&&e.originalEvent.target.tagName==='B'){map.removeLayer(svPin);svPin=null;return}window.open(url,'_blank','noopener')});
+ window.open(url,'_blank','noopener')}
+$('bSV').onclick=()=>{$('menu').hidden=true;setMode('sv')};
 let impStart=null;/* set when the import was started from the Survey type screen */
 $('bImp').onclick=()=>{impStart=null;$('fi').click()};
 $('tImp').onclick=()=>{impStart={bs5837:{pno:$('tPno').value.trim(),pname:$('tPname').value.trim()},safety:{sid:$('tSid').value.trim(),sname:$('tSname').value.trim(),reason:$('tReason').value.trim()}};$('tovl').hidden=true;$('fi').click()};
