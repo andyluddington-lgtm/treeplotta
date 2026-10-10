@@ -151,7 +151,7 @@ body.kside .leaflet-left{transform:translateX(var(--kw,0px))}
 #hClr{margin-top:10px;font-size:12px}#expInfo{font-size:11px;color:#555;padding:0 6px 2px;line-height:1.3}#expInfo b{color:#b35c00}#expInfo.ok b{color:#2e7d32}#tovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}
 #tpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:90vh;overflow:auto}#tpanel h3{margin:0 0 6px}#tpanel h4{margin:12px 0 2px;color:#1f3d2b}
 #tpanel .tnote{font-size:12px;color:#555;margin:0 0 8px}.topt{display:flex;gap:8px;align-items:flex-start;border:1px solid #ccc;border-radius:6px;padding:8px;margin:6px 0;cursor:pointer}.topt input{width:auto;margin-top:3px}.topt small{color:#555}.topt:has(input:checked){border-color:#1f3d2b;background:#e3efe6}
-#tSafe label,#tBs label{display:block;font-size:12px;color:#555;margin:6px 0 2px}#tpanel .row{display:flex;gap:6px;margin-top:12px}
+#tSafe label,#tBs label,#tSv label{display:block;font-size:12px;color:#555;margin:6px 0 2px}#tpanel .row{display:flex;gap:6px;margin-top:12px}
 #tpanel .timp{margin-top:12px;padding-top:10px;border-top:1px solid #ddd;display:flex;flex-direction:column;gap:5px}#tpanel .timp button{width:100%}#tpanel .timp small{color:#555;font-size:11px}
 
 .aer-ctrl button{display:flex;align-items:center;gap:4px;padding:5px 9px;border:0;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.4);background:#fff;font-size:13px;font-weight:600;color:#555;min-height:0}.aer-ctrl button span{font-size:12px}.aer-ctrl button.on{background:#ffd54a;color:#222}#map.noaer{background:#fff}
@@ -288,6 +288,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <div id="tSafe"><h4>Safety survey details</h4>
 <label>Site ID<input id="tSid"></label><label>Site name<input id="tSname"></label><label>Reason for survey<input id="tReason" list="rsl"></label></div>
 <p class="tnote" style="margin-top:8px">These details start the export file names (xlsx and DXF).</p>
+<div id="tSv"><h4>Surveyor</h4><label>Surveyor name<input id="tSurv" autocomplete="name"></label></div>
 <div class="row"><button id="tApply">Apply</button><button id="tClose">Cancel</button></div>
 <div class="timp"><button id="tImp">⬆ Import existing survey (xlsx)</button><small>BS5837 or Safety – the survey type is worked out from the file. Details typed above fill any the file is missing.</small></div>
 </div></div>
@@ -429,7 +430,7 @@ function qresHTML(o){if(!o)return'';const q=qtra(o),ad=actionDate(o);
  let h=q?`Risk index <span class="${q.ri<=100000?'riBad':''}">${Math.round(q.ri).toLocaleString('en-GB')}</span> · Risk of harm <b>${q.ri>0?'1/'+Math.round(q.ri).toLocaleString('en-GB'):'nil'}</b><br>Tolerability <span class="tol t${TOLK[q.tol]}">${q.tol}</span>`:'<i>Choose Size, Target range and Probability of failure to calculate the risk of harm.</i>';
  h+=`<br>Safety action date <b>${ad?ukD(ad):'–'}</b>${ad&&!o.sd?' <i>(from today – no survey date)</i>':''}`;return h}
 function refresh(root,obj){highlightMissing(root,obj);highlightStems(root,obj);highlightCC(root,obj);highlightLimits(root,obj);const q=root.querySelector('.qres');if(q)q.innerHTML=qresHTML(obj)}
-function extraFields(){return isSafe()?{sd:today(),li:'',qs:'',qt:'',qp:'',rec:'',wp:'',st:'',ph:''}:{}}
+function extraFields(){return isSafe()?{sd:today(),by:curSurv(),li:'',qs:'',qt:'',qp:'',rec:'',wp:'',st:'',ph:''}:{sd:today(),by:curSurv()}}
 function highlightCC(root,obj){const el=root.querySelector('input[data-k="cc"]');if(!el)return;
  el.classList.toggle('needs-check',!!obj&&num(obj.cc)===0)}
 function highlightStems(root,obj){const cnt=obj?requiredStemCount(obj):0;
@@ -519,10 +520,10 @@ map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle select
   if(im&&!confirm(im+'\nPlot anyway?'))return;
   t.lat=sn.lat;t.lon=sn.lng;
   const n=T.find(x=>x.lat==null&&x!==t);if(n)select(n);else{setMode('queue');select(t)}save()}
- else if(mode==='paste'&&clip&&clip.kind=='tree'){if(!confirmLeave('Paste a copy here anyway?'))return;const t={...clip.data,ref:newTree().ref,lat:sn.lat,lon:sn.lng};T.push(t);select(t);save()}
+ else if(mode==='paste'&&clip&&clip.kind=='tree'){if(!confirmLeave('Paste a copy here anyway?'))return;const t={...clip.data,ref:newTree().ref,sd:today(),by:curSurv(),lat:sn.lat,lon:sn.lng};T.push(t);select(t);save()}
  else if(mode==='paste'&&clip&&clip.kind=='poly'){const src=clip.data,c=turf.centerOfMass(feat(src)).geometry.coordinates,dLat=e.latlng.lat-c[1],dLon=e.latlng.lng-c[0];
   const pre={Group:'G',Woodland:'W',Hedge:'H'}[src.kind]||'G';
-  const p={...src,ref:nextRef(pre),ll:src.ll.map(v=>[v[0]+dLat,v[1]+dLon])};PG.push(p);selectP(p);save()}
+  const p={...src,ref:nextRef(pre),sd:today(),by:curSurv(),ll:src.ll.map(v=>[v[0]+dLat,v[1]+dLon])};PG.push(p);selectP(p);save()}
  else if(mode==='poly'){if(pts.length>=3){const a=map.latLngToContainerPoint(pts[0]),b=map.latLngToContainerPoint(e.latlng),tol=matchMedia('(pointer:coarse)').matches?24:14;if(a.distanceTo(b)<=tol)return $('bFin').click()}/* tap the first corner again to finish */pts.push([e.latlng.lat,e.latlng.lng]);draft();banner()}
  else if(mode==='sv'){svOpen(e.latlng);setMode('sv')}
  else if(mode==='rot'){}
@@ -592,7 +593,7 @@ function addRec(root,obj,v){if(!obj||!v)return;if(/^none$/i.test(v))obj.rec='Non
 fm.addEventListener('click',e=>{const b=e.target.closest('.stp');if(!b||!sel)return;const k=b.dataset.k,step=+b.dataset.s,inp=b.parentElement.querySelector('input');
  sel[k]=Math.max(0,rnd(num(inp.value)+step,Math.abs(step)));inp.value=sel[k];draw(sel);if(k[0]=='c'||k[0]=='d')handles();ro();list();refresh(fm,sel);save()});
 fm.addEventListener('input',e=>{const el=e.target,k=el.dataset.k;if(!k||!sel||el.type=='button')return;
- sel[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;
+ sel[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;stampSv(sel);
  draw(sel);if(k[0]=='c'||k[0]=='d')handles();ro();list();refresh(fm,sel);save()});
 fm.addEventListener('change',e=>{const el=e.target;if(el.dataset.act!='rec'||!sel)return;addRec(fm,sel,el.value);el.value='';draw(sel);list();refresh(fm,sel);save()});
 function fill(t){fm.querySelectorAll('[data-k],[data-act]').forEach(el=>{const v=t&&el.dataset.k?t[el.dataset.k]:'';el.type=='checkbox'?el.checked=v=='Y':el.value=v??'';el.disabled=!t});$('bNotes').disabled=!t;refresh(fm,t);ro()}
@@ -712,7 +713,7 @@ buildForms();
 pf.addEventListener('click',e=>{const b=e.target.closest('.stp');if(!b||!selP)return;const k=b.dataset.k,step=+b.dataset.s,inp=b.parentElement.querySelector('input');
  selP[k]=Math.max(0,rnd(num(inp.value)+step,Math.abs(step)));inp.value=selP[k];drawP(selP);proro();list();refresh(pf,selP);save()});
 pf.addEventListener('input',e=>{const el=e.target,k=el.dataset.k;if(!k||!selP||el.type=='button')return;
- selP[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;
+ selP[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;stampSv(selP);
  if(k==='kind'){const letter={Group:'G',Woodland:'W',Hedge:'H'}[selP.kind]||'G',n=(/\d+$/.exec(selP.ref)||['1'])[0];selP.ref=letter+n;const ri=pf.querySelector('[data-k=ref]');if(ri)ri.value=selP.ref}
  drawP(selP);proro();list();refresh(pf,selP);save()});
 pf.addEventListener('change',e=>{const el=e.target;if(el.dataset.act!='rec'||!selP)return;addRec(pf,selP,el.value);el.value='';drawP(selP);list();refresh(pf,selP);save()});
@@ -1223,6 +1224,7 @@ const otherMeta=t=>{try{return(JSON.parse(localStorage.getItem(dsKey(t))||'null'
 function openType(){document.querySelector(`input[name=stype][value=${ST}]`).checked=true;
  const ms=isSafe()?META:otherMeta('safety'),mb=isSafe()?otherMeta('bs5837'):META;
  $('tSid').value=ms.sid||'';$('tSname').value=ms.sname||'';$('tReason').value=ms.reason||'';$('tPno').value=mb.pno||'';$('tPname').value=mb.pname||'';
+ $('tSurv').value=META.surv||defSurv();
  document.querySelectorAll('#tpanel .tc').forEach(el=>{const n=el.dataset.c===ST?T.length+PG.length:dsCount(el.dataset.c);el.textContent=n?n+' feature'+(n>1?'s':'')+' saved on this device':'No features saved yet'});
  tChk();$('tovl').hidden=false;setTimeout(()=>{const f=isSafe()?$('tSid'):$('tPno');if(!f.value)f.focus()},50)}
 $('bType').onclick=openType;
@@ -1230,8 +1232,13 @@ $('tpanel').addEventListener('input',tChk);$('tpanel').addEventListener('change'
 $('tClose').onclick=()=>{$('tovl').hidden=true};
 $('tApply').onclick=()=>{const nt=document.querySelector('input[name=stype]:checked').value;
  const m=nt==='safety'?{sid:$('tSid').value.trim(),sname:$('tSname').value.trim(),reason:$('tReason').value.trim()}:{pno:$('tPno').value.trim(),pname:$('tPname').value.trim()};
+ m.surv=$('tSurv').value.trim();
  {const miss=metaMissing(m,nt);if(miss.length&&!confirm((nt==='safety'?'Safety survey':'BS5837 project')+' details are incomplete:\n\u2022 '+miss.join('\n\u2022 ')+'\n\nContinue anyway? (You can add them later from the 📋 Survey type button.)'))return}
- if(!switchType(nt))return;META={...META,...m};save();$('tovl').hidden=true};
+ if(!switchType(nt))return;META={...META,...m};try{if(m.surv)localStorage.setItem(KEY+'_surveyor',m.surv)}catch(x){}save();$('tovl').hidden=true};
+// surveyor name: remembered on this device; Andy Luddington by default
+function defSurv(){try{return localStorage.getItem(KEY+'_surveyor')||'Andy Luddington'}catch(x){return'Andy Luddington'}}
+function stampSv(o){if(o&&!o.sd)o.sd=today();if(o&&!o.by)o.by=curSurv()}
+function curSurv(){return(typeof META!=='undefined'&&META&&META.surv)||defSurv()}
 // export file names start with the project / site details from the Survey type screen
 const fnPart=s=>String(s||'').trim().replace(/[\\\/:*?"<>|,;]+/g,'').replace(/\s+/g,'_').replace(/_+/g,'_');
 function expName(ext){if(isSafe())return(fnPart(META.sid)||'SITE_NUMBER')+'_'+(fnPart(META.sname)||'SITE_NAME')+'-'+(ext==='dxf'?'Safety_Tree_Survey':'Tree_Survey_Schedule')+'_'+stamp()+'.'+ext;
@@ -1342,7 +1349,7 @@ $('bDxf').onclick=dxf;
 // ---------- xlsx
 // Safety survey: same columns (A:AJ) as the 'Survey data' sheet of the Tree Survey Schedule, plus app columns for re-import
 const SHD=['Site ID','Site name','Reason for survey','Survey date','Tree Ref','Object type','Line item','Species','Number of stems','Stem 1 diameter (mm)','Stem 2 diameter (mm)','Stem 3 diameter (mm)','Stem 4 diameter (mm)','Stem 5 diameter (mm)','Crown spread north (m)','Crown spread east (m)','Crown spread south (m)','Crown spread west (m)','Crown clearance (m)','Height (m)','Age class','Physiological condition','Notes','QTRA - Size','QTRA - Target range','QTRA - Probability of failure','QTRA - Risk Index','Tolerability of risk region','Recommendations','Work priority','Safety action date','Status','Coordinates \n(British National Grid e.g.377,756.86E 163,001.69N)','X','Y','Photo filename'];
-const SXH=['Latitude (WGS84)','Longitude (WGS84)','Vertices (lat,lon)','Vertices (OSGB E,N)','Area (m2)','QTRA size code','QTRA target code','Crown rotation (deg)'];
+const SXH=['Latitude (WGS84)','Longitude (WGS84)','Vertices (lat,lon)','Vertices (OSGB E,N)','Area (m2)','QTRA size code','QTRA target code','Crown rotation (deg)','Surveyor'];
 const xlSerial=iso=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||'');return m?(Date.UTC(+m[1],m[2]-1,+m[3])-Date.UTC(1899,11,30))/864e5:''};
 function fromXlDate(v){if(v==null||v==='')return'';if(typeof v=='number')return new Date(Date.UTC(1899,11,30)+Math.round(v)*864e5).toISOString().slice(0,10);
  if(v instanceof Date)return isoD(v);const t=String(v).trim();let m=/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/.exec(t);if(m)return m[3]+'-'+pad2(m[2])+'-'+pad2(m[1]);m=/^(\d{4})-(\d\d)-(\d\d)/.exec(t);return m?m[0]:''}
@@ -1353,7 +1360,7 @@ function safeRow(o,type){const isT=type==='Tree',q=qtra(o);let e=null,ll=null;
   qdesc(QS,o.qs),qdesc(QT,o.qt),o.qp||'',q?+q.ri.toFixed(2):'',q?q.tol:'',o.rec||'',o.wp||'',xlSerial(actionDate(o)),o.st||'',
   e?fmtG(e[0])+'E '+fmtG(e[1])+'N':'',e?+e[0].toFixed(2):'',e?+e[1].toFixed(2):'',o.ph||'',
   ll?+ll[0].toFixed(8):'',ll?+ll[1].toFixed(8):'',isT?'':o.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),
-  isT?'':o.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; '),isT?'':+gA(o).toFixed(1),o.qs||'',o.qt||'',isT&&crot(o)?crot(o):'']}
+  isT?'':o.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; '),isT?'':+gA(o).toFixed(1),o.qs||'',o.qt||'',isT&&crot(o)?crot(o):'',o.by||META.surv||'']}
 function expSafety(){const all=[...T.map(t=>[t,'Tree']),...PG.map(p=>[p,p.kind])].sort((a,b)=>natCmp(a[0].ref,b[0].ref));
  const mm=metaMissing(META),inc=all.filter(([o])=>issueText(o)).map(([o])=>o.ref),un=T.filter(t=>t.lat==null).map(t=>t.ref);
  if(mm.length||inc.length||un.length){let m='';if(mm.length)m+='Safety survey details missing: '+mm.join(', ')+'\n';if(inc.length)m+=inc.length+' feature(s) incomplete or with values to check: '+inc.slice(0,25).join(', ')+(inc.length>25?'…':'')+'\n';if(un.length)m+=un.length+' tree(s) not plotted: '+un.slice(0,25).join(', ')+'\n';
@@ -1369,11 +1376,11 @@ function expSafety(){const all=[...T.map(t=>[t,'Tree']),...PG.map(p=>[p,p.kind])
 function isSafetyBook(wb){const ws=wb.Sheets['Survey data'];if(!ws)return false;const h=(XLSX.utils.sheet_to_json(ws,{header:1})[0]||[]).map(String);return h.includes('QTRA - Size')||h.includes('Tree Ref')&&h.includes('Object type')}
 function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
  XLSX.utils.sheet_to_json(wb.Sheets['Survey data'],{defval:''}).forEach(o=>{const ref=String(o['Tree Ref']).trim();if(!ref)return;
-  if(!meta&&(o['Site ID']!==''||o['Site name']!==''))meta={sid:String(o['Site ID']).trim(),sname:String(o['Site name']).trim(),reason:String(o['Reason for survey']).trim()};
+  if(!meta&&(o['Site ID']!==''||o['Site name']!==''))meta={sid:String(o['Site ID']).trim(),sname:String(o['Site name']).trim(),reason:String(o['Reason for survey']).trim()};if(meta&&!meta.surv&&String(o['Surveyor']??'').trim())meta.surv=String(o['Surveyor']).trim();
   const y=k=>String(o[k]??'').trim(),ck=Object.keys(o).find(k=>/^Coordinates/.test(k));
   const b={ref,sd:fromXlDate(o['Survey date']),li:y('Line item'),sp:y('Species'),n:num(o['Number of stems']),cc:num(o['Crown clearance (m)']),h:num(o['Height (m)']),
    cn:num(o['Crown spread north (m)']),ce:num(o['Crown spread east (m)']),cs:num(o['Crown spread south (m)']),cw:num(o['Crown spread west (m)']),age:y('Age class'),cond:y('Physiological condition'),notes:y('Notes'),
-   qs:qcode(QS,o['QTRA size code']||o['QTRA - Size']),qt:qcode(QT,o['QTRA target code']||o['QTRA - Target range']),qp:qcode(QP,o['QTRA - Probability of failure']),rec:y('Recommendations'),wp:y('Work priority'),st:y('Status'),ph:y('Photo filename'),fd:'',fh:0,cat:''};{const rr=num(o['Crown rotation (deg)']);if(rr)b.rot=((rr%360)+360)%360}
+   qs:qcode(QS,o['QTRA size code']||o['QTRA - Size']),qt:qcode(QT,o['QTRA target code']||o['QTRA - Target range']),qp:qcode(QP,o['QTRA - Probability of failure']),rec:y('Recommendations'),wp:y('Work priority'),st:y('Status'),ph:y('Photo filename'),by:y('Surveyor'),fd:'',fh:0,cat:''};{const rr=num(o['Crown rotation (deg)']);if(rr)b.rot=((rr%360)+360)%360}
   for(let i=1;i<=5;i++)b['d'+i]=num(o[`Stem ${i} diameter (mm)`]);
   const ok=v=>v!==undefined&&v!==''&&!isNaN(parseFloat(String(v).replace(/,/g,'')));let la=null,lo=null;
   if(ok(o['Latitude (WGS84)'])&&ok(o['Longitude (WGS84)'])&&num(o['Latitude (WGS84)'])){la=num(o['Latitude (WGS84)']);lo=num(o['Longitude (WGS84)'])}
@@ -1386,14 +1393,15 @@ function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
   if(v.length<3){skipped++;return}np.push({...b,kind:type,ll:v})});
  return{nt,np,meta,skipped}}
 $('bExp').onclick=()=>{if(!T.length&&!PG.length&&!SN.length)return alert('Nothing to export');if(isSafe())return expSafety();if(!projOK())return;
- const DH=['Type',...HD,'Label position','Crown rotation (deg)','Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
- const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),type==='Tree'?(o.lp||''):'',type==='Tree'&&crot(o)?crot(o):'',...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo];
+ const DH=['Type',...HD,'Survey date','Surveyor','Label position','Crown rotation (deg)','Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
+ const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),xlSerial(o.sd),o.by||META.surv||'',type==='Tree'?(o.lp||''):'',type==='Tree'&&crot(o)?crot(o):'',...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo];
  const tRows=T.map(t=>{const e=t.lat!=null?en(t):['',''];
   return row('Tree',t,[t.lat==null?'':+t.lat.toFixed(8),t.lat==null?'':+t.lon.toFixed(8),e[0]===''?'':+e[0].toFixed(2),e[1]===''?'':+e[1].toFixed(2),'','','',''])});
  const pRows=PG.map(p=>row(p.kind,p,['','','','',+gA(p).toFixed(1),+gPer(p).toFixed(1),p.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),p.ll.map(v=>{const e=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return e[0].toFixed(2)+','+e[1].toFixed(2)}).join('; ')]));
  const wb=XLSX.utils.book_new(),ws=XLSX.utils.aoa_to_sheet([DH,...tRows,...pRows]);ws['!cols']=DH.map(h=>({wch:Math.max(10,h.length)}));
+ {const ci=DH.indexOf('Survey date');for(let r=1;r<=tRows.length+pRows.length;r++){const cell=ws[XLSX.utils.encode_cell({r,c:ci})];if(cell&&cell.t=='n')cell.z='dd/mm/yyyy'}}
  XLSX.utils.book_append_sheet(wb,ws,'DATA');nSheet(wb);
- XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Project number',META.pno||''],['Project name',META.pname||'']]),'Project');
+ XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Project number',META.pno||''],['Project name',META.pname||''],['Surveyor',META.surv||'']]),'Project');
  if(site)XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Site address',site.name],['Latitude',site.lat],['Longitude',site.lon]]),'Site');logExport(wb,expName('xlsx'))};
 // ---------- 📊 data table: the whole survey (trees + groups/woodlands/hedges) as one spreadsheet-style table.
 // Tap a row to select it and centre it on the map; tick rows and press Batch edit to change them together.
@@ -1405,8 +1413,8 @@ function dtCols(){const ty=o=>T.includes(o)?'Tree':(o.kind||'Group'),stems=[1,2,
  if(isSafe())return[['Ref',o=>o.ref,'ref'],['Type',ty],['Survey date',o=>ukD(o.sd),'sd'],['Species',o=>dtv(o,'sp'),'sp'],['Stems',o=>o.n||'','n',1],...stems,...crown,
   ['Height (m)',dtN('h',1),'h',1],['Clearance (m)',o=>fx1(o.cc),'cc',1],['Age class',o=>dtv(o,'age'),'age'],['Condition',o=>dtv(o,'cond'),'cond'],
   ['QTRA size',o=>dtv(o,'qs'),'qs'],['QTRA target',o=>dtv(o,'qt'),'qt'],['QTRA probability',o=>dtv(o,'qp'),'qp'],['Risk index',o=>{const q=qtra(o);return q?String(Math.round(q.ri)):''},null,1],
-  ['Tolerability',o=>{const q=qtra(o);return q?q.tol:''},'tol'],['Recommendations',o=>dtv(o,'rec'),'rec'],['Work priority',o=>dtv(o,'wp'),'wp'],['Action date',o=>ukD(actionDate(o))],['Photo',o=>dtv(o,'ph'),'ph'],['Notes',o=>dtv(o,'notes'),'notes'],pl];
- return[['Ref',o=>o.ref,'ref'],['Type',ty],['Species',o=>dtv(o,'sp'),'sp'],['Stems',o=>o.n||'','n',1],...stems,...crown,['Height (m)',dtN('h',1),'h',1],['Clearance (m)',o=>fx1(o.cc),'cc',1],
+  ['Tolerability',o=>{const q=qtra(o);return q?q.tol:''},'tol'],['Recommendations',o=>dtv(o,'rec'),'rec'],['Work priority',o=>dtv(o,'wp'),'wp'],['Action date',o=>ukD(actionDate(o))],['Photo',o=>dtv(o,'ph'),'ph'],['Surveyor',o=>o.by||META.surv||'','by'],['Notes',o=>dtv(o,'notes'),'notes'],pl];
+ return[['Ref',o=>o.ref,'ref'],['Type',ty],['Survey date',o=>ukD(o.sd),'sd'],['Surveyor',o=>o.by||META.surv||'','by'],['Species',o=>dtv(o,'sp'),'sp'],['Stems',o=>o.n||'','n',1],...stems,...crown,['Height (m)',dtN('h',1),'h',1],['Clearance (m)',o=>fx1(o.cc),'cc',1],
   ['FSB dir',o=>dtv(o,'fd'),'fd'],['FSB ht (m)',dtN('fh',1),'fh',1],['Age class',o=>dtv(o,'age'),'age'],['Condition',o=>dtv(o,'cond'),'cond'],['Category',o=>dtv(o,'cat'),'cat'],
   ['RPR (m)',o=>rpr(o).toFixed(2),null,1],['RPA (m²)',o=>rpa(o).toFixed(1),null,1],['Notes',o=>dtv(o,'notes'),'notes'],pl]}
 const fx1=v=>v===''||v==null||isNaN(+v)?'':(+v).toFixed(1);
@@ -1478,12 +1486,12 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
   if(safeBook!==isSafe()){const to=safeBook?'safety':'bs5837';if(fromStart){if(!switchType(to))return}else if(!confirm(`This looks like a ${safeBook?'Safety (QTRA)':'BS5837'} survey file.\n\nSwitch to the ${safeBook?'Safety':'BS5837'} survey type and import it there?`))return;if(!switchType(to))return}
   const ss=wb.Sheets['Site'];if(ss&&!site){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ss,{header:1}).filter(r=>r[0]).map(r=>[r[0],r[1]]));if(a.Latitude&&a.Longitude)setSite({name:a['Site address']||'',lat:+a.Latitude,lon:+a.Longitude})}
   let nt=[],np=[],skipped=0;const ds=wb.Sheets['DATA'],ps=wb.Sheets['Project'];
-  if(ps&&!safeBook){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ps,{header:1}).filter(r=>r[0]).map(r=>[r[0],String(r[1]??'').trim()]));if((a['Project number']||a['Project name'])&&metaMissing(META).length)META={...META,pno:a['Project number']||META.pno||'',pname:a['Project name']||META.pname||''}}
+  if(ps&&!safeBook){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ps,{header:1}).filter(r=>r[0]).map(r=>[r[0],String(r[1]??'').trim()]));if((a['Project number']||a['Project name'])&&metaMissing(META).length)META={...META,pno:a['Project number']||META.pno||'',pname:a['Project name']||META.pname||''};if(a['Surveyor']&&!META.surv)META={...META,surv:a['Surveyor']}}
   if(safeBook){const r=parseSafety(wb);nt=r.nt;np=r.np;skipped=r.skipped;if(r.meta&&(!metaMissing(r.meta).length||metaMissing(META).length==3))META=r.meta}
   else if(ds){
    XLSX.utils.sheet_to_json(ds,{defval:''}).forEach(o=>{
     const type=String(o.Type||'Tree').trim(),ref=String(o.Ref!==undefined?o.Ref:o['Tree Ref']).trim();if(!ref)return;
-    const base={};K.forEach((k,i)=>{const v=o[HD[i]];base[k]=['sp','ref','age','cond','notes','fd','cat'].includes(k)?String(v).trim():num(v)});base.ref=ref;
+    const base={};K.forEach((k,i)=>{const v=o[HD[i]];base[k]=['sp','ref','age','cond','notes','fd','cat'].includes(k)?String(v).trim():num(v)});base.ref=ref;base.sd=fromXlDate(o['Survey date']);base.by=String(o['Surveyor']??'').trim();
     if(type==='Tree'){
      const t=Object.assign(newTree.call(0),base);
      const la=o['Latitude (WGS84)'],lo=o['Longitude (WGS84)'],E=o['Easting (OSGB36)'],N=o['Northing (OSGB36)'];
@@ -1503,7 +1511,7 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
     np.push({ref:y('Ref'),kind:['Group','Woodland','Hedge'].includes(y('Type'))?y('Type'):'Group',sp:y('Species composition')||y('Species'),n:num(o['Number of trees']!==undefined?o['Number of trees']:o['Number of stems']),d1:num(o['Largest stem diameter (mm)']!==undefined?o['Largest stem diameter (mm)']:o['Stem diameter 1 (mm)']),d2:0,d3:0,d4:0,d5:0,h:num(o['Height (m)']),cn:num(o['Crown spread north (m)']),ce:num(o['Crown spread east (m)']),cs:num(o['Crown spread south (m)']),cw:num(o['Crown spread west (m)']),cc:num(o['Crown clearance (m)']),fd:y('FSB Direction'),fh:num(o['FSB Height (m)']),age:y('Age class'),cond:y('Physiological condition'),cat:y('Retention category'),notes:y('Notes'),ll:v})});
    rows.forEach(o=>{const ref=String(o.Ref!==undefined?o.Ref:o['Tree Ref']).trim();if(!ref)return;const t=newTree.call(0);
     K.forEach((k,i)=>{const v=o[HD[i]];t[k]=['sp','ref','age','cond','notes','fd','cat'].includes(k)?String(v).trim():num(v)});
-    t.ref=ref;
+    t.ref=ref;t.sd=fromXlDate(o['Survey date']);t.by=String(o['Surveyor']??'').trim();
     const la=o['Latitude (WGS84)'],lo=o['Longitude (WGS84)'],E=o['Easting (OSGB36)'],N=o['Northing (OSGB36)'];
     const ok=v=>v!==undefined&&v!==''&&!isNaN(parseFloat(v));
     if(ok(la)&&ok(lo)&&!(num(la)==0&&num(lo)==0)){t.lat=num(la);t.lon=num(lo)}else if(ok(E)&&ok(N)){const pp=proj4('EPSG:27700','EPSG:4326',[num(E),num(N)]);t.lon=pp[0];t.lat=pp[1]}
