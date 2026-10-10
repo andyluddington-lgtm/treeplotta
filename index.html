@@ -109,7 +109,20 @@ aside.collapsed>#abody{display:none}
 .tUN{background:#ff0000;color:#fff!important}.tTR{background:#ffc000}.tTA{background:#ffff00}.tBA{background:#92d050}
 #list .td{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:4px;border:1px solid #0004;vertical-align:middle}
 #bType small{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}#bType{position:relative;display:inline-flex;align-items:center;justify-content:center}#bTypeI{font-size:20px;line-height:1}#bType.safety{background:#ffe2b8;border-color:#c77d00}
-#kovl[hidden]{display:none}#kovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}#kpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:92vh;overflow:auto}#kpanel h3{margin:0 0 2px}#kpanel .tnote{font-size:12px;color:#555;margin:0 0 6px;word-break:break-all}#kpanel .row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}#kpanel .kc{display:flex;gap:6px;align-items:center;font-size:13px;margin:4px 0}#kpanel .kc input{width:auto}#kpanel .kl{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:#1f3d2b;margin:10px 0 3px}#kpanel .kl input{width:60%}#kpanel input[type=color]{width:42px;height:26px;padding:0}#kList{border:1px solid #ddd;border-radius:6px;max-height:34vh;overflow:auto}#kList label{display:flex;gap:7px;align-items:center;padding:5px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;cursor:pointer}#kList input{width:auto}#kList i{width:12px;height:12px;border:1px solid #0006;border-radius:2px;flex:none}#kList small{color:#888;margin-left:auto}#bTopo.on{background:#d6f3ff;border-color:#0a7ab0}
+#kovl[hidden]{display:none}#kovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}#kpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:440px;width:100%;max-height:92vh;overflow:auto}#kpanel h3{margin:0 0 2px}#kpanel .tnote{font-size:12px;color:#555;margin:0 0 6px;word-break:break-all}#kpanel .row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}#kpanel .kc{display:flex;gap:6px;align-items:center;font-size:13px;margin:4px 0}#kpanel .kc input{width:auto}#kpanel .kl{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:#1f3d2b;margin:10px 0 3px}#kpanel .kl input{width:60%}#kpanel input[type=color]{width:42px;height:26px;padding:0}#kList{border:1px solid #ddd;border-radius:6px;max-height:34vh;overflow:auto}
+/* docked topo panel (no backdrop – the map stays visible and usable) */
+#kovl.side,#kovl.sheet{position:fixed;inset:auto;background:none;padding:0;z-index:1500;display:block}
+#kovl.side #kpanel,#kovl.sheet #kpanel{height:100%;max-height:none;max-width:none;border-radius:0;display:flex;flex-direction:column;box-shadow:2px 0 12px #0005;padding:10px 12px}
+#kovl.sheet #kpanel{border-radius:12px 12px 0 0;box-shadow:0 -3px 14px #0006;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+#kovl.side #kList,#kovl.sheet #kList{flex:1 1 auto;max-height:none;min-height:80px}
+#kovl.side .row,#kovl.sheet .row{margin-top:8px}
+#kpanel .khead{display:flex;align-items:center;justify-content:space-between}#kClose{min-height:32px;min-width:38px;font-size:15px}
+#kpanel .khint{font-size:11px;color:#666;margin:0 0 4px}#kOpts{margin-top:8px;border-top:1px solid #e3e3e3;padding-top:4px}#kOpts summary{font-weight:700;font-size:12px;color:#1f3d2b;cursor:pointer;padding:4px 0}
+#kOpts #kDel{margin-top:10px;font-size:12px}#kpanel .row button{flex:1}
+body.kside .leaflet-left{transform:translateX(var(--kw,0px))}
+#kList label .kn{flex:1;min-width:0;word-break:break-all}#kList label small{margin-left:0}
+#kList .kh{min-height:0;min-width:0;width:30px;height:28px;padding:0;border:1px solid #ccc;border-radius:6px;background:#fff;font-size:15px;line-height:1;flex:none;color:#a0a}
+#kList label.hl{background:#ffe6ff}#kList label.hl .kh{background:#ff00ff;color:#fff;border-color:#c0c}#kList label{display:flex;gap:7px;align-items:center;padding:5px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;cursor:pointer}#kList input{width:auto}#kList i{width:12px;height:12px;border:1px solid #0006;border-radius:2px;flex:none}#kList small{color:#888;margin-left:auto}#bTopo.on{background:#d6f3ff;border-color:#0a7ab0}
 #tovl[hidden]{display:none}
 #dovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}#dovl[hidden]{display:none}
 #dpanel{background:#fff;color:#222;border-radius:8px;flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
@@ -281,17 +294,22 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <div id="dovl" hidden><div id="dpanel"><div class="dhead"><b id="dTitle">Survey data</b><span id="dCount"></span><button id="dClose" title="Close">✕</button></div><div class="dtools"><input id="dQ" type="search" placeholder="Filter – ref, species, category, notes…"><label class="dmiss"><input type="checkbox" id="dMiss"> Incomplete only</label></div><div class="dwrap"><table id="dTbl"></table></div><div class="dfoot"><span class="dhint">Tap a row to open it on the map · tick rows to batch edit · tap a heading to sort</span><button id="dClr" hidden>Clear ticks</button><button id="dUndo" hidden>↶ Undo delete</button><button id="dDel" class="danger" hidden>🗑 Delete selected</button><button id="dBatch" disabled>☑ Batch edit selected</button></div></div></div>
 <div id="hovl" hidden><div id="hpanel"><h3 id="hTitle">Export history</h3><div id="hStat"></div><div class="row"><button id="hExp">⬇ Export xlsx now</button><button id="hClose">Close</button></div><label class="hboth"><input type="checkbox" id="hBoth"> Show both survey types</label><div id="hList"></div><button id="hClr" class="danger">Clear history</button></div></div>
 <div id="kovl" hidden><div id="kpanel">
-<h3>Topo survey</h3><div id="kName" class="tnote"></div>
+<div class="khead"><h3>Topo survey</h3><button id="kClose" title="Close">✕</button></div><div id="kName" class="tnote"></div>
+<div class="kl">Layers <span><button id="kAll" type="button">All</button> <button id="kNone" type="button">None</button></span></div>
+<div class="khint">Tick to show · ◎ highlights a layer on the map in magenta (even if switched off)</div>
+<div id="kList"></div>
+<details id="kOpts"><summary>Display options</summary>
 <label class="kc"><input type="checkbox" id="kOn"> Show topo survey</label>
 <label class="kc"><input type="checkbox" id="kTxt"> Show text and levels (appear as you zoom in)</label>
+<label class="kl">Text size<select id="kTsz"><option value="1">As drawn</option><option value="2">× 2</option><option value="4">× 4</option><option value="8">× 8</option></select></label><div id="kTxtN" class="tnote"></div>
 <label class="kc"><input type="checkbox" id="kSnap"> Snap new trees to circle centres <small id="kSnapN"></small></label>
 <label class="kl">Opacity<input type="range" id="kOp" min="15" max="100" step="5"></label>
 <div class="kl">Colours</div>
 <label class="kc"><input type="radio" name="kMode" value="dwg"> Drawing colours</label>
 <label class="kc"><input type="radio" name="kMode" value="mono"> Single colour <input type="color" id="kMono"></label>
-<div class="kl">Layers <span><button id="kAll" type="button">All</button> <button id="kNone" type="button">None</button></span></div>
-<div id="kList"></div>
-<div class="row"><button id="kFit">Zoom to topo</button><button id="kClose">Close</button><button id="kDel" class="danger">Remove topo</button></div>
+<button id="kDel" class="danger">Remove topo from this device</button>
+</details>
+<div class="row"><button id="kFit">Zoom to site</button><button id="kFitAll">Whole drawing</button></div>
 </div></div>
 <datalist id="rsl"><option value="Routine safety inspection"><option value="Reactive inspection"><option value="Post-storm inspection"><option value="Pre-works inspection"><option value="Re-inspection"></datalist>
 <datalist id="spl"></datalist>
@@ -788,7 +806,7 @@ function snap(ll){const p=snapTarget(ll);return p?L.latLng(p.lat,p.lon):ll}
 function snapRing(ll){const p=ll&&snapTarget(ll);if(p){ipRing.setLatLng([p.lat,p.lon]);if(!map.hasLayer(ipRing))ipRing.addTo(map)}else if(map.hasLayer(ipRing))map.removeLayer(ipRing)}
 // ---------- topo survey overlay (georeferenced ASCII DXF on British National Grid, drawn on a canvas above the basemap)
 const TOPO_DB='bs5837_topo_v1',TOPO_CFG=KEY+'_topo_cfg';
-let TOPO=null,tcfg={on:true,txt:true,snap:true,op:1,mode:'dwg',mono:'#00e5ff',off:[]};
+let TOPO=null,tcfg={on:true,txt:true,tsz:1,snap:true,op:1,mode:'dwg',mono:'#00e5ff',off:[]};
 try{Object.assign(tcfg,JSON.parse(localStorage.getItem(TOPO_CFG)||'{}'))}catch(x){}
 const tcfgSave=()=>{try{localStorage.setItem(TOPO_CFG,JSON.stringify(tcfg))}catch(x){}};
 function tdb(){return new Promise((res,rej)=>{const r=indexedDB.open(TOPO_DB,1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
@@ -841,6 +859,13 @@ function parseTopo(txt){if(/^AutoCAD Binary DXF/.test(txt))throw Error('This is 
     for(let s=0;s<=k;s++){const a=a0+(a1-a0)*s/k,c=Math.cos(a),sn=Math.sin(a);o.push(cx+c*mx-sn*ra*my,cy+c*my+sn*ra*mx)}line(M,L,col,o)}
    else if(t==='SPLINE'){const f=[],cp=[];let cx=null;r.g.forEach(([c,v])=>{if(c===11)cx=+v;else if(c===21&&cx!=null){f.push(cx,+v);cx=null}else if(c===10)r._x=+v;else if(c===20&&r._x!=null){cp.push(r._x,+v);r._x=null}});line(M,L,col,f.length>=4?f:cp)}
    else if(t==='POINT'){const q=ap(M,n(10),n(20));feats.push({k:'p',L,col,p:q})}
+   else if(t==='LEADER'){const o=[];let cx=null;r.g.forEach(([c,v])=>{if(c===10)cx=+v;else if(c===20&&cx!=null){o.push(cx,+v);cx=null}});line(M,L,col,o)}
+   else if(t==='MULTILEADER'||t==='MLEADER'){/* text (304), its position (12/22) and height (41); leader lines between LEADER_LINE{ … } */
+    let txt=null,tx=null,ty=null,th=null,inLL=false,cur=[],lx=null;const lines=[];
+    r.g.forEach(([c,v])=>{if(c===304&&v==='LEADER_LINE{'){inLL=true;cur=[];return}if(c===305&&inLL){inLL=false;if(cur.length>=4)lines.push(cur);return}
+     if(inLL){if(c===10)lx=+v;else if(c===20&&lx!=null){cur.push(lx,+v);lx=null}return}
+     if(c===304&&txt==null&&!/\{$/.test(v))txt=v;else if(c===12&&tx==null)tx=+v;else if(c===22&&ty==null)ty=+v;else if(c===41&&th==null)th=+v});
+    lines.forEach(o=>line(M,L,col,o));if(txt&&tx!=null&&ty!=null)text(M,L,col,tx,ty,th>0?th:1,0,mtextClean(txt),0,3)}
    else if(t==='TEXT'||t==='ATTRIB'){if(t==='ATTRIB'&&(n(70)&1))continue;let ha=n(72),va=t==='TEXT'?n(73):n(74);const al=(ha||va)&&ha!==3&&ha!==5&&gv(r,11)!=null;if(ha===3||ha===5)ha=0;if(ha===4){ha=1;va=2}let x=al?n(11):n(10),y=al?n(21):n(20),rot=n(50)*Math.PI/180;
     if(+(gv(r,230)||1)<0){x=-x;rot=Math.PI-rot}text(M,L,col,x,y,n(40),rot,(gv(r,1)||'').replace(/%%[cC]/g,'Ø').replace(/%%[dD]/g,'°').replace(/%%[pP]/g,'±').replace(/%%[uUoO]/g,''),[0,1,2][ha]??0,[0,1,2,3][va]??0)}
    else if(t==='MTEXT'){const s=r.g.filter(x=>x[0]===3).map(x=>x[1]).join('')+(gv(r,1)||''),at=n(71)||1;let rot=n(50)*Math.PI/180;const dx=gv(r,11);if(dx!=null)rot=Math.atan2(n(21),n(11));
@@ -864,14 +889,24 @@ function topoBuild(name,res){const inG=(x,y)=>x>1000&&x<=700000&&y>1000&&y<=1300
  f.forEach(o=>{let bad=false;for(let i=0;i<o.p.length;i+=2)if(!inG(o.p[i]*sc,o.p[i+1]*sc)){bad=true;break}if(bad){dropped++;return}
   const p=new Float64Array(o.p.length);let x0=1e18,y0=1e18,x1=-1e18,y1=-1e18;
   for(let i=0;i<o.p.length;i+=2){const q=P(o.p[i],o.p[i+1]);p[i]=q[0];p[i+1]=q[1];x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1])}
-  const g={...o,p,bb:[x0,y0,x1,y1]};if(o.cc){const ll=proj4('EPSG:27700','EPSG:4326',[o.cc[0]*sc,o.cc[1]*sc]);g.c=[ll[1],ll[0]];delete g.cc}if(o.k==='t'){g.h=o.h*sc*k;const r=g.h*Math.max(...o.s.map(s=>s.length))*0.7+g.h*o.s.length*1.5;g.bb=[x0-r,y0-r,x1+r,y1+r]}out.push(g)});
+  const g={...o,p,bb:[x0,y0,x1,y1]};if(o.cc){const ll=proj4('EPSG:27700','EPSG:4326',[o.cc[0]*sc,o.cc[1]*sc]);g.c=[ll[1],ll[0]];delete g.cc}if(o.k==='t'){g.h=o.h*sc*k;const r=8*(g.h*Math.max(...o.s.map(s=>s.length))*0.7+g.h*o.s.length*1.5);g.bb=[x0-r,y0-r,x1+r,y1+r]}out.push(g)});
  const L={};Object.entries(res.layers).forEach(([n,v])=>L[n]={c:v.c,off:v.off,n:0});out.forEach(o=>{if(!L[o.L])L[o.L]={c:7,off:false,n:0};L[o.L].n++});
  // texts last so they sit on top of linework
  out.sort((a,b)=>(a.k==='t')-(b.k==='t'));
  let bx=[1e18,1e18,-1e18,-1e18];out.forEach(o=>{bx=[Math.min(bx[0],o.bb[0]),Math.min(bx[1],o.bb[1]),Math.max(bx[2],o.bb[2]),Math.max(bx[3],o.bb[3])]});
+ /* main site extent: group objects into ~250 m grid cells, keep the connected group of cells holding the most objects.
+    Title blocks, keys or stray items well away from the survey then don't make the map zoom right out. */
+ let site=bx,far=0;if(out.length>20){const cell=250*k,cnt=new Map(),key=o=>Math.floor((o.bb[0]+o.bb[2])/2/cell)+','+Math.floor((o.bb[1]+o.bb[3])/2/cell);
+  out.forEach(o=>{const q=key(o);cnt.set(q,(cnt.get(q)||0)+1)});const seen=new Set();let best=null,bestN=0;
+  for(const c0 of cnt.keys()){if(seen.has(c0))continue;const comp=new Set([c0]),st=[c0];seen.add(c0);let n=0;
+   while(st.length){const c=st.pop();n+=cnt.get(c);const[a,b]=c.split(',').map(Number);for(let i=-1;i<=1;i++)for(let j=-1;j<=1;j++){const q=(a+i)+','+(b+j);if(cnt.has(q)&&!seen.has(q)){seen.add(q);comp.add(q);st.push(q)}}}
+   if(n>bestN){bestN=n;best=comp}}
+  if(best&&bestN<out.length){site=[1e18,1e18,-1e18,-1e18];out.forEach(o=>{if(best.has(key(o))){site=[Math.min(site[0],o.bb[0]),Math.min(site[1],o.bb[1]),Math.max(site[2],o.bb[2]),Math.max(site[3],o.bb[3])]}else far++})}}
+ const tx=out.filter(o=>o.k==='t');
  /* KEEP – circ: topo circle centres used by snapTarget() */
- return{name,feats:out,circ:out.filter(o=>o.c),layers:L,bbox:bx,dropped,scaled:sc!==1}}
+ return{name,feats:out,circ:out.filter(o=>o.c),layers:L,bbox:bx,site,far,ntext:tx.length,scaled:sc!==1,dropped}}
 map.createPane('topoPane').style.zIndex=350;map.getPane('topoPane').style.pointerEvents='none';
+let topoHL=null;/* layer picked with ◎ in the topo panel: drawn bright magenta, everything else faded */
 const TopoLayer=L.Layer.extend({
  onAdd(m){this._c=L.DomUtil.create('canvas','');this._c.style.position='absolute';m.getPane('topoPane').appendChild(this._c);m.on('moveend resize viewreset baselayerchange',this.redraw,this);m.on('zoomstart',this._hide,this);this.redraw()},
  onRemove(m){this._c.remove();m.off('moveend resize viewreset baselayerchange',this.redraw,this);m.off('zoomstart',this._hide,this)},
@@ -882,10 +917,10 @@ const TopoLayer=L.Layer.extend({
   const W=m.hasLayer(sat)?'#ffffff':'#000000',off=new Set(tcfg.off),lc={};Object.entries(TOPO.layers).forEach(([n,o])=>{const a=aci(o.c);lc[n]=a==='W'?W:a});
   const colour=o=>tcfg.mode==='mono'?tcfg.mono:(o.col==null?lc[o.L]:o.col==='W'?W:o.col);
   x.lineWidth=1;x.lineJoin='round';let last='';
-  for(const o of TOPO.feats){if(off.has(o.L))continue;const b=o.bb;if(b[2]<v[0]||b[0]>v[2]||b[3]<v[1]||b[1]>v[3])continue;const cl=colour(o);
+  const hl=topoHL;let lw=1;for(const o of TOPO.feats){const isH=hl!=null&&o.L===hl;if(off.has(o.L)&&!isH)continue;const b=o.bb;if(b[2]<v[0]||b[0]>v[2]||b[3]<v[1]||b[1]>v[3])continue;const cl=isH?'#ff00ff':colour(o);x.globalAlpha=hl!=null&&!isH?0.22:1;const w=isH?3:1;if(w!==lw){x.lineWidth=w;lw=w}
    if(o.k==='l'){if((b[2]-b[0])*s<0.5&&(b[3]-b[1])*s<0.5)continue;if(cl!==last){x.strokeStyle=cl;last=cl}x.beginPath();const p=o.p;x.moveTo(p[0]*s-ox,p[1]*s-oy);for(let i=2;i<p.length;i+=2)x.lineTo(p[i]*s-ox,p[i+1]*s-oy);x.stroke()}
    else if(o.k==='p'){x.fillStyle=cl;x.fillRect(o.p[0]*s-ox-1.5,o.p[1]*s-oy-1.5,3,3)}
-   else if(o.k==='t'&&tcfg.txt){const hp=o.h*s;if(hp<4||hp>600)continue;x.save();x.translate(o.p[0]*s-ox,o.p[1]*s-oy);x.rotate(-o.rot);x.fillStyle=cl;x.font=hp.toFixed(1)+'px Arial,sans-serif';
+   else if(o.k==='t'&&tcfg.txt){const hp=o.h*s*(+tcfg.tsz||1);if(hp<3||hp>600)continue;x.save();x.translate(o.p[0]*s-ox,o.p[1]*s-oy);x.rotate(-o.rot);x.fillStyle=cl;x.font=hp.toFixed(1)+'px Arial,sans-serif';
     x.textAlign=['left','center','right'][o.ha]||'left';x.textBaseline=['alphabetic','bottom','middle','top'][o.va]||'alphabetic';
     const n=o.s.length,lh=hp*1.35;o.s.forEach((t,i)=>{const dy=o.va===3?i*lh:o.va===2?(i-(n-1)/2)*lh:(i-(n-1))*lh;x.fillText(t,0,dy)});x.restore()}}}
 });
@@ -893,17 +928,27 @@ const topoL=new TopoLayer();
 function topoShow(){const on=!!TOPO&&tcfg.on;if(on&&!map.hasLayer(topoL))topoL.addTo(map);else if(!on&&map.hasLayer(topoL))map.removeLayer(topoL);else if(on)topoL.redraw();
  const b=$('bTopo');b.hidden=!TOPO;b.classList.toggle('on',on);b.title=TOPO?(on?'Hide':'Show')+' topo survey ('+TOPO.name+')':''}
 function topoPanel(){if(!TOPO)return alert('No topo survey loaded – use Import topo survey (DXF) first.');
- $('kName').textContent=TOPO.name+' · '+TOPO.feats.length.toLocaleString('en-GB')+' objects';$('kOn').checked=tcfg.on;$('kTxt').checked=tcfg.txt;$('kSnap').checked=tcfg.snap;$('kSnapN').textContent='('+TOPO.circ.length.toLocaleString('en-GB')+' circles – visible layers only)';$('kOp').value=Math.round(tcfg.op*100);
+ $('kName').textContent=TOPO.name+' · '+TOPO.feats.length.toLocaleString('en-GB')+' objects';$('kOn').checked=tcfg.on;$('kTxt').checked=tcfg.txt;$('kTsz').value=String(tcfg.tsz||1);$('kTxtN').textContent=(TOPO.ntext!=null?TOPO.ntext.toLocaleString('en-GB'):'?')+' text label(s) in the drawing.';$('kSnap').checked=tcfg.snap;$('kSnapN').textContent='('+TOPO.circ.length.toLocaleString('en-GB')+' circles – visible layers only)';$('kOp').value=Math.round(tcfg.op*100);
  document.querySelector(`input[name=kMode][value=${tcfg.mode}]`).checked=true;$('kMono').value=tcfg.mono;const off=new Set(tcfg.off);
- $('kList').innerHTML=Object.entries(TOPO.layers).filter(([,o])=>o.n).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,o])=>{const c=aci(o.c);return `<label><input type="checkbox" data-l="${esc(n)}" ${off.has(n)?'':'checked'}><i style="background:${c==='W'?'#fff':c}"></i>${esc(n)} <small>${o.n}</small></label>`}).join('');
- $('kovl').hidden=false}
+ $('kList').innerHTML=Object.entries(TOPO.layers).filter(([,o])=>o.n).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,o])=>{const c=aci(o.c);return `<label class="${topoHL===n?'hl':''}"><input type="checkbox" data-l="${esc(n)}" ${off.has(n)?'':'checked'}><i style="background:${c==='W'?'#fff':c}"></i><span class="kn">${esc(n)}</span> <small>${o.n}</small><button type="button" class="kh" data-h="${esc(n)}" title="Highlight this layer on the map">◎</button></label>`}).join('');
+ $('kovl').hidden=false;kDock()}
 $('kovl').addEventListener('input',e=>{const t=e.target;if(t.dataset.l!=null){const s=new Set(tcfg.off);t.checked?s.delete(t.dataset.l):s.add(t.dataset.l);tcfg.off=[...s]}
- else if(t.id==='kOn')tcfg.on=t.checked;else if(t.id==='kTxt')tcfg.txt=t.checked;else if(t.id==='kSnap'){tcfg.snap=t.checked;tcfgSave();return}else if(t.id==='kOp')tcfg.op=t.value/100;else if(t.name==='kMode')tcfg.mode=t.value;else if(t.id==='kMono'){tcfg.mono=t.value;tcfg.mode='mono';document.querySelector('input[name=kMode][value=mono]').checked=true}
+ else if(t.id==='kOn')tcfg.on=t.checked;else if(t.id==='kTxt')tcfg.txt=t.checked;else if(t.id==='kTsz')tcfg.tsz=+t.value;else if(t.id==='kSnap'){tcfg.snap=t.checked;tcfgSave();return}else if(t.id==='kOp')tcfg.op=t.value/100;else if(t.name==='kMode')tcfg.mode=t.value;else if(t.id==='kMono'){tcfg.mono=t.value;tcfg.mode='mono';document.querySelector('input[name=kMode][value=mono]').checked=true}
  tcfgSave();topoShow()});
 $('kAll').onclick=()=>{tcfg.off=[];$('kList').querySelectorAll('input').forEach(c=>c.checked=true);tcfgSave();topoShow()};
 $('kNone').onclick=()=>{tcfg.off=Object.keys(TOPO.layers);$('kList').querySelectorAll('input').forEach(c=>c.checked=false);tcfgSave();topoShow()};
-$('kClose').onclick=()=>{$('kovl').hidden=true};
-$('kFit').onclick=()=>{if(!TOPO)return;const b=TOPO.bbox;map.fitBounds(L.latLngBounds(map.unproject([b[0],b[1]],0),map.unproject([b[2],b[3]],0)));$('kovl').hidden=true};
+$('kClose').onclick=()=>kUndock();
+function kDock(){document.body.classList.add('kdock');kPlace();setTimeout(()=>map.invalidateSize(),50)}
+function kUndock(){kPlace.done=0;$('kovl').hidden=true;document.body.classList.remove('kdock','kside');if(topoHL!=null){topoHL=null;topoShow()}setTimeout(()=>map.invalidateSize(),50)}
+/* docked: a side panel down the left of the map on tablets/desktop, a sheet over the lower part of the screen on phones – the map stays live */
+function kPlace(){if($('kovl').hidden)return;const r=$('map').getBoundingClientRect(),k=$('kovl');
+ if(!kPlace.done){$('kOpts').open=innerWidth>=700;kPlace.done=1}if(innerWidth>=700){k.className='side';k.style.top=r.top+'px';k.style.left=r.left+'px';k.style.height=r.height+'px';const w=Math.round(Math.min(340,r.width*0.45));k.style.width=w+'px';k.style.right='';k.style.bottom='';document.body.classList.add('kside');document.body.style.setProperty('--kw',w+'px')}
+ else{k.className='sheet';document.body.classList.remove('kside');const top=r.top+Math.round(r.height*0.42);k.style.top=top+'px';k.style.left='0';k.style.right='0';k.style.bottom='0';k.style.width='';k.style.height=''}}
+addEventListener('resize',kPlace);
+$('kList').addEventListener('click',e=>{const b=e.target.closest('.kh');if(!b)return;e.preventDefault();e.stopPropagation();const n=b.dataset.h;topoHL=topoHL===n?null:n;
+ $('kList').querySelectorAll('label').forEach(l=>l.classList.toggle('hl',l.querySelector('.kh').dataset.h===topoHL));topoShow()});
+const topoFit=b=>map.fitBounds(L.latLngBounds(map.unproject([b[0],b[1]],0),map.unproject([b[2],b[3]],0)),{maxZoom:20});
+$('kFit').onclick=()=>{if(!TOPO)return;topoFit(TOPO.site||TOPO.bbox)};$('kFitAll').onclick=()=>{if(!TOPO)return;topoFit(TOPO.bbox)};
 $('kDel').onclick=async()=>{if(!confirm('Remove the topo survey from this device?\n\nYour trees, polygons and imported points are not affected.'))return;TOPO=null;await tdbDo('readwrite',s=>s.delete('topo'));tcfg.off=[];tcfgSave();$('kovl').hidden=true;topoShow()};
 $('bTopo').onclick=()=>{tcfg.on=!tcfg.on;tcfgSave();topoShow()};
 $('bTopoCfg').onclick=topoPanel;
@@ -916,8 +961,8 @@ $('tFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)re
   if(!r.feats.length)return alert('No drawable linework, points or text found in the DXF model space.');
   TOPO=r;tcfg.on=true;tcfg.off=Object.entries(r.layers).filter(([,o])=>o.off).map(([n])=>n);tcfgSave();
   const saved=await tdbDo('readwrite',s=>s.put({name:f.name,txt},'topo'));
-  topoShow();const b=r.bbox;map.fitBounds(L.latLngBounds(map.unproject([b[0],b[1]],0),map.unproject([b[2],b[3]],0)));
-  alert(`${f.name}: ${r.feats.length.toLocaleString('en-GB')} objects on ${Object.values(r.layers).filter(o=>o.n).length} layers drawn over the basemap.`+(r.scaled?'\nDrawing units were millimetres – converted to metres.':'')+(r.dropped?`\n${r.dropped} object(s) away from the site (outside British National Grid, e.g. at 0,0) were left out.`:'')+(saved===null?'\n\n⚠ The file could not be stored on this device, so it will need importing again next time.':'')+(r.circ.length?`\n\n${r.circ.length.toLocaleString('en-GB')} circles found – new trees snap to their centres (only on layers you leave switched on).`:'')+'\n\nUse 🗺 Topo layers & style in the menu to switch layers off, change colours or transparency.');
+  topoShow();topoFit(r.site||r.bbox);
+  alert(`${f.name}: ${r.feats.length.toLocaleString('en-GB')} objects on ${Object.values(r.layers).filter(o=>o.n).length} layers drawn over the basemap.`+(r.scaled?'\nDrawing units were millimetres – converted to metres.':'')+(r.dropped?`\n${r.dropped} object(s) away from the site (outside British National Grid, e.g. at 0,0) were left out.`:'')+(r.far?`\nZoomed to the main survey area – ${r.far.toLocaleString('en-GB')} object(s) lie well away from it (e.g. a title block, key or stray items). Use “Whole drawing” in Topo layers & style to see them.`:'')+`\n${r.ntext?r.ntext.toLocaleString('en-GB')+' text label(s) – small text appears as you zoom in; Text size ×2 / ×4 in Topo layers & style makes it readable sooner.':'No text found in model space.'}`+(saved===null?'\n\n⚠ The file could not be stored on this device, so it will need importing again next time.':'')+(r.circ.length?`\n\n${r.circ.length.toLocaleString('en-GB')} circles found – new trees snap to their centres (only on layers you leave switched on).`:'')+'\n\nUse 🗺 Topo layers & style in the menu to switch layers off, change colours or transparency.');
   topoPanel()}catch(x){alert('Topo import failed: '+x.message)}finally{save()}};
 (async()=>{const d=await tdbDo('readonly',s=>s.get('topo'));if(!d||!d.txt)return;try{TOPO=topoFromText(d.name,d.txt);topoShow()}catch(x){}})();
 
