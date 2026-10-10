@@ -36,6 +36,7 @@ header .tools #bCopy:not([hidden])::before{content:'';position:absolute;left:-7p
 .maptools{display:flex;flex-direction:column;background:#fff}.maptools button{width:34px;height:34px;min-height:0;min-width:0;border:0;border-bottom:1px solid #ccc;background:#fff;font-size:17px;line-height:34px;padding:0;cursor:pointer;color:#222;border-radius:0}
 .maptools button:last-child{border-bottom:0}.maptools button.on{background:#ffd54f}.maptools button:hover{background:#f2f2f2}
 @media(pointer:coarse){.maptools button{width:42px;height:42px;line-height:42px;font-size:20px}}
+#bn [data-rot]{min-height:28px;padding:2px 8px;margin:2px 1px}.h.rotg{background:#ffd54f;border-color:#a07800;font-size:12px;line-height:14px}
 #bn #bxEnd{min-height:28px;padding:2px 10px;margin-left:4px;font-weight:700}
 
 @media(max-width:520px){header .row.tools{gap:4px}header .row.tools button{min-width:0;flex:1 1 0;padding:6px 2px;font-size:17px}}
@@ -238,7 +239,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 <div class="row"><b class="ttl">🌳 <span>TreePlotta</span></b>
 <span class="sr"><input id="q" type="search" placeholder="Search site address / postcode ⏎"><div id="res" hidden></div></span>
 <span id="offBadge">📴</span> <span id="dot" title="Local save status">●</span><button id="bMenu" title="Menu">☰</button></div>
-<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)"><span id="bTypeI" aria-hidden="true">🏗️</span><small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.6c2.3 0 4.1 1.5 4.6 3.5 2 .3 3.6 2.1 3.6 4.2 0 1.6-.9 3-2.2 3.7.1.3.1.6.1.9 0 2.1-1.8 3.8-4 3.8h-4.2c-2.2 0-4-1.7-4-3.8 0-.3 0-.6.1-.9-1.3-.7-2.2-2.1-2.2-3.7 0-2.1 1.6-3.9 3.6-4.2.5-2 2.3-3.5 4.6-3.5Z" fill="currentColor" fill-opacity=".1"/><path d="M12 18.7v3.1M10 21.8h4"/><path d="M12 7.6v7.2M8.4 11.2h7.2" stroke-width="2.2"/></svg></button><button id="bPoly" title="Draw polygon (group / woodland / hedge)"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 4.6C9.6 3.2 13.4 3.6 15.6 4.9 17.9 6.2 20.6 7.6 20.9 10.4 21.2 13.2 19.6 15.4 18.8 17.4 17.9 19.6 15.2 20.6 12.4 20.4 9.6 20.2 6.4 19.9 4.6 17.8 2.8 15.7 2.7 12.6 3.4 10.1 4.1 7.6 4.9 6 7.2 4.6Z" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><g fill="currentColor"><circle cx="7.2" cy="4.6" r="1.9"/><circle cx="20.9" cy="10.4" r="1.9"/><circle cx="12.4" cy="20.4" r="1.9"/><circle cx="3.4" cy="10.1" r="1.9"/></g></svg></button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bNote" title="Site note – tap the map for a point note, or draw an area note">📝</button><button id="bTableT" title="Data table – all trees and groups at a glance, filter, sort and batch edit">📊</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bCopy" class="ctx" hidden title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bLbl" class="ctx" hidden title="Move tree reference labels – tap a tree, then pick a compass direction">🏷</button><button id="bDel" class="danger ctx" hidden title="Delete selected">🗑</button></div>
+<div class="row tools"><button id="bType" title="Survey type – switch between BS5837 and Safety (QTRA)"><span id="bTypeI" aria-hidden="true">🏗️</span><small id="bTypeL">BS5837</small></button><button id="bAdd" title="Add tree"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.6c2.3 0 4.1 1.5 4.6 3.5 2 .3 3.6 2.1 3.6 4.2 0 1.6-.9 3-2.2 3.7.1.3.1.6.1.9 0 2.1-1.8 3.8-4 3.8h-4.2c-2.2 0-4-1.7-4-3.8 0-.3 0-.6.1-.9-1.3-.7-2.2-2.1-2.2-3.7 0-2.1 1.6-3.9 3.6-4.2.5-2 2.3-3.5 4.6-3.5Z" fill="currentColor" fill-opacity=".1"/><path d="M12 18.7v3.1M10 21.8h4"/><path d="M12 7.6v7.2M8.4 11.2h7.2" stroke-width="2.2"/></svg></button><button id="bPoly" title="Draw polygon (group / woodland / hedge)"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 4.6C9.6 3.2 13.4 3.6 15.6 4.9 17.9 6.2 20.6 7.6 20.9 10.4 21.2 13.2 19.6 15.4 18.8 17.4 17.9 19.6 15.2 20.6 12.4 20.4 9.6 20.2 6.4 19.9 4.6 17.8 2.8 15.7 2.7 12.6 3.4 10.1 4.1 7.6 4.9 6 7.2 4.6Z" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><g fill="currentColor"><circle cx="7.2" cy="4.6" r="1.9"/><circle cx="20.9" cy="10.4" r="1.9"/><circle cx="12.4" cy="20.4" r="1.9"/><circle cx="3.4" cy="10.1" r="1.9"/></g></svg></button><button id="bFin" hidden title="Finish polygon">✓</button><button id="bUndo" hidden title="Undo last point">↶</button><button id="bNote" title="Site note – tap the map for a point note, or draw an area note">📝</button><button id="bTableT" title="Data table – all trees and groups at a glance, filter, sort and batch edit">📊</button><button id="bTopo" hidden title="Show / hide topo survey">🗺</button><button id="bQ" hidden title="Plot unplotted trees">📍</button><button id="bCopy" class="ctx" hidden title="Copy the selected tree or polygon feature, then tap the map to paste">⧉</button><button id="bRot" class="ctx" hidden title="Rotate the crown of the selected tree">⟳</button><button id="bLbl" class="ctx" hidden title="Move tree reference labels – tap a tree, then pick a compass direction">🏷</button><button id="bDel" class="danger ctx" hidden title="Delete selected">🗑</button></div>
 </header>
 <div id="mapTools" class="leaflet-bar maptools"><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bSVm" title="Street View – tap a road to open Google Street View">🚶</button></div>
 <div hidden><button id="bTable">📊 Data table (all features)…</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑ Batch edit – tap features on the map</button></div>
@@ -429,7 +430,11 @@ let batch=false;const BSEL=new Set();// batch edit mode and its selection
 const eqd=t=>Math.sqrt([1,2,3,4,5].reduce((s,i)=>s+num(t['d'+i])**2,0));
 /* Veteran and ancient trees (BS5837 only): protection zone is the greater of 15 × stem diameter or 5 m beyond the crown edge, taken in every direction, so it follows the crown shape. No 15 m cap. */
 const isVet=t=>!isSafe()&&/^(veteran|ancient)$/i.test(String(t&&t.age||'').trim());
-function crownAt(t,th){const s=Math.sin(th),c=Math.cos(th),a=num(s>=0?t.ce:t.cw),b=num(c>=0?t.cn:t.cs);
+/* crown rotation: t.rot degrees clockwise; the N/E/S/W spreads are measured along the rotated axes */
+const crot=t=>((num(t&&t.rot)||0)%360+360)%360;
+function rotXY(t,x,y){const r=crot(t)*Math.PI/180;if(!r)return[x,y];const c=Math.cos(r),s=Math.sin(r);return[x*c+y*s,-x*s+y*c]}
+function unrotXY(t,x,y){const r=-crot(t)*Math.PI/180;if(!r)return[x,y];const c=Math.cos(r),s=Math.sin(r);return[x*c+y*s,-x*s+y*c]}
+function crownAt(t,th){th-=crot(t)*Math.PI/180;const s=Math.sin(th),c=Math.cos(th),a=num(s>=0?t.ce:t.cw),b=num(c>=0?t.cn:t.cs);
  if((!a&&Math.abs(s)>1e-9)||(!b&&Math.abs(c)>1e-9))return 0;return 1/Math.sqrt((a?s*s/(a*a):0)+(b?c*c/(b*b):0))}
 function vetRing(t){const d=eqd(t)*0.015,o=[];for(let g=0;g<360;g+=2){const th=g*Math.PI/180,r=Math.max(d,crownAt(t,th)+5);o.push([r*Math.sin(th),r*Math.cos(th)])}return o}
 const ringArea=r=>Math.abs(r.reduce((s,p,i)=>{const q=r[(i+1)%r.length];return s+p[0]*q[1]-q[0]*p[1]},0))/2;
@@ -502,6 +507,7 @@ map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle select
   const p={...src,ref:nextRef(pre),ll:src.ll.map(v=>[v[0]+dLat,v[1]+dLon])};PG.push(p);selectP(p);save()}
  else if(mode==='poly'){if(pts.length>=3){const a=map.latLngToContainerPoint(pts[0]),b=map.latLngToContainerPoint(e.latlng),tol=matchMedia('(pointer:coarse)').matches?24:14;if(a.distanceTo(b)<=tol)return $('bFin').click()}/* tap the first corner again to finish */pts.push([e.latlng.lat,e.latlng.lng]);draft();banner()}
  else if(mode==='sv'){svOpen(e.latlng);setMode('sv')}
+ else if(mode==='rot'){}
  else if(mode==='note'){const n={ref:noteRef(),kind:'Point',notes:'',lat:e.latlng.lat,lon:e.latlng.lng};SN.push(n);setMode('note');nSelect(n,true);save()}
  else if(mode==='meas'){mpts.push([e.latlng.lat,e.latlng.lng]);mdraw();}
  else if(mode==='addv'&&selP){const c=e.latlng,n=selP.ll,C=map.latLngToLayerPoint(c);let b=0,bd=1e9;n.forEach((a,i)=>{const d=L.LineUtil.pointToSegmentDistance(C,map.latLngToLayerPoint(a),map.latLngToLayerPoint(n[(i+1)%n.length]));if(d<bd){bd=d;b=i}});n.splice(b+1,0,[c.lat,c.lng]);drawP(selP);handlesP();proro();save()}
@@ -513,7 +519,7 @@ function newTree(){return{ref:nextRef('T'),sp:'',n:1,d1:300,d2:0,d3:0,d4:0,d5:0,
 function draw(t){
  if(G.has(t)){map.removeLayer(G.get(t));G.delete(t)}
  if(t.lat==null)return;const c=colour(t),s=t===sel,ll=[t.lat,t.lon],pts=[];
- for(let a=0;a<=360;a+=5){const r=a*Math.PI/180,sn=Math.sin(r),cs=Math.cos(r);pts.push(m2ll(t,(sn>=0?t.ce:t.cw)*sn,(cs>=0?t.cn:t.cs)*cs))}
+ for(let a=0;a<=360;a+=5){const r=a*Math.PI/180,sn=Math.sin(r),cs=Math.cos(r);pts.push(m2ll(t,...rotXY(t,(sn>=0?t.ce:t.cw)*sn,(cs>=0?t.cn:t.cs)*cs)))}
  const go=e=>{if(mode=='label'){L.DomEvent.stopPropagation(e);return lpOpen(t)}if(!mode){L.DomEvent.stopPropagation(e);batch?bToggle(t):wantSelect(t)}};
  const g=L.layerGroup([
   ...(isSafe()?[]:[L.circle(ll,{radius:rpr(t),color:'#ff0000',weight:2,fill:false,interactive:false})]),
@@ -532,18 +538,24 @@ function measShow(t,k,ll){clearTimeout(measT);measL.clearLayers();const up=match
 function measHide(ms){clearTimeout(measT);measT=setTimeout(()=>measL.clearLayers(),ms||0)}
 function handles(){
  HL.clearLayers();const t=sel;if(!t||t.lat==null)return;
- const pos={cn:()=>m2ll(t,0,t.cn),ce:()=>m2ll(t,t.ce,0),cs:()=>m2ll(t,0,-t.cs),cw:()=>m2ll(t,-t.cw,0)},ms={};
+ const pos={cn:()=>m2ll(t,...rotXY(t,0,t.cn)),ce:()=>m2ll(t,...rotXY(t,t.ce,0)),cs:()=>m2ll(t,...rotXY(t,0,-t.cs)),cw:()=>m2ll(t,...rotXY(t,-t.cw,0))},ms={};
  const mk=(html,p,z)=>L.marker(p,{draggable:true,zIndexOffset:z,icon:L.divIcon({className:'',html,iconSize:[18,18],iconAnchor:[9,9]})}).addTo(HL);
  for(const k in pos){const m=mk(`<div class="h">${k[1].toUpperCase()}</div>`,pos[k](),1000);ms[k]=m;
   m.on('dragstart',()=>measShow(t,k,pos[k]()));
-  m.on('drag',e=>{const p=e.latlng,dy=(p.lat-t.lat)*R,dx=(p.lng-t.lon)*R*Math.cos(t.lat*Math.PI/180);
+  m.on('drag',e=>{const p=e.latlng,[dx,dy]=unrotXY(t,(p.lng-t.lon)*R*Math.cos(t.lat*Math.PI/180),(p.lat-t.lat)*R);
    let d=k=='cn'?dy:k=='cs'?-dy:k=='ce'?dx:-dx;t[k]=Math.max(0,Math.round(d*2)/2);m.setLatLng(pos[k]());measShow(t,k,pos[k]());draw(t);fill(t);dirty=1});
   m.on('dragend',()=>{measHide(1200);save();handles()})}
  const s=mk('<div class="h s">+</div>',[t.lat,t.lon],1100);
  const qbs=matchMedia('(pointer:coarse)').matches?44:34,qb=batch?null:L.marker([t.lat,t.lon],{zIndexOffset:1200,keyboard:false,icon:L.divIcon({className:'',html:'<div class="qbtn" title="Quick entry">✎</div>',iconSize:[qbs,qbs],iconAnchor:[-26,-26]})}).addTo(HL);
  if(qb)qb.on('click',e=>{L.DomEvent.stop(e);qcBox.hidden?qcOpen():qcClose()});
  s.on('drag',e=>{const q=snap(e.latlng);if(q!==e.latlng)s.setLatLng(q);snapRing(e.latlng);t.lat=q.lat;t.lon=q.lng;for(const k in ms)ms[k].setLatLng(pos[k]());if(qb)qb.setLatLng(q);draw(t);fill(t);qcPlace()});
- s.on('dragend',()=>{snapRing(null);save();handles()})}
+ s.on('dragend',()=>{snapRing(null);save();handles()})
+ if(mode==='rot'){/* rotate grip: drag it round the trunk to turn the crown (5° steps) */
+  const gr=()=>Math.max(num(t.cn),num(t.ce),num(t.cs),num(t.cw),1)+1.5,gp=()=>m2ll(t,...rotXY(t,0,gr()));
+  const g=mk('<div class="h rotg" title="Drag round to rotate the crown">↻</div>',gp(),1150);
+  g.on('drag',e=>{const p=e.latlng,dx=(p.lng-t.lon)*R*Math.cos(t.lat*Math.PI/180),dy=(p.lat-t.lat)*R;t.rot=(Math.round((Math.atan2(dx,dy)*180/Math.PI)/5)*5+360)%360;
+   for(const k in ms)ms[k].setLatLng(pos[k]());draw(t);banner();dirty=1});
+  g.on('dragend',()=>{g.setLatLng(gp());save();handles()})}}
 // ---------- UI
 const fm=$('form');
 const optH=x=>Array.isArray(x)?`<option value="${esc(x[0])}">${esc(x[1])}</option>`:`<option>${esc(x)}</option>`;
@@ -580,7 +592,7 @@ function list(){tbSync();const entries=[...T.map((t,i)=>({ref:t.ref,html:`<div d
  $('list').innerHTML=entries.map(e=>e.html).join('')||'<div>Nothing yet – press “＋ Add” or “▱ Polygon”.</div>';banner()}
 $('list').onclick=e=>{const i=e.target.closest('[data-i]');if(i){const t=T[i.dataset.i];if(batch)return bToggle(t);if(wantSelect(t)&&t.lat!=null)map.setView([t.lat,t.lon],Math.max(map.getZoom(),20))}};
 function select(t){if(t!==sel)qcClose();if(selN)nDesel();const p=sel,q=selP;sel=t;selP=null;if(p&&T.includes(p))draw(p);if(q&&PG.includes(q))drawP(q);if(t)draw(t);fill(t);$('pform').hidden=true;fm.hidden=false;list();handles()}
-function setMode(m){qcClose();if(batch&&m)exitBatch();mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);if(mode!='poly')noteDraw=false;$('bPoly').classList.toggle('on',mode=='poly'&&!noteDraw);$('bNote').classList.toggle('on',mode=='note'||(mode=='poly'&&noteDraw));$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();$('bLbl').classList.toggle('on',mode=='label');$('bSVm').classList.toggle('on',mode=='sv');if(mode!='label')lpClose();banner();tbSync()}
+function setMode(m){qcClose();if(batch&&m)exitBatch();mode=mode===m?null:m;snapRing(null);$('bAdd').classList.toggle('on',mode=='add');$('bQ').classList.toggle('on',mode=='queue');$('bCopy').classList.toggle('on',mode=='paste');banner();$('map').classList.toggle('add',!!mode);if(mode!='poly')noteDraw=false;$('bPoly').classList.toggle('on',mode=='poly'&&!noteDraw);$('bNote').classList.toggle('on',mode=='note'||(mode=='poly'&&noteDraw));$('bAV').classList.toggle('on',mode=='addv');$('bDV').classList.toggle('on',mode=='delv');$('bFin').hidden=$('bUndo').hidden=mode!='poly';if(mode!='poly')cancelDraft();$('bMeas').classList.toggle('on',mode=='meas');if(mode!='meas')cancelMeas();$('bLbl').classList.toggle('on',mode=='label');$('bSVm').classList.toggle('on',mode=='sv');$('bRot').classList.toggle('on',mode=='rot');if(mode!='label')lpClose();if(sel&&(mode=='rot'||m=='rot'))handles();banner();tbSync()}
 $('bCopy').onclick=()=>{if(mode=='paste')return setMode('paste');
  if(sel)clip={kind:'tree',data:{...sel}};
  else if(selP)clip={kind:'poly',data:{...selP,ll:selP.ll.map(v=>v.slice())}};
@@ -628,6 +640,7 @@ function banner(){if(batch)return bRefresh();const u=T.filter(t=>t.lat==null),n=
  else if(mode=='addv')m='Click on or near an edge to add a vertex · Esc to stop';
  else if(mode=='delv')m='Tap a vertex (white square) to delete it · Esc to stop';
  else if(mode=='add')m='Tap the map to place one tree · Esc to cancel';
+ else if(mode=='rot')m=sel?`Rotate crown of <b>${esc(sel.ref)}</b>: <b>${crot(sel)}°</b> · drag the ↻ handle round the trunk · <button type="button" data-rot="-15">−15°</button> <button type="button" data-rot="15">+15°</button> <button type="button" data-rot="0">Reset</button> <button type="button" data-rot="done">✓ Done</button>`:'Select a tree to rotate its crown · Esc to finish';
  else if(mode=='sv')m='Tap a road to open Google Street View there'+(sel&&sel.lat!=null?` (it will face ${esc(sel.ref)})`:'')+' · Esc to cancel';
  else if(mode=='label')m='Tap a tree, then pick where its reference label goes · tap 🏷 or Esc to finish';
  else if(site)m='<span>📍 '+esc(site.name)+'</span> <button id="bPinX" title="Clear site pin (map position is kept)">✕</button>';
@@ -1206,7 +1219,7 @@ function dxf(){
  P.forEach(t=>{const[x,y]=en(t),[c,col,rgb]=cls(t),td=Math.max(eqd(t)/2000,0.01);used.add(c);
   if(!safe){const r=rpr(t);circ(front,lay('RPA',c,col,rgb),x,y,r,{col:1});rpaFill(mid,hCirc(x,y,r),c)}
   if(!safe&&isVet(t)){anyVet=true;const ring=vetRing(t).map(v=>[x+v[0],y+v[1]]);lwp(front,lay('VETBUFFER',c,col,rgb),ring,{col:1});vetFill(back,hPoly(ring),c)}
-  const cr=[];for(let a=0;a<360;a+=5){const r=a*Math.PI/180,sn=Math.sin(r),cs=Math.cos(r);cr.push([x+(sn>=0?t.ce:t.cw)*sn,y+(cs>=0?t.cn:t.cs)*cs])}
+  const cr=[];for(let a=0;a<360;a+=5){const r=a*Math.PI/180,sn=Math.sin(r),cs=Math.cos(r);{const q=rotXY(t,(sn>=0?t.ce:t.cw)*sn,(cs>=0?t.cn:t.cs)*cs);cr.push([x+q[0],y+q[1]])}}
   lwp(front,lay('CROWN',c,col,rgb),cr,{col,rgb,lw:40});
   lwp(front,lay('TRUNK',c,col,rgb),[[x-td/2,y,1],[x+td/2,y,1]],{col,rgb,w:td});
   /* FSB direction arrow (BS5837), as on the map: from the stem 1.5 m beyond its edge, 0.4 m solid head – layer TREE_FSB_<category> */
@@ -1280,7 +1293,7 @@ $('bDxf').onclick=dxf;
 // ---------- xlsx
 // Safety survey: same columns (A:AJ) as the 'Survey data' sheet of the Tree Survey Schedule, plus app columns for re-import
 const SHD=['Site ID','Site name','Reason for survey','Survey date','Tree Ref','Object type','Line item','Species','Number of stems','Stem 1 diameter (mm)','Stem 2 diameter (mm)','Stem 3 diameter (mm)','Stem 4 diameter (mm)','Stem 5 diameter (mm)','Crown spread north (m)','Crown spread east (m)','Crown spread south (m)','Crown spread west (m)','Crown clearance (m)','Height (m)','Age class','Physiological condition','Notes','QTRA - Size','QTRA - Target range','QTRA - Probability of failure','QTRA - Risk Index','Tolerability of risk region','Recommendations','Work priority','Safety action date','Status','Coordinates \n(British National Grid e.g.377,756.86E 163,001.69N)','X','Y','Photo filename'];
-const SXH=['Latitude (WGS84)','Longitude (WGS84)','Vertices (lat,lon)','Vertices (OSGB E,N)','Area (m2)','QTRA size code','QTRA target code'];
+const SXH=['Latitude (WGS84)','Longitude (WGS84)','Vertices (lat,lon)','Vertices (OSGB E,N)','Area (m2)','QTRA size code','QTRA target code','Crown rotation (deg)'];
 const xlSerial=iso=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||'');return m?(Date.UTC(+m[1],m[2]-1,+m[3])-Date.UTC(1899,11,30))/864e5:''};
 function fromXlDate(v){if(v==null||v==='')return'';if(typeof v=='number')return new Date(Date.UTC(1899,11,30)+Math.round(v)*864e5).toISOString().slice(0,10);
  if(v instanceof Date)return isoD(v);const t=String(v).trim();let m=/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/.exec(t);if(m)return m[3]+'-'+pad2(m[2])+'-'+pad2(m[1]);m=/^(\d{4})-(\d\d)-(\d\d)/.exec(t);return m?m[0]:''}
@@ -1291,7 +1304,7 @@ function safeRow(o,type){const isT=type==='Tree',q=qtra(o);let e=null,ll=null;
   qdesc(QS,o.qs),qdesc(QT,o.qt),o.qp||'',q?+q.ri.toFixed(2):'',q?q.tol:'',o.rec||'',o.wp||'',xlSerial(actionDate(o)),o.st||'',
   e?fmtG(e[0])+'E '+fmtG(e[1])+'N':'',e?+e[0].toFixed(2):'',e?+e[1].toFixed(2):'',o.ph||'',
   ll?+ll[0].toFixed(8):'',ll?+ll[1].toFixed(8):'',isT?'':o.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),
-  isT?'':o.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; '),isT?'':+gA(o).toFixed(1),o.qs||'',o.qt||'']}
+  isT?'':o.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; '),isT?'':+gA(o).toFixed(1),o.qs||'',o.qt||'',isT&&crot(o)?crot(o):'']}
 function expSafety(){const all=[...T.map(t=>[t,'Tree']),...PG.map(p=>[p,p.kind])].sort((a,b)=>natCmp(a[0].ref,b[0].ref));
  const mm=metaMissing(META),inc=all.filter(([o])=>issueText(o)).map(([o])=>o.ref),un=T.filter(t=>t.lat==null).map(t=>t.ref);
  if(mm.length||inc.length||un.length){let m='';if(mm.length)m+='Safety survey details missing: '+mm.join(', ')+'\n';if(inc.length)m+=inc.length+' feature(s) incomplete or with values to check: '+inc.slice(0,25).join(', ')+(inc.length>25?'…':'')+'\n';if(un.length)m+=un.length+' tree(s) not plotted: '+un.slice(0,25).join(', ')+'\n';
@@ -1311,7 +1324,7 @@ function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
   const y=k=>String(o[k]??'').trim(),ck=Object.keys(o).find(k=>/^Coordinates/.test(k));
   const b={ref,sd:fromXlDate(o['Survey date']),li:y('Line item'),sp:y('Species'),n:num(o['Number of stems']),cc:num(o['Crown clearance (m)']),h:num(o['Height (m)']),
    cn:num(o['Crown spread north (m)']),ce:num(o['Crown spread east (m)']),cs:num(o['Crown spread south (m)']),cw:num(o['Crown spread west (m)']),age:y('Age class'),cond:y('Physiological condition'),notes:y('Notes'),
-   qs:qcode(QS,o['QTRA size code']||o['QTRA - Size']),qt:qcode(QT,o['QTRA target code']||o['QTRA - Target range']),qp:qcode(QP,o['QTRA - Probability of failure']),rec:y('Recommendations'),wp:y('Work priority'),st:y('Status'),ph:y('Photo filename'),fd:'',fh:0,cat:''};
+   qs:qcode(QS,o['QTRA size code']||o['QTRA - Size']),qt:qcode(QT,o['QTRA target code']||o['QTRA - Target range']),qp:qcode(QP,o['QTRA - Probability of failure']),rec:y('Recommendations'),wp:y('Work priority'),st:y('Status'),ph:y('Photo filename'),fd:'',fh:0,cat:''};{const rr=num(o['Crown rotation (deg)']);if(rr)b.rot=((rr%360)+360)%360}
   for(let i=1;i<=5;i++)b['d'+i]=num(o[`Stem ${i} diameter (mm)`]);
   const ok=v=>v!==undefined&&v!==''&&!isNaN(parseFloat(String(v).replace(/,/g,'')));let la=null,lo=null;
   if(ok(o['Latitude (WGS84)'])&&ok(o['Longitude (WGS84)'])&&num(o['Latitude (WGS84)'])){la=num(o['Latitude (WGS84)']);lo=num(o['Longitude (WGS84)'])}
@@ -1324,8 +1337,8 @@ function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
   if(v.length<3){skipped++;return}np.push({...b,kind:type,ll:v})});
  return{nt,np,meta,skipped}}
 $('bExp').onclick=()=>{if(!T.length&&!PG.length&&!SN.length)return alert('Nothing to export');if(isSafe())return expSafety();if(!projOK())return;
- const DH=['Type',...HD,'Label position','Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
- const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),type==='Tree'?(o.lp||''):'',...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo];
+ const DH=['Type',...HD,'Label position','Crown rotation (deg)','Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
+ const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),type==='Tree'?(o.lp||''):'',type==='Tree'&&crot(o)?crot(o):'',...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo];
  const tRows=T.map(t=>{const e=t.lat!=null?en(t):['',''];
   return row('Tree',t,[t.lat==null?'':+t.lat.toFixed(8),t.lat==null?'':+t.lon.toFixed(8),e[0]===''?'':+e[0].toFixed(2),e[1]===''?'':+e[1].toFixed(2),'','','',''])});
  const pRows=PG.map(p=>row(p.kind,p,['','','','',+gA(p).toFixed(1),+gPer(p).toFixed(1),p.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),p.ll.map(v=>{const e=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return e[0].toFixed(2)+','+e[1].toFixed(2)}).join('; ')]));
@@ -1393,7 +1406,7 @@ $('dUndo').onclick=()=>{if(!dtUndo)return;dtUndo.t.sort((a,b)=>a[1]-b[1]).forEac
 $('bTable').onclick=dtOpen;$('bTableT').onclick=dtOpen;
 /* selection tools (copy, label, delete) only show when there is something they can act on */
 function tbSync(){const ok=!batch,t=sel&&sel.lat!=null;
- $('bCopy').hidden=!(ok&&(t||selP||mode=='paste'));$('bLbl').hidden=!(ok&&(t||mode=='label'));$('bDel').hidden=!(ok&&(sel||selP||selN))}
+ $('bCopy').hidden=!(ok&&(t||selP||mode=='paste'));$('bRot').hidden=!(ok&&(t||mode=='rot'));$('bLbl').hidden=!(ok&&(t||mode=='label'));$('bDel').hidden=!(ok&&(sel||selP||selN))}
 // ---------- 🚶 Street View: tap a road, a pin is dropped there and Google Street View opens at that spot
 // (in a new tab, or the Google Maps app on a phone). If a tree is selected the view faces it.
 let svPin=null;
@@ -1405,6 +1418,9 @@ function svOpen(ll){const lat=ll.lat.toFixed(6),lon=ll.lng.toFixed(6);let h='';
  svPin.on('click',e=>{L.DomEvent.stop(e);if(e.originalEvent&&e.originalEvent.target.tagName==='B'){map.removeLayer(svPin);svPin=null;return}window.open(url,'_blank','noopener')});
  window.open(url,'_blank','noopener')}
 $('bSVm').onclick=()=>setMode('sv');
+$('bRot').onclick=()=>{if(mode!=='rot'&&!(sel&&sel.lat!=null))return;setMode('rot')};
+$('bn').addEventListener('click',e=>{const b=e.target.closest('[data-rot]');if(!b||!sel)return;e.stopPropagation();const v=b.dataset.rot;
+ if(v==='done')return setMode('rot');sel.rot=v==='0'?0:(crot(sel)+(+v)+360)%360;if(!sel.rot)delete sel.rot;draw(sel);handles();banner();save()});
 let impStart=null;/* set when the import was started from the Survey type screen */
 $('bImp').onclick=()=>{impStart=null;$('fi').click()};
 $('tImp').onclick=()=>{impStart={bs5837:{pno:$('tPno').value.trim(),pname:$('tPname').value.trim()},safety:{sid:$('tSid').value.trim(),sname:$('tSname').value.trim(),reason:$('tReason').value.trim()}};$('tovl').hidden=true;$('fi').click()};
@@ -1424,7 +1440,7 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
      const la=o['Latitude (WGS84)'],lo=o['Longitude (WGS84)'],E=o['Easting (OSGB36)'],N=o['Northing (OSGB36)'];
      const ok=v=>v!==undefined&&v!==''&&!isNaN(parseFloat(v));
      if(ok(la)&&ok(lo)&&!(num(la)==0&&num(lo)==0)){t.lat=num(la);t.lon=num(lo)}else if(ok(E)&&ok(N)){const pp=proj4('EPSG:27700','EPSG:4326',[num(E),num(N)]);t.lon=pp[0];t.lat=pp[1]}
-     {const lp=String(o['Label position']||'').trim().toUpperCase();if(FSB_DEG[lp]!=null)t.lp=lp}
+     {const lp=String(o['Label position']||'').trim().toUpperCase();if(FSB_DEG[lp]!=null)t.lp=lp;const rr=num(o['Crown rotation (deg)']);if(rr)t.rot=((rr%360)+360)%360}
      nt.push(t);
     }else{
      const v=String(o['Vertices (lat,lon)']).split(';').map(x=>x.split(',').map(Number)).filter(a=>a.length==2&&!isNaN(a[0])&&!isNaN(a[1]));
