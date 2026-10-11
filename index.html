@@ -169,6 +169,21 @@ body.kside .leaflet-left{transform:translateX(var(--kw,0px))}
 @media(pointer:coarse){#acBox div{padding:11px 12px;font-size:16px}}
 .qbtn{width:100%;height:100%;border-radius:50%;background:rgba(31,61,43,.55);border:2px solid rgba(255,255,255,.85);color:#fff;font-size:17px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 5px #0006;cursor:pointer;backdrop-filter:blur(2px)}
 .qbtn:hover{background:rgba(31,61,43,.85)}
+#qhovl{position:fixed;inset:0;background:#0008;z-index:4100;display:flex;align-items:center;justify-content:center;padding:10px}#qhovl[hidden]{display:none}
+#qhp{background:#fff;color:#222;border-radius:12px;padding:12px;width:100%;max-width:440px;max-height:calc(100dvh - 20px);overflow:auto;font-size:13px;overscroll-behavior:contain}
+#qhp .qhh{display:flex;align-items:center;gap:6px;margin-bottom:8px}#qhp .qhh b{font-size:15px;color:#1f3d2b}#qhp .qhx{margin-left:auto;border:0;background:#eee;border-radius:50%;width:32px;height:32px;min-height:0;padding:0}
+#qhp .qhtabs{display:flex;gap:4px;margin-bottom:8px}#qhp .qhtabs button{flex:1;padding:7px 2px;font-size:12px;font-weight:700;border-radius:8px;min-height:38px}#qhp .qhtabs button.on{background:#1f3d2b;color:#fff;border-color:#1f3d2b}
+#qhp .qhq{margin:2px 0 6px;color:#333}#qhp .qhin{display:flex;gap:5px;align-items:center;margin-bottom:6px}#qhp .qhin input,#qhp .qhin select{font-size:16px;padding:8px;border-radius:8px;min-width:0;width:auto;flex:1 1 0}#qhp .qhin input[data-qs=v],#qhp .qhin input[data-qz=v]{flex:1.2 1 0;min-width:84px}#qhp .qhin input[data-qs=what]{flex:1.6 1 0}
+#qhp .qhin label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:#555;width:100%}#qhp .qhin label select,#qhp .qhin label input{width:100%}#qhp .qhpre{font-weight:700;color:#555}
+#qhp .qhwx{display:flex;flex-wrap:nowrap;gap:7px;align-items:flex-start;background:#fff8e1;border:1px solid #f0d68a;border-radius:8px;padding:7px;font-size:12px;margin:4px 0 8px}#qhp .qhwx input{width:auto;margin-top:2px}
+#qhp .qhlad{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0}#qhp .qhlad th{text-align:left;font-size:11px;color:#555;padding:3px 5px;border-bottom:1px solid #ccc}#qhp .qhlad td{padding:6px 5px;border-bottom:1px solid #eee;cursor:pointer}
+#qhp .qhlad tr.on td{background:#ffe9a8;font-weight:700}#qhp .qhlad tr.on td:first-child{box-shadow:inset 4px 0 #c77d00}#qhp .qhlad td:last-child{white-space:nowrap;color:#555}
+#qhp .qhtip{font-size:11.5px;color:#555;margin:4px 0;line-height:1.35}#qhp .qhalt{color:#888}#qhp .qhlink{padding:1px 6px;min-height:0;font-size:11.5px;font-weight:700;border-radius:5px}
+#qhp .qhb{display:block;font-size:12px;color:#555;margin:8px 0 4px}#qhp .qhb input{width:100%;font-size:15px;padding:8px;border-radius:8px;margin-top:3px}
+#qhp .qhex{margin:6px 0;border:1px solid #dde5df;border-radius:8px;padding:4px 8px}#qhp .qhex summary{cursor:pointer;font-size:12px;font-weight:700;color:#1f3d2b;padding:4px 0}
+#qhp .qhex button{display:flex;width:100%;justify-content:space-between;gap:8px;text-align:left;margin:3px 0;padding:7px 8px;border-radius:7px;font-size:12.5px;min-height:0;background:#f6f8f6}#qhp .qhex button b{color:#1f3d2b}
+#qhp .qhact{display:flex;gap:6px;margin-top:10px}#qhp .qhact button{flex:1;padding:10px;border-radius:8px;font-weight:700;min-height:44px}#qhp .qhok{flex:2!important;background:#1f3d2b;color:#fff;border-color:#1f3d2b}#qhp .qhok:disabled{opacity:.45}
+#qc .qhq2{margin:0 0 6px;background:#eef5f0;border-color:#b9cfc0;color:#1f3d2b;font-weight:700}.qhbtn{font-size:12.5px;padding:7px;margin:-2px 0 4px;background:#eef5f0;border-color:#b9cfc0;color:#1f3d2b;font-weight:700}
 #qc{position:fixed;z-index:3500;width:290px;max-width:calc(100vw - 16px);background:rgba(255,255,255,.97);border-radius:12px;box-shadow:0 8px 28px #0006;padding:8px;font-size:13px;color:#222}#qc[hidden]{display:none}
 #qc .qh{display:flex;align-items:center;gap:6px;padding:0 2px 6px}#qc .qh span{color:#666;font-size:12px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#qc .qh b{flex:none}#qc .qx{margin-left:auto;border:0;background:#eee;border-radius:50%;width:30px;height:30px;min-height:0;padding:0}
 #qc{width:310px;max-height:calc(100dvh - 16px);overflow:auto;overscroll-behavior:contain}#qc .qgroups{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:5px}#qc .qgroups button{flex:1 0 22%;padding:6px 2px;font-size:11.5px;font-weight:700;border-radius:6px;min-height:0}#qc .qgroups button.on{background:#1f3d2b;color:#fff;border-color:#1f3d2b}#qc .qgroups button.miss:not(.on){background:#fde2e2;border-color:#e29a9a}
@@ -408,7 +423,7 @@ const STEMS=[['__s1','Stems','sec'],['n','Number of stems','n'],['d1','Stem 1 di
 const SAFE_BODY=[['__s0','Survey','sec'],['sd','Survey date','d'],['sp','Species','sp'],...STEMS,
 ['__s3','Height & clearance','sec'],['h','Height (m)','n',0.5],['cc','Crown clearance (m)','n',0.5],
 ['__s4','Condition','sec'],['age','Age class','s',['Young','Semi mature','Early mature','Mature','Veteran','Ancient']],['cond','Physiological condition','s',['Good','Fair','Poor','Dead']],['notes','Notes','a'],['__nb','','nb'],
-['__s5','QTRA','sec'],['qs','QTRA - Size','s',qopts(QS),1],['qt','QTRA - Target range','s',qopts(QT,[['Human – pedestrians / occupancy','P'],['Property – repair cost','$'],['Vehicles','V'],['No target','N/A']]),1],['qp','QTRA - Probability of failure','s',qopts(QP),1],['__qr','','qr'],
+['__s5','QTRA','sec'],['qs','QTRA - Size','s',qopts(QS),1],['__qsh','','qh','qs'],['qt','QTRA - Target range','s',qopts(QT,[['Human – pedestrians / occupancy','P'],['Property – repair cost','$'],['Vehicles','V'],['No target','N/A']]),1],['__qth','','qh','qt'],['qb','QTRA - Target basis','t',null,1],['qp','QTRA - Probability of failure','s',qopts(QP),1],['__qr','','qr'],
 ['__s6','Recommendations & action','sec'],['rec','Recommendations','a'],['__rp','','rp'],['wp','Work priority','s',WP],['ph','Photo filename','t',null,1]];
 const SF=[['ref','Tree ref','t'],...SAFE_BODY];
 const SPF=[['ref','Ref','t'],['kind','Object type','s',['Group','Woodland','Hedge']],...SAFE_BODY];
@@ -581,6 +596,7 @@ const optH=x=>Array.isArray(x)?`<option value="${esc(x[0])}">${esc(x[1])}</optio
 function buildFields(fs,pre){return fs.map(([k,l,ty,o,wide])=>{if(ty=='sec')return `<div class="sec">${l}</div>`;
  if(ty=='nb')return `<button type="button" id="${pre}Notes" class="w">📋 Predefined notes…</button>`;
  if(ty=='qr')return '<div class="qres"></div>';
+ if(ty=='qh')return o==='qt'?'<button type="button" class="w qhbtn" data-qh="qt">🎯 Help me choose the Target range…</button>':'<button type="button" class="w qhbtn" data-qh="qs">📏 Help me choose the Size…</button>';
  if(ty=='rp')return `<label class="w">Add a standard recommendation<select data-act="rec"><option value="">Choose to add…</option>${REC.map(r=>optH(r)).join('')}</select></label>`;
  const w=ty=='a'||ty=='sp'||wide?' class="w"':'';const st=o||1;
  const i=ty=='s'?`<select data-k="${k}"><option></option>${typeof o=='string'?o:o.map(optH).join('')}</select>`:
@@ -1154,6 +1170,8 @@ function qcRender(){if(!qo())return qcClose();const f=qcFields(),k=qcK,g=qcGroup
    :`<div class="qchips qrec">${REC.map(r=>`<button type="button" data-rec="${esc(r)}" class="${String(qo().rec||'').includes(r+'.')||(r==='None'&&noWork(qo()))?'on':''}">${esc(r)}</button>`).join('')}</div>`;
   h+=`<div class="qact"><button type="button" data-q="ok" class="qok">${okTxt}</button></div>`}
  else{const opts=qcChips(k);
+  if(k==='qt')h+=`<button type="button" class="qwide qhq2" data-qh="qt">🎯 Target helper – work it out</button>${qo().qb?`<div class="qnote" style="text-align:left;margin:3px 2px">Basis: ${esc(qo().qb)}</div>`:''}`;
+  if(k==='qs')h+=`<button type="button" class="qwide qhq2" data-qh="qs">📏 Size helper – work it out</button>`;
   h+=`<div class="qchips ${k==='cat'?'qcat':k==='fd'?'qfd':k==='qs'||k==='qt'||k==='qp'?'qq':'qtxt'}">${opts.map(([v,l])=>v===''?'<span class="qfdc">FSB</span>':`<button type="button" data-v="${esc(v)}" class="${String(qo()[k]||'')===v?'on':''} ${k==='cat'?'c'+v[0]:''}">${l}</button>`).join('')}</div>`;
   if(isSafe()&&(k==='qs'||k==='qt'||k==='qp'||k==='wp'))h+=`<div class="qres2">${qresHTML(qo())}</div>`;
   h+=`<div class="qact"><button type="button" data-q="ok" class="qok">${last?'Done':'Next ›'}</button></div>`}
@@ -1191,6 +1209,7 @@ qcBox.addEventListener('input',e=>{const k=e.target.dataset.qtext;if(!k)return;q
  const hd=qcBox.querySelector('.qh b');if(hd&&k==='ref')hd.textContent=e.target.value;qcBox.querySelectorAll(`[data-tab="${k}"]`).forEach(b=>b.classList.toggle('miss',qcMiss(k)))});
 qcBox.addEventListener('keydown',e=>{const k=e.target.dataset.qtext;if(!k||e.target.tagName==='TEXTAREA'||e.key!=='Enter')return;e.preventDefault();qcNext()});
 qcBox.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('button');if(!b||!qo())return;
+ if(b.dataset.qh)return qhOpen(b.dataset.qh);
  if(b.dataset.tab)return qcTab(b.dataset.tab);if(b.dataset.d)return qcKey(b.dataset.d);
  if(b.dataset.rec){recAdd(qo(),b.dataset.rec);qcSet('rec',qo().rec);if(b.dataset.rec===REINSPECT)qcSet('wp','N/A');qcRender();return}
  if(b.dataset.v!=null){qcSet(qcK,b.dataset.v==='__today'?today():b.dataset.v);if(qcK==='kind'&&selP){drawP(selP);handlesP()}qcRender();setTimeout(qcNext,180);return}
@@ -1199,6 +1218,116 @@ qcBox.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest(
 document.addEventListener('keydown',e=>{if(qcBox.hidden||e.target.matches('input,select,textarea'))return;
  if(/^[0-9]$/.test(e.key)||e.key==='.'){qcKey(e.key);e.preventDefault()}else if(e.key==='Backspace'){qcKey('⌫');e.preventDefault()}
  else if(e.key==='Enter'){qcNext();e.preventDefault()}else if(e.key==='Escape'){qcClose();e.stopPropagation()}},true);
+// ---------- QTRA helpers: Target range helper (Table 2) and Size helper (Table 1)
+/* Upper limits of each range as printed in QTRA Practice Note Table 2. A value above the top of range n+1 is range n,
+   so every printed figure lands in the range the table shows, and values in the table's gaps go to the higher-risk range. */
+const QH_PROB=['1/1 – >1/10','1/10 – >1/100','1/100 – >1/1,000','1/1,000 – >1/10,000','1/10,000 – >1/100,000','1/100,000 – 1/1,000,000'];
+const QH_SPD=[['32','32 mph (50 kph)',[4700,470,47,5,1],['4,800 – 47,000','480 – 4,700','48 – 470','6 – 47','1 – 5']],
+ ['50','50 mph (80 kph)',[3200,320,32,3,1],['3,300 – 32,000','330 – 3,200','33 – 320','4 – 32','1 – 3']],
+ ['68','68 mph (110 kph)',[2600,260,26,3,1],['2,700 – 26,000','270 – 2,600','27 – 260','4 – 26','1 – 3']]];
+const QH_PER={hour:24,day:1,week:1/7,month:1/30.44,year:1/365};
+const QH_TABS=[['pass','🚶 Passing','P'],['stay','🪑 Staying','P'],['veh','🚗 Vehicles','V'],['prop','🏠 Property','$']];
+function qhRange(tab,s){const v=+s.v;if(!(v>0))return null;
+ if(tab==='pass'){const d=v*QH_PER[s.per];return d>1728?1:d>168?2:d>24?3:d>2?4:d>1/7?5:d>=6/365?6:7}
+ if(tab==='stay'){const m=v*(s.u==='h'?60:1)*QH_PER[s.per];return m>144?1:m>14?2:m>1?3:m>1/7?4:m>=1/30.44?5:m>=0.5/365?6:7}
+ if(tab==='veh'){const d=v*QH_PER[s.per],t=(QH_SPD.find(x=>x[0]===s.spd)||QH_SPD[1])[2];return d>t[0]?1:d>t[1]?2:d>t[2]?3:d>t[3]?4:d>=t[4]?5:6}
+ return v>200000?1:v>20000?2:v>2000?3:v>200?4:v>20?5:v>=2?6:7}
+function qhBands(tab,s){if(tab==='pass')return['73 – 720 an hour','8 – 72 an hour','2 – 7 an hour','3 a day – 1 an hour','2 a week – 2 a day','6 a year – 1 a week'];
+ if(tab==='stay')return['2.5 h a day – constant','15 min – 2.4 h a day','2 – 14 min a day','2 min a week – 1 min a day','1 min a month – 1 min a week','0.5 min a year – <1 min a month'];
+ if(tab==='veh')return[...(QH_SPD.find(x=>x[0]===s.spd)||QH_SPD[1])[3].map(x=>x+' a day'),'None'];
+ return['£200,000 – £2,000,000','£20,000 – £200,000','£2,000 – £20,000','£200 – £2,000','£20 – £200','£2 – £20']}
+const qhFmt=v=>(+v).toLocaleString('en-GB',{maximumFractionDigits:2});
+const QH_PERL={hour:'an hour',day:'a day',week:'a week',month:'a month',year:'a year'};
+function qhCode(tab,r){if(!r)return'';if(tab==='veh')return'V'+Math.min(r,6);if(tab==='prop')return'$'+Math.min(r,6);return'P'+Math.min(r,6)}
+function qhBasis(tab,s){const v=+s.v;if(!(v>0))return'';
+ if(tab==='pass')return`Pedestrians/cyclists ≈ ${qhFmt(v)} ${QH_PERL[s.per]}${s.wx?' (in failure weather)':''}`;
+ if(tab==='stay')return`Occupied ≈ ${qhFmt(v)} ${s.u==='h'?'h':'min'} ${QH_PERL[s.per]}${s.wx?' (in failure weather)':''}${+s.ppl>1?`; ${Math.round(+s.ppl)} people at once (${Math.round(+s.ppl)}T)`:''}`;
+ if(tab==='veh')return`Vehicles ≈ ${qhFmt(v)} ${QH_PERL[s.per]} @ ${s.spd} mph`;
+ return`Property${s.what?': '+s.what.trim():''}, repair/replacement ≈ £${qhFmt(v)}`}
+// worked examples: the range shown is calculated from the assumed figure, never typed in
+const QH_EX={pass:[['Town-centre street, ~2 people a minute',{v:120,per:'hour'}],['Busy suburban pavement, ~1 every 5 min',{v:12,per:'hour'}],['Residential street pavement',{v:4,per:'hour'}],['Quiet lane or country footway',{v:10,per:'day'}],['Rural public footpath, few walkers',{v:3,per:'week'}],['Rarely visited corner of a site',{v:1,per:'month'}]],
+ stay:[['Garden seating, ~3 h a day',{v:3,u:'h',per:'day'}],['Park bench, ~30 min a day',{v:30,u:'min',per:'day'}],['Parked car – people at it ~5 min a day',{v:5,u:'min',per:'day'}],['Allotment plot, ~1 h a week',{v:1,u:'h',per:'week'}],['Picnic spot, ~5 min a week',{v:5,u:'min',per:'week'}],['Maintenance visit, ~10 min a month',{v:10,u:'min',per:'month'}]],
+ veh:[['Main A-road, ~10,000 a day @ 50 mph',{v:10000,per:'day',spd:'50'}],['Busy minor road, ~1,000 a day @ 32 mph',{v:1000,per:'day',spd:'32'}],['Estate road, ~200 a day @ 32 mph',{v:200,per:'day',spd:'32'}],['Farm or access track, ~10 a day',{v:10,per:'day',spd:'32'}],['Private track, ~2 a day',{v:2,per:'day',spd:'32'}]],
+ prop:[['House rebuild, ~£300,000',{v:300000,what:'house'}],['Garage or outbuilding, ~£25,000',{v:25000,what:'garage'}],['Parked car, ~£15,000',{v:15000,what:'parked car'}],['Garden shed, ~£1,500',{v:1500,what:'shed'}],['Fence panel, ~£100',{v:100,what:'fence panel'}]]};
+const QH_DEF={pass:{v:'',per:'day',wx:true},stay:{v:'',u:'min',per:'day',ppl:'',wx:true},veh:{v:'',per:'day',spd:'50'},prop:{v:'',what:''}};
+let QHS=null;/* {k:'qt'|'qs', o, tab, st:{pass,stay,veh,prop}, basis, basisEdited, sv:{v,mode}} */
+const qhOvl=document.createElement('div');qhOvl.id='qhovl';qhOvl.hidden=true;qhOvl.innerHTML='<div id="qhp"></div>';document.body.appendChild(qhOvl);
+function qhOpen(k){const o=qo();if(!o)return;
+ if(k==='qt'){const prev=o.qhi&&o.qhi.st?o.qhi:null,pre=String(o.qt||'')[0];
+  const tab=prev?prev.tab:pre==='V'?'veh':pre==='$'?'prop':'pass';
+  QHS={k,o,tab,st:Object.fromEntries(Object.keys(QH_DEF).map(t=>[t,{...QH_DEF[t],...(prev&&prev.st[t]||{})}])),basis:o.qb||'',basisEdited:prev&&prev.edited!=null?!!prev.edited:!!o.qb}}
+ else{const big=Math.max(...[1,2,3,4,5].map(i=>num(o['d'+i])||0));QHS={k,o,sv:o.qsi?{...o.qsi}:{v:big||'',mode:'stem',dead:false}}}
+ qhRender();qhOvl.hidden=false}
+function qhClose(){qhOvl.hidden=true;QHS=null}
+function qhRender(){const p=$('qhp');if(!QHS)return;
+ if(QHS.k==='qs')return qhRenderSize(p);
+ const {tab}=QHS,s=QHS.st[tab];
+ const sel=(id,opts,val)=>`<select data-qs="${id}">${opts.map(([v,l])=>`<option value="${v}"${String(val)===v?' selected':''}>${l}</option>`).join('')}</select>`;
+ const perO=ks=>ks.map(k=>[k,'per '+k]);
+ let h=`<div class="qhh"><b>🎯 Target range helper</b><button type="button" class="qhx" data-qa="x" title="Close">✕</button></div>
+ <div class="qhtabs">${QH_TABS.map(([t,l])=>`<button type="button" data-qtab="${t}" class="${t===tab?'on':''}">${l}</button>`).join('')}</div>`;
+ if(tab==='pass')h+=`<p class="qhq">How many pedestrians and cyclists pass beneath the tree (or within reach of the part that could fail)?</p>
+  <div class="qhin"><input data-qs="v" type="number" inputmode="decimal" min="0" value="${esc(s.v)}" placeholder="Number">${sel('per',perO(['hour','day','week','month','year']),s.per)}</div>`;
+ else if(tab==='stay')h+=`<p class="qhq">For places where people stay (bench, garden, café, play area, building): how long is the area occupied?</p>
+  <div class="qhin"><input data-qs="v" type="number" inputmode="decimal" min="0" value="${esc(s.v)}" placeholder="Time">${sel('u',[['min','minutes'],['h','hours']],s.u)}${sel('per',perO(['day','week','month','year']),s.per)}</div>
+  <div class="qhin"><label>People usually there at once <small>(optional – multiple targets)</small><input data-qs="ppl" type="number" inputmode="numeric" min="1" value="${esc(s.ppl)}" placeholder="1"></label></div>`;
+ else if(tab==='veh')h+=`<p class="qhq">How many vehicles pass, and at what speed? Use a traffic count if you have one.</p>
+  <div class="qhin"><input data-qs="v" type="number" inputmode="numeric" min="0" value="${esc(s.v)}" placeholder="Vehicles">${sel('per',perO(['day','hour']),s.per)}</div>
+  <div class="qhin"><label>Speed column${sel('spd',QH_SPD.map(x=>[x[0],x[1]]),s.spd)}</label></div>
+  <p class="qhtip">Speed between columns? Use the faster column – it gives the higher (more cautious) range.</p>`;
+ else h+=`<p class="qhq">What would it roughly cost to repair or replace the property if the tree or branch hit it? You only need to be close enough to pick the range.</p>
+  <div class="qhin"><span class="qhpre">£</span><input data-qs="v" type="number" inputmode="numeric" min="0" value="${esc(s.v)}" placeholder="Cost"><input data-qs="what" value="${esc(s.what)}" placeholder="What (e.g. garage)"></div>`;
+ if(tab==='pass'||tab==='stay')h+=`<label class="qhwx"><input type="checkbox" data-qs="wx"${s.wx?' checked':''}><span>I've estimated this <b>for the weather in which this failure is likely</b> (e.g. a windy day), not a fine day.</span></label>`;
+ h+=`<div class="qhres"></div><label class="qhb">Target basis <small>(saved with the tree and exported)</small><input data-qa="basis" placeholder="How the range was worked out"></label>`;
+ h+=`<details class="qhex"><summary>Examples (indicative – your own site estimate always comes first)</summary>${QH_EX[tab].map(([l,e],i)=>{const rr=qhRange(tab,{...QH_DEF[tab],...e});return`<button type="button" data-qex="${i}"><span>${esc(l)}</span><b>${qhCode(tab,rr)}</b></button>`}).join('')}</details>`;
+ h+=`<div class="qhact"><button type="button" data-qa="x">Cancel</button><button type="button" class="qhok" data-qa="use"></button></div>`;
+ p.innerHTML=h;qhUpd()}
+function qhUpd(){const p=$('qhp');if(!QHS)return;if(QHS.k==='qs')return qhUpdSize(p);
+ const {tab}=QHS,s=QHS.st[tab],r=qhRange(tab,s),bands=qhBands(tab,s),code=qhCode(tab,r),pre=tab==='veh'?'V':tab==='prop'?'$':'P';
+ if(!QHS.basisEdited)QHS.basis=r?qhBasis(tab,s):'';
+ let h=`<table class="qhlad"><tr><th>Range</th><th>${tab==='prop'?'Repair cost':tab==='veh'?'Vehicles':tab==='stay'?'Occupation':'People'}</th><th>Probability</th></tr>`+
+  bands.map((b,i)=>`<tr class="${r&&Math.min(r,6)===i+1?'on':''}" data-qpick="${pre}${i+1}"><td><b>${pre}${i+1}</b></td><td>${b}</td><td>${QH_PROB[i]}</td></tr>`).join('')+'</table>';
+ if(r===7)h+=`<p class="qhtip">${tab==='prop'?'Below £2 – barely a target. ':'Below Range 6. '}Range 6 is the lowest available, so ${code} is suggested.</p>`;
+ if(tab==='prop'&&+s.v>2000000)h+=`<p class="qhtip">Above £2,000,000 – the top of Range 1. Consider recording multiple targets.</p>`;
+ if(tab==='stay'&&+s.ppl>1)h+=`<p class="qhtip">Multiple targets: the range is for one person; record it as ${code||'the range'}(${Math.round(+s.ppl)}T) – shown in the target basis.</p>`;
+ if(r)h+='<p class="qhtip qhalt">Tap a row to choose a different range if your judgement differs.</p>';
+ p.querySelector('.qhres').innerHTML=h;const bi=p.querySelector('[data-qa=basis]');if(bi&&document.activeElement!==bi)bi.value=QHS.basis;
+ const u=p.querySelector('[data-qa=use]');u.disabled=!code;u.textContent=code?'Use '+code:'Enter a value'}
+function qhSizeR(d){return d>450?'S1':d>250?'S2':d>100?'S3':d>=25?'S4':'N/A'}
+function qhRenderSize(p){const s=QHS.sv;
+ let h=`<div class="qhh"><b>📏 Size helper</b><button type="button" class="qhx" data-qa="x" title="Close">✕</button></div>
+ <div class="qhtabs">${[['stem','🌳 Whole tree / stem'],['br','🌿 Branch']].map(([m,l])=>`<button type="button" data-qmode="${m}" class="${s.mode===m?'on':''}">${l}</button>`).join('')}</div>
+ <p class="qhq">${s.mode==='stem'?'Diameter of the stem that could fail, measured above any basal flare. Filled in from the largest stem diameter recorded.':'Diameter of the branch that could fail, measured beyond the swelling where it joins the stem.'}</p>
+ <div class="qhin"><input data-qz="v" type="number" inputmode="numeric" min="0" value="${esc(s.v)}" placeholder="Diameter"><span class="qhpre">mm</span></div>`;
+ if(s.mode==='br')h+=`<label class="qhwx"><input type="checkbox" data-qz="dead"${s.dead?' checked':''}><span>Dead branch that has lost much of its weight (shed side branches, decay) – QTRA's <b>Reduced Mass</b>: enter a smaller, equivalent diameter.</span></label>`;
+ h+=`<div class="qhres"></div><div class="qhact"><button type="button" data-qa="x">Cancel</button><button type="button" class="qhok" data-qa="use"></button></div>`;
+ p.innerHTML=h;qhUpd()}
+function qhUpdSize(p){const s=QHS.sv,d=+s.v,code=d>0?qhSizeR(d):'',prop=String(QHS.o.qt||'')[0]==='$';
+ const rows=[['S1','> 450 mm','1/1 – >1/2'],['S2','260 – 450 mm','1/2 – >1/8.6'],['S3','110 – 250 mm','1/8.6 – >1/82'],['S4','25 – 100 mm','1/82 – 1/2,500']];
+ let h=`<table class="qhlad"><tr><th>Size</th><th>Diameter</th><th>Probability</th></tr>${rows.map(r=>`<tr class="${code===r[0]?'on':''}" data-qpick="${r[0]}"><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</table>`;
+ if(d>0&&d<25)h+='<p class="qhtip">Under 25 mm is not likely to cause significant harm, so no Size range applies (N/A).</p>';
+ if(d>250&&d<260||d>100&&d<110)h+='<p class="qhtip">This falls in a gap in Table 1, so the larger (more cautious) Size range is suggested.</p>';
+ if(prop)h+=`<p class="qhtip">This tree's target is property (${esc(QHS.o.qt)}). Your template uses <button type="button" class="qhlink" data-qpick="S0">S0 · Property</button> for property targets.</p>`;
+ p.querySelector('.qhres').innerHTML=h;const u=p.querySelector('[data-qa=use]');u.disabled=!code;u.textContent=code?'Use '+code:'Enter a diameter'}
+function qhApply(code){const o=QHS.o;if(o!==qo()){qhClose();return}
+ if(QHS.k==='qt'){qcSet('qt',code);qcSet('qb',QHS.basis.trim());o.qhi={tab:QHS.tab,st:JSON.parse(JSON.stringify(QHS.st)),edited:QHS.basisEdited}}
+ else{qcSet('qs',code);o.qsi={...QHS.sv}}
+ save();qhClose();if(!qcBox.hidden&&(qcK==='qt'||qcK==='qs'))qcRender()}
+qhOvl.addEventListener('click',e=>{if(e.target===qhOvl)return qhClose();const b=e.target.closest('[data-qa],[data-qtab],[data-qex],[data-qpick],[data-qmode]');if(!b||!QHS)return;
+ if(b.dataset.qa==='x')return qhClose();if(b.dataset.qa==='use'){const t=QHS.k==='qt'?qhCode(QHS.tab,qhRange(QHS.tab,QHS.st[QHS.tab])):(+QHS.sv.v>0?qhSizeR(+QHS.sv.v):'');if(t)qhApply(t);return}
+ if(b.dataset.qtab){QHS.tab=b.dataset.qtab;QHS.basisEdited=false;return qhRender()}
+ if(b.dataset.qmode){QHS.sv.mode=b.dataset.qmode;return qhRender()}
+ if(b.dataset.qex!=null){const e2=QH_EX[QHS.tab][+b.dataset.qex][1];QHS.st[QHS.tab]={...QHS.st[QHS.tab],...e2};QHS.basisEdited=false;return qhRender()}
+ if(b.dataset.qpick){/* tapping a ladder row picks that range directly (your judgement overrides the calculation) */
+  if(QHS.k==='qt'){const calc=qhCode(QHS.tab,qhRange(QHS.tab,QHS.st[QHS.tab])),pk=b.dataset.qpick;if(!QHS.basisEdited)QHS.basis=calc&&calc!==pk?qhBasis(QHS.tab,QHS.st[QHS.tab])+` (calculated ${calc}; ${pk} chosen on judgement)`:qhBasis(QHS.tab,QHS.st[QHS.tab])}qhApply(b.dataset.qpick)}});
+qhOvl.addEventListener('input',e=>{if(!QHS)return;const el=e.target;
+ if(el.dataset.qa==='basis'){QHS.basis=el.value;QHS.basisEdited=true;return}
+ const k=el.dataset.qs,z=el.dataset.qz;if(!k&&!z)return;const v=el.type==='checkbox'?el.checked:el.value;
+ if(k)QHS.st[QHS.tab][k]=v;else QHS.sv[z]=v;
+ /* only the result part re-draws, so the keyboard stays up while typing */
+ if(k)QHS.basisEdited=false;qhUpd()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-qh]');if(!b||qcBox.contains(b))return;e.preventDefault();qhOpen(b.dataset.qh)});
+document.addEventListener('keydown',e=>{if(!qhOvl.hidden&&e.key==='Escape'){qhClose();e.stopPropagation()}},true);
 map.on('move zoom',qcPlace);addEventListener('resize',qcPlace);
 if(window.visualViewport){visualViewport.addEventListener('resize',qcPlace);visualViewport.addEventListener('scroll',qcPlace)}
 // keyboard opening/closing animates, so re-place a couple of times after focus changes
@@ -1349,7 +1478,7 @@ $('bDxf').onclick=dxf;
 // ---------- xlsx
 // Safety survey: same columns (A:AJ) as the 'Survey data' sheet of the Tree Survey Schedule, plus app columns for re-import
 const SHD=['Site ID','Site name','Reason for survey','Survey date','Tree Ref','Object type','Line item','Species','Number of stems','Stem 1 diameter (mm)','Stem 2 diameter (mm)','Stem 3 diameter (mm)','Stem 4 diameter (mm)','Stem 5 diameter (mm)','Crown spread north (m)','Crown spread east (m)','Crown spread south (m)','Crown spread west (m)','Crown clearance (m)','Height (m)','Age class','Physiological condition','Notes','QTRA - Size','QTRA - Target range','QTRA - Probability of failure','QTRA - Risk Index','Tolerability of risk region','Recommendations','Work priority','Safety action date','Status','Coordinates \n(British National Grid e.g.377,756.86E 163,001.69N)','X','Y','Photo filename'];
-const SXH=['Latitude (WGS84)','Longitude (WGS84)','Vertices (lat,lon)','Vertices (OSGB E,N)','Area (m2)','QTRA size code','QTRA target code','Crown rotation (deg)','Surveyor'];
+const SXH=['Latitude (WGS84)','Longitude (WGS84)','Vertices (lat,lon)','Vertices (OSGB E,N)','Area (m2)','QTRA size code','QTRA target code','Crown rotation (deg)','Surveyor','QTRA target basis'];
 const xlSerial=iso=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||'');return m?(Date.UTC(+m[1],m[2]-1,+m[3])-Date.UTC(1899,11,30))/864e5:''};
 function fromXlDate(v){if(v==null||v==='')return'';if(typeof v=='number')return new Date(Date.UTC(1899,11,30)+Math.round(v)*864e5).toISOString().slice(0,10);
  if(v instanceof Date)return isoD(v);const t=String(v).trim();let m=/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/.exec(t);if(m)return m[3]+'-'+pad2(m[2])+'-'+pad2(m[1]);m=/^(\d{4})-(\d\d)-(\d\d)/.exec(t);return m?m[0]:''}
@@ -1360,7 +1489,7 @@ function safeRow(o,type){const isT=type==='Tree',q=qtra(o);let e=null,ll=null;
   qdesc(QS,o.qs),qdesc(QT,o.qt),o.qp||'',q?+q.ri.toFixed(2):'',q?q.tol:'',o.rec||'',o.wp||'',xlSerial(actionDate(o)),o.st||'',
   e?fmtG(e[0])+'E '+fmtG(e[1])+'N':'',e?+e[0].toFixed(2):'',e?+e[1].toFixed(2):'',o.ph||'',
   ll?+ll[0].toFixed(8):'',ll?+ll[1].toFixed(8):'',isT?'':o.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),
-  isT?'':o.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; '),isT?'':+gA(o).toFixed(1),o.qs||'',o.qt||'',isT&&crot(o)?crot(o):'',o.by||META.surv||'']}
+  isT?'':o.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; '),isT?'':+gA(o).toFixed(1),o.qs||'',o.qt||'',isT&&crot(o)?crot(o):'',o.by||META.surv||'',o.qb||'']}
 function expSafety(){const all=[...T.map(t=>[t,'Tree']),...PG.map(p=>[p,p.kind])].sort((a,b)=>natCmp(a[0].ref,b[0].ref));
  const mm=metaMissing(META),inc=all.filter(([o])=>issueText(o)).map(([o])=>o.ref),un=T.filter(t=>t.lat==null).map(t=>t.ref);
  if(mm.length||inc.length||un.length){let m='';if(mm.length)m+='Safety survey details missing: '+mm.join(', ')+'\n';if(inc.length)m+=inc.length+' feature(s) incomplete or with values to check: '+inc.slice(0,25).join(', ')+(inc.length>25?'…':'')+'\n';if(un.length)m+=un.length+' tree(s) not plotted: '+un.slice(0,25).join(', ')+'\n';
@@ -1380,7 +1509,7 @@ function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
   const y=k=>String(o[k]??'').trim(),ck=Object.keys(o).find(k=>/^Coordinates/.test(k));
   const b={ref,sd:fromXlDate(o['Survey date']),li:y('Line item'),sp:y('Species'),n:num(o['Number of stems']),cc:num(o['Crown clearance (m)']),h:num(o['Height (m)']),
    cn:num(o['Crown spread north (m)']),ce:num(o['Crown spread east (m)']),cs:num(o['Crown spread south (m)']),cw:num(o['Crown spread west (m)']),age:y('Age class'),cond:y('Physiological condition'),notes:y('Notes'),
-   qs:qcode(QS,o['QTRA size code']||o['QTRA - Size']),qt:qcode(QT,o['QTRA target code']||o['QTRA - Target range']),qp:qcode(QP,o['QTRA - Probability of failure']),rec:y('Recommendations'),wp:y('Work priority'),st:y('Status'),ph:y('Photo filename'),by:y('Surveyor'),fd:'',fh:0,cat:''};{const rr=num(o['Crown rotation (deg)']);if(rr)b.rot=((rr%360)+360)%360}
+   qs:qcode(QS,o['QTRA size code']||o['QTRA - Size']),qt:qcode(QT,o['QTRA target code']||o['QTRA - Target range']),qp:qcode(QP,o['QTRA - Probability of failure']),rec:y('Recommendations'),wp:y('Work priority'),st:y('Status'),ph:y('Photo filename'),by:y('Surveyor'),qb:y('QTRA target basis'),fd:'',fh:0,cat:''};{const rr=num(o['Crown rotation (deg)']);if(rr)b.rot=((rr%360)+360)%360}
   for(let i=1;i<=5;i++)b['d'+i]=num(o[`Stem ${i} diameter (mm)`]);
   const ok=v=>v!==undefined&&v!==''&&!isNaN(parseFloat(String(v).replace(/,/g,'')));let la=null,lo=null;
   if(ok(o['Latitude (WGS84)'])&&ok(o['Longitude (WGS84)'])&&num(o['Latitude (WGS84)'])){la=num(o['Latitude (WGS84)']);lo=num(o['Longitude (WGS84)'])}
@@ -1412,7 +1541,7 @@ function dtCols(){const ty=o=>T.includes(o)?'Tree':(o.kind||'Group'),stems=[1,2,
  const pl=['Plotted',o=>(T.includes(o)?o.lat!=null:true)?'✓':'✗',null,0];
  if(isSafe())return[['Ref',o=>o.ref,'ref'],['Type',ty],['Survey date',o=>ukD(o.sd),'sd'],['Species',o=>dtv(o,'sp'),'sp'],['Stems',o=>o.n||'','n',1],...stems,...crown,
   ['Height (m)',dtN('h',1),'h',1],['Clearance (m)',o=>fx1(o.cc),'cc',1],['Age class',o=>dtv(o,'age'),'age'],['Condition',o=>dtv(o,'cond'),'cond'],
-  ['QTRA size',o=>dtv(o,'qs'),'qs'],['QTRA target',o=>dtv(o,'qt'),'qt'],['QTRA probability',o=>dtv(o,'qp'),'qp'],['Risk index',o=>{const q=qtra(o);return q?String(Math.round(q.ri)):''},null,1],
+  ['QTRA size',o=>dtv(o,'qs'),'qs'],['QTRA target',o=>dtv(o,'qt'),'qt'],['Target basis',o=>dtv(o,'qb'),'qb'],['QTRA probability',o=>dtv(o,'qp'),'qp'],['Risk index',o=>{const q=qtra(o);return q?String(Math.round(q.ri)):''},null,1],
   ['Tolerability',o=>{const q=qtra(o);return q?q.tol:''},'tol'],['Recommendations',o=>dtv(o,'rec'),'rec'],['Work priority',o=>dtv(o,'wp'),'wp'],['Action date',o=>ukD(actionDate(o))],['Photo',o=>dtv(o,'ph'),'ph'],['Surveyor',o=>o.by||META.surv||'','by'],['Notes',o=>dtv(o,'notes'),'notes'],pl];
  return[['Ref',o=>o.ref,'ref'],['Type',ty],['Survey date',o=>ukD(o.sd),'sd'],['Surveyor',o=>o.by||META.surv||'','by'],['Species',o=>dtv(o,'sp'),'sp'],['Stems',o=>o.n||'','n',1],...stems,...crown,['Height (m)',dtN('h',1),'h',1],['Clearance (m)',o=>fx1(o.cc),'cc',1],
   ['FSB dir',o=>dtv(o,'fd'),'fd'],['FSB ht (m)',dtN('fh',1),'fh',1],['Age class',o=>dtv(o,'age'),'age'],['Condition',o=>dtv(o,'cond'),'cond'],['Category',o=>dtv(o,'cat'),'cat'],
