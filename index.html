@@ -232,6 +232,8 @@ body{position:fixed;top:0;right:0;bottom:0;left:0;height:auto}
 .leaflet-bottom{padding-bottom:env(safe-area-inset-bottom)}
 #menu{right:max(8px,env(safe-area-inset-right))}
 aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),24px)) 0 0 env(safe-area-inset-left)}
+/* iPhone/iPad (touch, no mouse): pinch and drag replace the zoom buttons and pan pad; laptops/desktops keep them */
+@media (hover:none) and (pointer:coarse){.leaflet-control-zoom,.leaflet-control.pan-ctrl{display:none!important}}
 </style></head><body>
 <div id="login"><form id="lgForm" autocomplete="on">
 <div class="lgLogo">🌳</div><h1>TreePlotta</h1><p>Sign in to continue</p>
