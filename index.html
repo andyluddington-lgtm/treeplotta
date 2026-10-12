@@ -743,7 +743,10 @@ let pts=[];const dl=L.layerGroup().addTo(map);
 function draft(m){dl.clearLayers();if(!pts.length)return;L.polyline(m?[...pts,m]:pts,{color:'#ff0',weight:2,dashArray:'4 4',interactive:false}).addTo(dl);
  pts.forEach((v,i)=>L.circleMarker(v,i===0&&pts.length>=3?{radius:9,color:'#000',weight:2,fillColor:'#7cff7c',fillOpacity:1,interactive:false}:{radius:5,color:'#000',weight:1,fillColor:'#ff0',fillOpacity:1,interactive:false}).addTo(dl))}
 function cancelDraft(){pts=[];dl.clearLayers()}
-map.on('mousemove',e=>{snapRing(['add','queue','paste'].includes(mode)&&!(mode=='paste'&&clip&&clip.kind=='poly')?e.latlng:null);if(mode=='poly')draft([e.latlng.lat,e.latlng.lng]);else if(mode=='meas'){const q=mSnap(e.latlng);mRing(q._snap?q:null);if(mpts.length)mdraw([q.lat,q.lng])}});
+/* iPhone/iPad: a tap also sends a fake mousemove first. If that changes what's on screen (measure preview line, snap ring),
+   Safari treats the tap as a "hover" and swallows the click – so hover previews only run with a real mouse/trackpad. */
+const HOVER_OK=matchMedia('(hover:hover)');
+map.on('mousemove',e=>{if(!HOVER_OK.matches)return;snapRing(['add','queue','paste'].includes(mode)&&!(mode=='paste'&&clip&&clip.kind=='poly')?e.latlng:null);if(mode=='poly')draft([e.latlng.lat,e.latlng.lng]);else if(mode=='meas'){const q=mSnap(e.latlng);mRing(q._snap?q:null);if(mpts.length)mdraw([q.lat,q.lng])}});
 let mpts=[],mtot=0;const mdl=L.layerGroup().addTo(map);
 function mdraw(cursor){mdl.clearLayers();if(!mpts.length){mtot=0;banner();return}
  let tot=0;
