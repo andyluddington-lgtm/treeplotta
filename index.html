@@ -37,6 +37,11 @@ header .tools #bCopy:not([hidden])::before{content:'';position:absolute;left:-7p
 .maptools button:last-child{border-bottom:0}.maptools button.on{background:#ffd54f}.maptools button:hover{background:#f2f2f2}
 @media(pointer:coarse){.maptools button{width:42px;height:42px;line-height:42px;font-size:20px}}
 #bn [data-rot]{min-height:28px;padding:2px 8px;margin:2px 1px}.h.rotg{background:#ffd54f;border-color:#a07800;font-size:12px;line-height:14px}
+#bn #bMNew{min-height:30px;padding:3px 10px;margin:2px 0 2px 4px}#bn .mlenB{font-size:16px;color:#c25e00}
+.mh{border-radius:50%;box-sizing:border-box;display:flex;align-items:center;justify-content:center}.mhS{background:rgba(255,152,0,.25);border:3px solid #ff9800}
+.mhE{background:rgba(255,255,255,.55);border:3px solid #ff9800;color:#c25e00;font-size:22px;line-height:1;box-shadow:0 1px 6px #0007}.mhE b{margin-top:-2px}
+.mhPulse{animation:mhp 1.2s ease-in-out infinite}@keyframes mhp{50%{box-shadow:0 0 0 8px rgba(255,152,0,.35)}}
+.lbl.mlen{white-space:nowrap;font-size:15px;color:#c25e00!important}
 #bn #bMSnap{min-height:30px;padding:3px 10px;margin:2px 0 2px 4px;font-weight:700}#bn #bMSnap.on{background:#fde7ff;border-color:#b0b}#bn #bMKeep,#bn #bMKClr{min-height:30px;padding:3px 10px;margin:2px 0 2px 4px;font-weight:700}.lbl.mkl{color:#006b7d!important;white-space:nowrap}#mapTools button[hidden]{display:none!important}#bn #bMTree{min-height:30px;padding:3px 10px;margin-left:4px;font-weight:700;background:#e3efe6;border-color:#1f3d2b}#bn #bxEnd{min-height:28px;padding:2px 10px;margin-left:4px;font-weight:700}
 
 @media(max-width:520px){header .row.tools{gap:4px}header .row.tools button{min-width:0;flex:1 1 0;padding:6px 2px;font-size:17px}}
@@ -545,7 +550,7 @@ map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle select
  else if(mode==='sv'){svOpen(e.latlng);setMode('sv')}
  else if(mode==='rot'){}
  else if(mode==='note'){const n={ref:noteRef(),kind:'Point',notes:'',lat:e.latlng.lat,lon:e.latlng.lng};SN.push(n);setMode('note');nSelect(n,true);save()}
- else if(mode==='meas'){const q=mSnap(e.latlng);mpts.push([q.lat,q.lng]);mRing(null);mdraw();}
+ else if(mode==='meas')mTap(e.latlng);
  else if(mode==='addv'&&selP){const c=e.latlng,n=selP.ll,C=map.latLngToLayerPoint(c);let b=0,bd=1e9;n.forEach((a,i)=>{const d=L.LineUtil.pointToSegmentDistance(C,map.latLngToLayerPoint(a),map.latLngToLayerPoint(n[(i+1)%n.length]));if(d<bd){bd=d;b=i}});n.splice(b+1,0,[c.lat,c.lng]);drawP(selP);handlesP();proro();save()}
 
  else select(null)});
@@ -673,7 +678,7 @@ function banner(){if(batch)return bRefresh();const u=T.filter(t=>t.lat==null),n=
  else if(mode=='paste'&&clip)m=`Click the map to paste a copy of ${clip.data.ref} (new ref assigned) · Esc to stop`;
  else if(mode=='note')m='Tap the map to drop a point note · <button id="bNArea" type="button">▱ Draw an area note instead</button> · Esc to cancel';
  else if(mode=='poly')m=(noteDraw?'<b>Area site note</b> · ':'')+(pts.length>=3?`Corner points: ${pts.length} · tap the green first corner or ✓ Finish to complete · Esc to cancel`:`Tap to add corner points (${pts.length}) · Esc to cancel`);
- else if(mode=='meas')m=mpts.length?`Measuring – total <b>${mtot.toFixed(2)} m</b> (${mpts.length} point${mpts.length>1?'s':''}) · tap to continue · tap 📏 or Esc to stop${mSnapBtn()}${mpts.length>=2?' <button id="bMKeep" type="button">📌 Keep line &amp; measure another</button> <button id="bMTree" type="button">🌳 Plot tree at end point</button>':''}${mkept.length?` <button id="bMKClr" type="button">🧹 Clear kept (${mkept.length})</button>`:''}`:'Tap points along the feature to measure · Esc to cancel'+mSnapBtn()+(mkept.length?` <button id="bMKClr" type="button">🧹 Clear kept (${mkept.length})</button>`:'');
+ else if(mode=='meas')m=mBanner();
  else if(mode=='addv')m='Click on or near an edge to add a vertex · Esc to stop';
  else if(mode=='delv')m='Tap a vertex (white square) to delete it · Esc to stop';
  else if(mode=='add')m='Tap the map to place one tree · Esc to cancel';
@@ -746,19 +751,31 @@ function cancelDraft(){pts=[];dl.clearLayers()}
 /* iPhone/iPad: a tap also sends a fake mousemove first. If that changes what's on screen (measure preview line, snap ring),
    Safari treats the tap as a "hover" and swallows the click – so hover previews only run with a real mouse/trackpad. */
 const HOVER_OK=matchMedia('(hover:hover)');
-map.on('mousemove',e=>{if(!HOVER_OK.matches)return;snapRing(['add','queue','paste'].includes(mode)&&!(mode=='paste'&&clip&&clip.kind=='poly')?e.latlng:null);if(mode=='poly')draft([e.latlng.lat,e.latlng.lng]);else if(mode=='meas'){const q=mSnap(e.latlng);mRing(q._snap?q:null);if(mpts.length)mdraw([q.lat,q.lng])}});
-let mpts=[],mtot=0;const mdl=L.layerGroup().addTo(map);
-function mdraw(cursor){mdl.clearLayers();if(!mpts.length){mtot=0;banner();return}
- let tot=0;
- mpts.forEach((p,i)=>{if(i>0)tot+=L.latLng(mpts[i-1]).distanceTo(p);
-  L.circleMarker(p,{radius:4,color:'#000',weight:1,fillColor:'#ff9800',fillOpacity:1,interactive:false}).addTo(mdl)
-   .bindTooltip(tot.toFixed(1)+' m',{permanent:true,direction:'top',className:'lbl',offset:[0,-6]})});
- mtot=tot;const line=cursor?[...mpts,cursor]:mpts;
- L.polyline(line,{color:'#ff9800',weight:3,dashArray:cursor?'6 4':null,interactive:false}).addTo(mdl);
- if(cursor){const seg=L.latLng(mpts[mpts.length-1]).distanceTo(cursor),mid=[(mpts[mpts.length-1][0]+cursor[0])/2,(mpts[mpts.length-1][1]+cursor[1])/2];
-  L.marker(mid,{interactive:false,icon:L.divIcon({className:'lbl',html:seg.toFixed(1)+' m',iconSize:[0,0]})}).addTo(mdl)}
+map.on('mousemove',e=>{if(!HOVER_OK.matches)return;snapRing(['add','queue','paste'].includes(mode)&&!(mode=='paste'&&clip&&clip.kind=='poly')?e.latlng:null);if(mode=='poly')draft([e.latlng.lat,e.latlng.lng]);else if(mode=='meas'&&!mDragging){const q=mSnap(e.latlng);mRing(q._snap?q:null)}});
+/* measure: one straight line. Tap the start; an end handle appears – drag it out (the length updates live) or tap where it ends.
+   Both ends stay draggable to fine-tune; ends snap to topo / trees when released (🧲). */
+let mpts=[],mtot=0,mEndSet=false,mDragging=false;const mdl=L.layerGroup().addTo(map),mhl=L.layerGroup().addTo(map);
+const mLen=()=>mpts.length>1?L.latLng(mpts[0]).distanceTo(mpts[1]):0;
+function mTap(ll){const q=mSnap(ll);mRing(null);
+ if(!mpts.length){mpts=[[q.lat,q.lng]];const c=map.latLngToContainerPoint(q),sz=map.getSize(),dx=c.x+90<sz.x-20?90:-90,e=map.containerPointToLatLng([c.x+dx,c.y]);mpts.push([e.lat,e.lng]);mEndSet=false}
+ else{mpts[1]=[q.lat,q.lng];mEndSet=true}
+ mHandles();mdraw()}
+function mHandles(){mhl.clearLayers();
+ mpts.forEach((p,i)=>{const m=L.marker(p,{draggable:true,autoPan:true,zIndexOffset:1000,keyboard:false,icon:L.divIcon({className:'mh'+(i?' mhE'+(mEndSet?'':' mhPulse'):' mhS'),iconSize:i?[40,40]:[30,30],html:i?'<b>⊕</b>':''})}).addTo(mhl);
+  m.on('dragstart',()=>{mDragging=true;mRing(null)});
+  m.on('drag',ev=>{const q=mSnap(ev.target.getLatLng());mpts[i]=[q.lat,q.lng];if(i)mEndSet=true;mRing(q._snap?q:null);mdraw()});
+  m.on('dragend',()=>{mDragging=false;m.setLatLng(mpts[i]);mRing(null);mHandles();mdraw()})})}
+function mdraw(){mdl.clearLayers();if(mpts.length<2){mtot=0;banner();return}
+ mtot=mLen();const a=mpts[0],b=mpts[1];
+ L.polyline(mpts,{color:'#ff9800',weight:3,dashArray:mEndSet?null:'6 4',interactive:false}).addTo(mdl);
+ L.marker([(a[0]+b[0])/2,(a[1]+b[1])/2],{interactive:false,icon:L.divIcon({className:'lbl mlen',html:mtot.toFixed(2)+' m',iconSize:[0,0]})}).addTo(mdl);
  banner()}
-function cancelMeas(){mpts=[];mtot=0;mdl.clearLayers();mRing(null)}
+function mBanner(){const clr=mkept.length?` <button id="bMKClr" type="button">🧹 Clear kept (${mkept.length})</button>`:'';
+ if(!mpts.length)return'Tap the start point of the measurement · Esc to cancel'+mSnapBtn()+clr;
+ const len=`<b class="mlenB">${mtot.toFixed(2)} m</b>`;
+ if(!mEndSet)return`${len} · drag the ⊕ end handle out to measure, or tap where the line ends`+mSnapBtn()+' <button id="bMNew" type="button">↺ Restart</button>'+clr;
+ return`${len} · drag either end to adjust · tap the map to move the end`+mSnapBtn()+' <button id="bMKeep" type="button">📌 Keep line &amp; measure another</button> <button id="bMTree" type="button">🌳 Plot tree at end point</button> <button id="bMNew" type="button">↺ Restart</button>'+clr}
+function cancelMeas(){mpts=[];mtot=0;mEndSet=false;mDragging=false;mdl.clearLayers();mhl.clearLayers();mRing(null)}
 /* measure snapping: topo vertices / line ends / point entities / circle centres (visible layers), tree centres and polygon corners first;
    otherwise the nearest point on a topo line. Works in zoom-0 projected units, the same space TOPO.feats are stored in. */
 let mSnapOn=true;try{mSnapOn=localStorage.getItem(KEY+'_msnap')!=='0'}catch(x){}
@@ -779,7 +796,7 @@ function mSnap(ll){if(!mSnapOn)return ll;const sc=Math.pow(2,map.getZoom()),coar
 /* kept measurements: stay on the map (also after the measure tool is closed) until cleared with 🧹 */
 let mkept=[];const mkl=L.layerGroup().addTo(map);
 const mSnapBtn=()=>` <button id="bMSnap" type="button" class="${mSnapOn?'on':''}" title="Snap to topo points, lines and trees">🧲 Snap ${mSnapOn?'on':'off'}</button>`;
-function mKeep(){if(mpts.length<2)return;mkept.push(mpts.slice());mpts=[];mtot=0;mdl.clearLayers();mkDraw();banner()}
+function mKeep(){if(mpts.length<2||!mEndSet)return;mkept.push(mpts.slice());cancelMeas();mkDraw();banner()}
 function mkDraw(){mkl.clearLayers();
  mkept.forEach(line=>{let tot=0;line.forEach((p,i)=>{L.circleMarker(p,{radius:3.5,color:'#000',weight:1,fillColor:'#00b8d4',fillOpacity:1,interactive:false}).addTo(mkl);
    if(i>0){const a=line[i-1],seg=L.latLng(a).distanceTo(p);tot+=seg;if(line.length>2)L.marker([(a[0]+p[0])/2,(a[1]+p[1])/2],{interactive:false,icon:L.divIcon({className:'lbl mkl',html:seg.toFixed(1)+' m',iconSize:[0,0]})}).addTo(mkl)}});
@@ -1792,8 +1809,9 @@ nCard.addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest(
 $('bNote').onclick=()=>{if(mode=='poly'&&noteDraw)return setMode('poly');setMode('note')};
 $('bn').addEventListener('click',e=>{if(e.target.id==='bxEnd'){e.stopPropagation();return exitBatch()}if(e.target.id==='bNArea'){e.stopPropagation();noteDraw=true;setMode('poly')}
  if(e.target.id==='bMSnap'){e.stopPropagation();mSnapOn=!mSnapOn;try{localStorage.setItem(KEY+'_msnap',mSnapOn?'1':'0')}catch(x){}if(!mSnapOn)mRing(null);return banner()}
+ if(e.target.id==='bMNew'){e.stopPropagation();cancelMeas();return banner()}
  if(e.target.id==='bMKeep'){e.stopPropagation();return mKeep()}if(e.target.id==='bMKClr'){e.stopPropagation();return mkClear()}
- if(e.target.id==='bMTree'&&mode==='meas'&&mpts.length){e.stopPropagation();/* new tree at the last measured point, e.g. a tree base located by offset from a mapped feature */
+ if(e.target.id==='bMTree'&&mode==='meas'&&mpts.length>1&&mEndSet){e.stopPropagation();/* new tree at the last measured point, e.g. a tree base located by offset from a mapped feature */
   const p=mpts[mpts.length-1];if(!confirmLeave('Add a new tree anyway?'))return;const t=newTree();t.lat=p[0];t.lon=p[1];T.push(t);setMode(null);select(t);save()}});
 const NHD=['Ref','Type','Notes','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
 function nSheet(wb){const rows=[...SN].sort((a,b)=>natCmp(a.ref,b.ref)).map(n=>{if(n.kind==='Area'){const c=turf.centerOfMass(feat(n)).geometry.coordinates,e=proj4('EPSG:4326','EPSG:27700',c);
