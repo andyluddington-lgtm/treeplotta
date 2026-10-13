@@ -694,11 +694,13 @@ const crownR=p=>(num(p.cn)+num(p.ce)+num(p.cs)+num(p.cw))/4,GP=new Map(),pf=$('p
 const feat=p=>turf.polygon([[...p.ll.map(v=>[v[1],v[0]]),[p.ll[0][1],p.ll[0][0]]]]);
 const gA=p=>turf.area(feat(p)),gPer=p=>turf.length(turf.polygonToLine(feat(p)),{units:'meters'});
 function buf(p,r){if(r==null)r=off(p);if(!r)return null;try{const g=turf.buffer(feat(p),r,{units:'meters'}).geometry,c=g.type=='Polygon'?g.coordinates[0]:g.coordinates[0][0];return c.map(v=>[v[1],v[0]])}catch(x){return null}}
+/* groups/woodlands/hedges (and area notes) sit in their own pane BELOW trees, so a tree plotted inside a polygon can always be tapped */
+map.createPane('polyPane').style.zIndex=390;
 function drawP(p){if(GP.has(p)){map.removeLayer(GP.get(p));GP.delete(p)}
- const c=colour(p),s=p===selP,ds={Woodland:'10 5',Hedge:'3 5'}[p.kind]||null,ls=[],b=isSafe()?null:buf(p);
- if(b)ls.push(L.polygon(b,{color:'#ff0000',weight:2,fill:false,interactive:false}));
- const vb=isVet(p)?buf(p,voff(p)):null;if(vb)ls.push(L.polygon(vb,{color:'#ff0000',weight:2,dashArray:'8 5',fill:false,interactive:false}));
- ls.push(L.polygon(p.ll,BSEL.has(p)?{color:'#00e5ff',fillColor:c,weight:4,fillOpacity:.4}:{color:c,weight:s?3:2,dashArray:ds,fillOpacity:s?.28:.12}).on('click',e=>{if(!mode){L.DomEvent.stopPropagation(e);batch?bToggle(p):wantSelectAny(p,false)}}));
+ const c=colour(p),s=p===selP,ds=null,ls=[],b=isSafe()?null:buf(p);
+ if(b)ls.push(L.polygon(b,{pane:'polyPane',color:'#ff0000',weight:2,fill:false,interactive:false}));
+ const vb=isVet(p)?buf(p,voff(p)):null;if(vb)ls.push(L.polygon(vb,{pane:'polyPane',color:'#ff0000',weight:2,dashArray:'8 5',fill:false,interactive:false}));
+ ls.push(L.polygon(p.ll,BSEL.has(p)?{pane:'polyPane',color:'#00e5ff',fillColor:c,weight:4,fillOpacity:.4}:{pane:'polyPane',color:c,weight:s?3:2,dashArray:ds,fillOpacity:s?.28:.12}).on('click',e=>{if(!mode){L.DomEvent.stopPropagation(e);batch?bToggle(p):wantSelectAny(p,false)}}));
  const lp=turf.pointOnFeature(feat(p)).geometry.coordinates;
  ls.push(L.circleMarker([lp[1],lp[0]],{radius:1,opacity:0,fillOpacity:0,interactive:false}).bindTooltip(p.ref,{permanent:true,direction:'center',className:lblCls(p)}));
  GP.set(p,L.layerGroup(ls).addTo(map))}
@@ -1776,7 +1778,7 @@ function noteRef(){let m=0;SN.forEach(n=>{const x=/^N(\d+)$/i.exec(n.ref||'');if
 function drawN(n){if(NG.has(n)){map.removeLayer(NG.get(n));NG.delete(n)}const s=n===selN,ls=[];
  const go=e=>{if(mode||batch)return;L.DomEvent.stopPropagation(e);nSelect(n)};
  if(n.kind==='Area'){if(!n.ll||n.ll.length<3)return;
-  ls.push(L.polygon(n.ll,{color:s?'#00e5ff':NCOL,weight:s?3:2,dashArray:'6 4',fillColor:NCOL,fillOpacity:s?.22:.1}).on('click',go));
+  ls.push(L.polygon(n.ll,{pane:'polyPane',color:s?'#00e5ff':NCOL,weight:s?3:2,dashArray:'6 4',fillColor:NCOL,fillOpacity:s?.22:.1}).on('click',go));
   const c=turf.pointOnFeature(feat(n)).geometry.coordinates;ls.push(L.circleMarker([c[1],c[0]],{radius:1,opacity:0,fillOpacity:0,interactive:false}).bindTooltip(esc(n.ref),{permanent:true,direction:'center',className:'lbl lblN'}))}
  else{if(n.lat==null)return;const m=L.marker([n.lat,n.lon],{draggable:s,keyboard:false,zIndexOffset:500,icon:L.divIcon({className:'',html:`<div class="snpt${s?' on':''}">✎</div>`,iconSize:[22,22],iconAnchor:[11,11]})}).on('click',go);
   m.on('dragend',e=>{const q=e.target.getLatLng();n.lat=q.lat;n.lon=q.lng;nMeta();save()});
