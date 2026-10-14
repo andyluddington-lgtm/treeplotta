@@ -1019,7 +1019,8 @@ $('kList').addEventListener('click',e=>{const b=e.target.closest('.kh');if(!b)re
  $('kList').querySelectorAll('label').forEach(l=>l.classList.toggle('hl',l.querySelector('.kh').dataset.h===topoHL));topoShow()});
 const topoFit=b=>map.fitBounds(L.latLngBounds(map.unproject([b[0],b[1]],0),map.unproject([b[2],b[3]],0)),{maxZoom:20});
 $('kFit').onclick=()=>{if(!TOPO)return;topoFit(TOPO.site||TOPO.bbox)};$('kFitAll').onclick=()=>{if(!TOPO)return;topoFit(TOPO.bbox)};
-$('kDel').onclick=async()=>{if(!confirm('Remove the topo survey from this device?\n\nYour trees, polygons and imported points are not affected.'))return;TOPO=null;await tdbDo('readwrite',s=>s.delete('topo'));tcfg.off=[];tcfgSave();$('kovl').hidden=true;topoShow()};
+async function topoClear(){TOPO=null;topoHL=null;try{await tdbDo('readwrite',s=>s.delete('topo'))}catch(x){}tcfg.off=[];tcfgSave();if(!$('kovl').hidden)kUndock();topoShow()}
+$('kDel').onclick=async()=>{if(!confirm('Remove the topo survey from this device?\n\nYour trees, polygons and imported points are not affected.'))return;await topoClear()};
 $('bTopo').onclick=()=>{tcfg.on=!tcfg.on;tcfgSave();topoShow()};
 $('bTopoCfg').onclick=topoPanel;
 $('bTopoImp').onclick=()=>$('tFi').click();
@@ -1036,13 +1037,13 @@ $('tFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)re
   topoPanel()}catch(x){alert('Topo import failed: '+x.message)}finally{save()}};
 (async()=>{const d=await tdbDo('readonly',s=>s.get('topo'));if(!d||!d.txt)return;try{TOPO=topoFromText(d.name,d.txt);topoShow()}catch(x){}})();
 
-$('bNew').onclick=()=>{exitBatch();if(!T.length&&!PG.length&&!SN.length&&!site)return alert('Nothing to clear \u2013 this is already a blank survey.');
- if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s), ${SN.length} site note(s), the project details and the site pin from this device.\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
+$('bNew').onclick=()=>{exitBatch();if(!T.length&&!PG.length&&!SN.length&&!site&&!TOPO)return alert('Nothing to clear \u2013 this is already a blank survey.');
+ if(!confirm(`Start a new survey?\n\nThis permanently clears the ${isSafe()?'Safety':'BS5837'} survey: ${T.length} tree(s), ${PG.length} group/woodland/hedge feature(s), ${SN.length} site note(s), the project details and the site pin${TOPO?', and the imported topo ('+(TOPO.name||'drawing')+')':''} from this device.\n\nExport your xlsx first if you need to keep this survey \u2013 a backup is kept only until your next change.`))return;
  try{localStorage.setItem(KEY+'_backup',localStorage.getItem(KEY)||'')}catch(x){}
  select(null);
  T.forEach(t=>{if(G.has(t))map.removeLayer(G.get(t))});G.clear();T=[];
  PG.forEach(p=>{if(GP.has(p))map.removeLayer(GP.get(p))});GP.clear();PG=[];nClearAll();
- META={};setSite(null);$('menu').hidden=true;list();save();openType()};
+ META={};setSite(null);if(TOPO)topoClear();if(typeof mkClear==='function')mkClear();$('menu').hidden=true;list();save();openType()};
 
 // ---------- batch edit: tap trees / polygons (or select by rule), then change descriptive fields for all of them at once
 /* Measured fields (stems, crown spreads, height, clearance, FSB height) are deliberately NOT batch-editable. Notes and recommendations are only ever ADDED to. */
