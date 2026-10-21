@@ -249,6 +249,10 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 input.est{background:#fff3d6!important;border-style:dashed!important;border-color:#d39b2a!important;font-style:italic;color:#7a4b00!important}
 .lblEst{font-style:italic;text-decoration:underline dashed}.dkt1{font-size:10px;background:#ffe2a8;color:#7a4b00;border-radius:8px;padding:0 5px;margin-left:4px;font-weight:700}
 #bAdd.desk{box-shadow:inset 0 -3px 0 #ffb300}
+#xovl{position:fixed;inset:0;background:#0008;z-index:4000;display:flex;align-items:center;justify-content:center;padding:12px}#xovl[hidden]{display:none}
+#xpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:460px;width:100%}#xpanel h3{margin:0 0 6px}#xpanel .xnote{font-size:12.5px;color:#555;margin:0 0 10px}
+#xpanel .xopt{display:flex;gap:8px;align-items:flex-start;border:1px solid #ccc;border-radius:6px;padding:8px;margin:0 0 6px;font-size:13px;cursor:pointer}#xpanel .xopt{flex-direction:row!important;text-align:left}#xpanel .xopt input{margin:2px 0 0;width:auto!important;flex:none}#xpanel .xopt span{flex:1;text-align:left}
+#xpanel .xopt:has(input:checked){border-color:#1f3d2b;background:#eef6f0}#xpanel .row{display:flex;gap:6px;margin-top:10px}#xpanel .row button{flex:1}
 </style></head><body>
 <div id="login"><form id="lgForm" autocomplete="on">
 <div class="lgLogo">🌳</div><h1>TreePlotta</h1><p>Sign in to continue</p>
@@ -288,7 +292,8 @@ input.est{background:#fff3d6!important;border-style:dashed!important;border-colo
 </header>
 <div id="mapTools" class="leaflet-bar maptools"><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bMClr" title="Clear kept measurements" hidden>🧹</button><button id="bSVm" title="Street View – tap a road to open Google Street View">🚶</button></div>
 <div hidden><button id="bTable">📊 Data table (all features)…</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑ Batch edit – tap features on the map</button></div>
-<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bDxf">⬇ Export drawing (DXF)</button><button id="bHist">🕘 Export history…</button><div class="mh">Desk assessment</div><button id="bDeskMode">🌳 Desk mode for new trees: Off</button><button id="bDeskFill">🌳 Desk-estimate trees missing height / diameter…</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><button id="bOff">📶 Offline maps…</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
+<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp" title="TreePlotta exports, Tree_survey_vertical field sheets (BS5837 Field / Safety Field / Desk Allometry) or formatted schedules">⬆ Import survey or field sheets (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><button id="bSched">📋 Export tree schedule (formatted xlsx)…</button><div id="expInfo"></div><button id="bDxf">⬇ Export drawing (DXF)</button><button id="bHist">🕘 Export history…</button><div class="mh">Desk assessment</div><button id="bDeskMode">🌳 Desk mode for new trees: Off</button><button id="bDeskFill">🌳 Desk-estimate trees missing height / diameter…</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><button id="bOff">📶 Offline maps…</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
+<div id="xovl" hidden><div id="xpanel"><h3>Export tree schedule</h3><p class="xnote"><b id="xTy"></b> survey · same layout, colours and pick-lists as the field schedule sheets. Groups, woodlands and hedges are included.</p><label class="xopt"><input type="radio" name="xori" value="v"><span><b>Vertical</b> – attributes down the side, one column per tree (as the field sheets)</span></label><label class="xopt"><input type="radio" name="xori" value="h"><span><b>Horizontal</b> – one row per tree, attributes across (filterable)</span></label><label class="xopt"><input type="radio" name="xori" value="b" checked><span><b>Both</b> – vertical and horizontal sheets in one workbook</span></label><div class="row"><button id="xGo" type="button">⬇ Export</button><button id="xCancel" type="button">Cancel</button></div></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
@@ -350,6 +355,7 @@ input.est{background:#fff3d6!important;border-style:dashed!important;border-colo
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/6.5.0/turf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script>
 const $=id=>document.getElementById(id),KEY='bs5837_plotter_v1',R=111320;
 proj4.defs('EPSG:27700','+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs');
@@ -1745,16 +1751,88 @@ $('bSVm').onclick=()=>setMode('sv');
 $('bRot').onclick=()=>{if(mode!=='rot'&&!(sel&&sel.lat!=null))return;setMode('rot')};
 $('bn').addEventListener('click',e=>{const b=e.target.closest('[data-rot]');if(!b||!sel)return;e.stopPropagation();const v=b.dataset.rot;
  if(v==='done')return setMode('rot');sel.rot=v==='0'?0:(crot(sel)+(+v)+360)%360;if(!sel.rot)delete sel.rot;draw(sel);handles();banner();save()});
+
+// ---------- ⬆ import from the field fallback workbook (Tree_survey_vertical: BS5837 Field / Safety Field / Desk Allometry sheets)
+// and from TreePlotta's own formatted schedules (vertical or horizontal). Rows are matched by their label in column A, not by row number.
+const FX_N=s=>String(s??'').toLowerCase().replace(/[–—]/g,'-').replace(/²/g,'2').replace(/\s+/g,' ').trim();
+const fxEnd=s=>/[.!?]$/.test(s)?s:s+'.';
+function fxVert(ws){const a=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''}),hr=a.findIndex(r=>FX_N(r[0])==='attribute');if(hr<0)return null;
+ const meta={},lab={};a.slice(0,hr).forEach(r=>{const k=FX_N(r[0]);if(k)meta[k]=r.slice(1).find(v=>v!=='')??''});
+ a.forEach((r,i)=>{const k=FX_N(r[0]);if(i>hr&&k&&!(k in lab))lab[k]=i});
+ const w=Math.max(0,...a.map(r=>r.length)),recs=[];
+ for(let c=1;c<w;c++){const rec={};Object.keys(lab).forEach(k=>{const v=a[lab[k]][c];if(v!==''&&v!=null)rec[k]=v});recs.push(rec)}
+ return{meta,recs}}
+function fxHoriz(ws){const a=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''}),hr=a.findIndex(r=>FX_N(r[0])==='tree ref'&&r.some((v,i)=>i>0&&FX_N(v)==='species'));if(hr<0)return null;
+ const meta={};a.slice(0,hr).forEach(r=>{const k=FX_N(r[0]);if(k)meta[k]=r.slice(1).find(v=>v!=='')??''});
+ const H=a[hr].map(FX_N);return{meta,recs:a.slice(hr+1).map(r=>{const rec={};H.forEach((k,i)=>{if(k&&r[i]!==''&&r[i]!=null&&!(k in rec))rec[k]=r[i]});return rec})}}
+const fxStarted=r=>['tree ref','species','number of stems','stem diameter 1 (mm)'].some(k=>k in r);
+function fxDesk(ws){const p=fxVert(ws);if(!p)return null;const fbk=Object.keys(p.meta).find(k=>k.startsWith('if no species equation'));
+ const g=(r,pre)=>{const k=Object.keys(r).find(x=>x.startsWith(pre));return k?r[k]:''};
+ const recs=p.recs.map(r=>({ref:String(r['tree ref']??'').trim(),sp:String(r['species']??'').trim(),ovr:String(g(r,'latin name override')).trim(),
+  cr:num(g(r,'measured crown radius')),h:num(g(r,'measured height')),d:num(g(r,'measured stem diameter'))})).filter(r=>r.ref||r.sp);
+ return{recs,fb:fbk?/^y/i.test(String(p.meta[fbk])):null}}
+/* returns null (not a field / schedule workbook), false (user cancelled) or the sheet to import */
+function fieldDetect(wb){const c=[];
+ wb.SheetNames.forEach(n=>{let safe=null,kind=null;
+  if(/^BS5837 (Field|schedule \(vertical\))$/i.test(n)){safe=false;kind='v'}else if(/^Safety (Field|schedule \(vertical\))$/i.test(n)){safe=true;kind='v'}
+  else if(/^BS5837 schedule \(horizontal\)$/i.test(n)){safe=false;kind='h'}else if(/^Safety schedule \(horizontal\)$/i.test(n)){safe=true;kind='h'}
+  if(kind==null)return;const p=kind==='v'?fxVert(wb.Sheets[n]):fxHoriz(wb.Sheets[n]);if(!p)return;p.recs=p.recs.filter(fxStarted);c.push({name:n,safe,kind,...p})});
+ const desk=wb.Sheets['Desk Allometry']?fxDesk(wb.Sheets['Desk Allometry']):null;
+ if(!c.length&&!(desk&&desk.recs.length))return c.length||desk?(alert('No trees found on the field sheets of this workbook.'),false):null;
+ const use=c.filter(x=>x.recs.length);
+ if(!use.length)return{name:'Desk Allometry',safe:isSafe(),kind:'v',meta:{},recs:[],desk};
+ let want=use[0].safe;
+ if(new Set(use.map(x=>x.safe)).size>1){const nb=use.find(x=>!x.safe).recs.length,ns=use.find(x=>x.safe).recs.length;
+  want=!confirm(`This workbook has trees on both sheets:\n• BS5837 Field – ${nb} tree(s)\n• Safety Field – ${ns} tree(s)\n\nOK = import the BS5837 sheet\nCancel = import the Safety sheet`)}
+ const same=use.filter(x=>x.safe===want);/* a schedule export holds the same trees vertically and horizontally – read one */
+ return{...(same.find(x=>x.kind==='v')||same[0]),desk}}
+/* species from the sheet's pick-list (“English oak”) → the app's list entry (“English oak (Quercus robur)”) where there is one */
+function fxSp(v,ovr){let s=String(v||'').trim();if(ovr){const c=s.replace(/\s*\(.*\)\s*$/,'');return(c?c+' ':'')+'('+capLat(String(ovr).trim().toLowerCase())+')'}
+ if(!s||/\(/.test(s))return s;const lo=s.toLowerCase(),hit=SP.find(x=>x.toLowerCase().startsWith(lo+' ('));if(hit)return hit;const lat=AL_CN[lo];return lat?s+' ('+capLat(lat)+')':s}
+function fxGrid(s){const m=/E\s*([\d,]+(?:\.\d+)?)\s*[,;]?\s*N\s*([\d,]+(?:\.\d+)?)/i.exec(String(s||''));if(!m)return null;const E=+m[1].replace(/,/g,''),N=+m[2].replace(/,/g,'');
+ if(!(E>1000&&E<700000&&N>1000&&N<1300000))return null;const p=proj4('EPSG:27700','EPSG:4326',[E,N]);return{lat:p[1],lon:p[0]}}
+function fieldBuild(fx){const safe=fx.safe,M=fx.meta||{},hdrDate=fromXlDate(M['survey date'])||fromXlDate((/\d{1,2}\/\d{1,2}\/\d{4}/.exec(String(M['survey date']||''))||[''])[0]),surv=String(M['surveyor']||'').trim(),nt=[],np=[];let skipped=0;
+ const meta=safe?{sid:String(M['site id']||'').trim(),sname:String(M['site name']||'').trim(),reason:String(M['reason for survey']||'').trim(),surv}:{pno:String(M['project number']||'').trim(),pname:String(M['project name']||'').trim(),surv};
+ fx.recs.forEach(r=>{const g=k=>r[k]??'',s=k=>String(g(k)).trim(),t=newTree();
+  Object.assign(t,{ref:s('tree ref'),sp:fxSp(g('species')),h:num(g('height (m)')),cc:num(g('crown clearance (m)')),age:s('age class'),cond:s('physiological condition'),
+   cn:num(g('crown spread n (m)')),ce:num(g('crown spread e (m)')),cs:num(g('crown spread s (m)')),cw:num(g('crown spread w (m)')),sd:fromXlDate(g('survey date'))||hdrDate||t.sd,by:surv||t.by});
+  for(let i=1;i<=5;i++)t['d'+i]=num(g(`stem diameter ${i} (mm)`));t.n=num(g('number of stems'))||(t.d1?1:0);
+  const obs=[];for(let i=1;i<=10;i++){const o=s('observation '+i);if(o)obs.push(fxEnd(o))}const free=s('free text notes');
+  t.notes=obs.length||free?[...obs,free?fxEnd(free):''].filter(Boolean).join(' '):s('notes (calculated - observations + free text)');
+  if(safe){Object.assign(t,{qs:qcode(QS,g('qtra - size')),qt:qcode(QT,g('qtra - target range')),qb:s('qtra - target basis'),qp:qcode(QP,g('qtra - probability of failure')),rec:s('recommendations'),wp:s('work priority'),ph:s('photo filename'),li:s('line item'),st:s('status')})}
+  else Object.assign(t,{fd:s('fsb direction').toUpperCase(),fh:num(g('fsb height (m)')),cat:s('retention category').toUpperCase()});
+  const loc=s(safe?'location notes':'photo / location reference'),ll=fxGrid(loc);
+  if(ll){t.lat=ll.lat;t.lon=ll.lon}else if(loc)t.notes=[t.notes,(safe?'Location: ':'Photo / location ref: ')+fxEnd(loc)].filter(Boolean).join(' ');
+  if(/^y/i.test(s('desk estimate'))){t.desk='Y';t.est=deskParse(s('estimate basis'))}
+  const type=s('feature type');
+  if(/^(group|woodland|hedge)$/i.test(type)){if(t.lat==null){skipped++;return}const kind=type[0].toUpperCase()+type.slice(1).toLowerCase(),c={lat:t.lat,lon:t.lon};
+   const p={...t,kind,ll:[m2ll(c,-5,5),m2ll(c,5,5),m2ll(c,5,-5),m2ll(c,-5,-5)]};delete p.lat;delete p.lon;delete p.desk;delete p.est;np.push(p);return}
+  nt.push(t)});
+ /* Desk Allometry sheet: trees that are only on that sheet come in as desk estimates; trees also on the field sheet keep the field values,
+    and any value still equal to the allometric estimate is flagged as an estimate (a value changed on site counts as measured) */
+ let deskN=0;if(fx.desk&&fx.desk.recs.length){const fb0=deskFb;if(fx.desk.fb!=null)deskFb=fx.desk.fb;
+  try{fx.desk.recs.forEach(r=>{const tmp={...newTree(),ref:r.ref,sp:fxSp(r.sp,r.ovr),d1:r.d,d2:0,d3:0,d4:0,d5:0,h:r.h,cn:r.cr,ce:r.cr,cs:r.cr,cw:r.cr,by:surv||curSurv(),sd:hdrDate||today()};
+   tmp.desk='Y';tmp.est={};if(!r.d)tmp.est.d1='';if(!r.h)tmp.est.h='';if(!r.cr)tmp.est.cr='';deskCalc(tmp);
+   const ex=r.ref&&[...nt,...np].find(t=>t.ref===r.ref);
+   if(ex){if(!nt.includes(ex)||isDesk(ex))return;const E={};
+    if('d1' in tmp.est&&tmp.d1&&num(ex.d1)===tmp.d1&&!num(ex.d2))E.d1=tmp.est.d1;if('h' in tmp.est&&tmp.h&&num(ex.h)===tmp.h)E.h=tmp.est.h;
+    if('cr' in tmp.est&&tmp.cn&&DK_CROWN.every(k=>num(ex[k])===tmp.cn))E.cr=tmp.est.cr;if(Object.keys(E).length){ex.desk='Y';ex.est=E;deskN++}}
+   else{nt.push(tmp);deskN++}})}finally{deskFb=fb0}}
+ /* refs: keep the sheet's, number any blanks after the highest in use */
+ let mx=0;[...T,...PG,...nt,...np].forEach(o=>{const m=/^[A-Za-z](\d+)$/.exec(o.ref||'');if(m)mx=Math.max(mx,+m[1])});nt.forEach(t=>{if(!t.ref)t.ref='T'+(++mx)});
+ return{nt,np,skipped,meta,deskN}}
+
 let impStart=null;/* set when the import was started from the Survey type screen */
 $('bImp').onclick=()=>{impStart=null;$('fi').click()};
 $('tImp').onclick=()=>{impStart={bs5837:{pno:$('tPno').value.trim(),pname:$('tPname').value.trim()},safety:{sid:$('tSid').value.trim(),sname:$('tSname').value.trim(),reason:$('tReason').value.trim()}};$('tovl').hidden=true;$('fi').click()};
 $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value='';const fromStart=impStart;impStart=null;if(!f)return;
- try{const wb=XLSX.read(await f.arrayBuffer()),safeBook=isSafetyBook(wb);
+ try{const wb=XLSX.read(await f.arrayBuffer()),fx=fieldDetect(wb);if(fx===false)return;const safeBook=fx?fx.safe:isSafetyBook(wb);
   if(safeBook!==isSafe()){const to=safeBook?'safety':'bs5837';if(fromStart){if(!switchType(to))return}else if(!confirm(`This looks like a ${safeBook?'Safety (QTRA)':'BS5837'} survey file.\n\nSwitch to the ${safeBook?'Safety':'BS5837'} survey type and import it there?`))return;if(!switchType(to))return}
   const ss=wb.Sheets['Site'];if(ss&&!site){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ss,{header:1}).filter(r=>r[0]).map(r=>[r[0],r[1]]));if(a.Latitude&&a.Longitude)setSite({name:a['Site address']||'',lat:+a.Latitude,lon:+a.Longitude})}
   let nt=[],np=[],skipped=0;const ds=wb.Sheets['DATA'],ps=wb.Sheets['Project'];
   if(ps&&!safeBook){const a=Object.fromEntries(XLSX.utils.sheet_to_json(ps,{header:1}).filter(r=>r[0]).map(r=>[r[0],String(r[1]??'').trim()]));if((a['Project number']||a['Project name'])&&metaMissing(META).length)META={...META,pno:a['Project number']||META.pno||'',pname:a['Project name']||META.pname||''};if(a['Surveyor']&&!META.surv)META={...META,surv:a['Surveyor']}}
-  if(safeBook){const r=parseSafety(wb);nt=r.nt;np=r.np;skipped=r.skipped;if(r.meta&&(!metaMissing(r.meta).length||metaMissing(META).length==3))META=r.meta}
+  let fxR=null;if(fx){fxR=fieldBuild(fx);nt=fxR.nt;np=fxR.np;skipped=fxR.skipped;Object.keys(fxR.meta).forEach(k=>{if(fxR.meta[k]&&!String(META[k]||'').trim())META={...META,[k]:fxR.meta[k]}})}
+  else if(safeBook){const r=parseSafety(wb);nt=r.nt;np=r.np;skipped=r.skipped;if(r.meta&&(!metaMissing(r.meta).length||metaMissing(META).length==3))META=r.meta}
   else if(ds){
    XLSX.utils.sheet_to_json(ds,{defval:''}).forEach(o=>{
     const type=String(o.Type||'Tree').trim(),ref=String(o.Ref!==undefined?o.Ref:o['Tree Ref']).trim();if(!ref)return;
@@ -1793,6 +1871,7 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
   T.push(...nt);PG.push(...np);select(null);T.forEach(draw);PG.forEach(drawP);SN.forEach(drawN);const p=T.filter(t=>t.lat!=null),pl=[...p.map(t=>[t.lat,t.lon]),...PG.flatMap(g=>g.ll)];
   if(pl.length)map.fitBounds(L.latLngBounds(pl).pad(.3),{maxZoom:20});else if(site)map.setView([site.lat,site.lon],19);
   if(fromStart){const m=fromStart[ST]||{};Object.keys(m).forEach(k=>{if(m[k]&&!String(META[k]||'').trim())META[k]=m[k]})}save();
+  if(fxR)alert(`Imported ${nt.length} tree(s)${np.length?` and ${np.length} group(s)`:''} from the “${fx.name}” sheet${fxR.deskN?` – ${fxR.deskN} with desk estimates from the Desk Allometry sheet`:''}.`+(np.length?'\n\nGroups, woodlands and hedges come in as 10 m squares at their grid reference – reshape them on the map.':''));
   if(skipped)alert(skipped+' group/woodland/hedge row(s) had no vertices or coordinates and were not imported.');
   const u=nt.filter(t=>t.lat==null).length;if(u)alert(u+' trees have no coordinates – search for the site address, then press “Plot unplotted”.')
  }catch(x){alert('Import failed: '+x.message)}};
@@ -1928,4 +2007,112 @@ fm.addEventListener('change',e=>{const c=e.target.closest('input[data-desk]');if
  else if(c.dataset.desk==='fb'){deskFb=c.checked;try{localStorage.setItem(DESK_FB_KEY,deskFb?'1':'0')}catch(x){}T.filter(isDesk).forEach(t=>{deskCalc(t);if(t!==sel)draw(t)})}
  draw(sel);fill(sel);handles();list();save()});
 deskModeUI();
+
+// ---------- 📋 formatted tree schedules (ExcelJS). Vertical = attributes down column A, one column per feature – the same layout,
+// colours and rows as the BS5837 Field / Safety Field sheets of Tree_survey_vertical. Horizontal = one row per feature, same fields across.
+const XC={dk:'FF1F3D2B',sec:'FFE3EFE6',inp:'FFFFF2CC',calc:'FFEDEDED',blue:'FF0000FF',bd:'FFBFBFBF',over:'FFED7D31'};
+const xFill=a=>({type:'pattern',pattern:'solid',fgColor:{argb:a}});
+const xBorder={top:{style:'thin',color:{argb:XC.bd}},left:{style:'thin',color:{argb:XC.bd}},bottom:{style:'thin',color:{argb:XC.bd}},right:{style:'thin',color:{argb:XC.bd}}};
+const xDate=iso=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||'');return m?new Date(Date.UTC(+m[1],m[2]-1,+m[3])):null};
+const xNum=(v,blank0)=>{const n=num(v);return blank0&&!n?null:n};
+const xGrid=o=>{let e=null;if(T.includes(o)){if(o.lat!=null)e=en(o)}else{const c=turf.centerOfMass(feat(o)).geometry.coordinates;e=proj4('EPSG:4326','EPSG:27700',c)}return e?`E ${Math.round(e[0])} N ${Math.round(e[1])}`:''};
+/* split the app's notes into the template's Observation 1–10 (predefined notes, in the order they appear) and Free text notes (the rest) */
+function xObs(o){let rest=String(o.notes||'');const found=[];
+ [...new Set(NOTES.map(n=>n[1]))].forEach(txt=>{const i=rest.indexOf(txt);if(i>=0)found.push([i,txt])});
+ found.sort((a,b)=>a[0]-b[0]);const obs=found.slice(0,10).map(f=>f[1]);
+ obs.forEach(txt=>{rest=rest.replace(txt,' ')});return{obs:obs.map(s=>s.replace(/\.$/,'')),free:rest.replace(/\s{2,}/g,' ').trim()}}
+/* field definitions: [label, kind ('sec' | 'in' | 'calc'), getter, number format, pick-list key, column width (horizontal)] */
+function xFields(items,horiz){const safe=isSafe(),anyP=items.some(o=>!T.includes(o)),anyD=items.some(o=>T.includes(o)&&isDesk(o)),ty=o=>T.includes(o)?'Tree':(o.kind||'Group');
+ const ob=o=>o.__ob||(o.__ob=xObs(o)),f=[];const S=l=>f.push([l,'sec']),I=(l,g,fm,lk,w)=>f.push([l,'in',g,fm,lk,w]),C=(l,g,fm,w)=>f.push([l,'calc',g,fm,null,w]);
+ S('Identification');I('Tree ref',o=>o.ref,null,null,9);if(anyP)I('Feature type',ty,null,null,10);I('Species',o=>o.sp||'',null,'sp',28);
+ S('Stems');I('Number of stems',o=>xNum(o.n,1),'0',null,8);for(let i=1;i<=5;i++)I(`Stem diameter ${i} (mm)`,o=>xNum(o['d'+i],i>1),'0',null,9);
+ S('Crown spread');[['N','cn'],['E','ce'],['S','cs'],['W','cw']].forEach(([d,k])=>I(`Crown spread ${d} (m)`,o=>xNum(o[k]),'0.0',null,8));
+ if(safe){S('Height & clearance');I('Height (m)',o=>xNum(o.h,1),'0.0',null,8);I('Crown clearance (m)',o=>xNum(o.cc),'0.0',null,9);
+  S('Condition');I('Age class',o=>o.age||'',null,'age',12);I('Physiological condition',o=>o.cond||'',null,'cond',12)}
+ else{S('Height, clearance & FSB');I('Height (m)',o=>xNum(o.h,1),'0.0',null,8);I('Crown clearance (m)',o=>xNum(o.cc),'0.0',null,9);I('FSB direction',o=>o.fd||'',null,'fd',8);I('FSB height (m)',o=>xNum(o.fh,1),'0.0',null,8);
+  S('Condition & category');I('Age class',o=>o.age||'',null,'age',12);I('Physiological condition',o=>o.cond||'',null,'cond',12);I('Retention category',o=>o.cat||'',null,'cat',9)}
+ const nObs=horiz?Math.max(1,...items.map(o=>ob(o).obs.length)):10;S('Observations & notes');for(let i=0;i<nObs;i++)I('Observation '+(i+1),o=>ob(o).obs[i]||'',null,'obs',24);I('Free text notes',o=>ob(o).free,null,null,30);
+ C('Notes (calculated – observations + free text)',o=>o.notes||'',null,45);
+ if(safe){S('QTRA');I('QTRA – Size',o=>o.qs||'',null,'qs',8);I('QTRA – Target range',o=>o.qt||'',null,'qt',8);I('QTRA – Target basis',o=>o.qb||'',null,null,24);I('QTRA – Probability of failure',o=>o.qp||'',null,'qp',9);
+  C('Risk index',o=>{const q=qtra(o);return q?Math.round(q.ri):null},'#,##0',16);C('Risk of harm',o=>{const q=qtra(o);return q?(q.ri===0?'Nil':'1/'+Math.round(q.ri).toLocaleString('en-GB')):''},null,17);C('Tolerability',o=>{const q=qtra(o);return q?q.tol:''},null,20);
+  S('Recommendations & action');I('Recommendations',o=>o.rec||'',null,'rec',40);I('Work priority',o=>o.wp||'',null,'wp',11);C('Safety action date',o=>xDate(actionDate(o)),'dd/mm/yyyy',12);
+  I('Photo filename',o=>o.ph||'',null,null,16);I('Location notes',xGrid,null,null,20);
+  const xtra=[['Line item','li'],['Status','st']].filter(([,k])=>items.some(o=>String(o[k]||'').trim()));
+  const dates=new Set(items.map(o=>o.sd||''));if(xtra.length||dates.size>1){S('Additional');if(dates.size>1)I('Survey date',o=>xDate(o.sd),'dd/mm/yyyy',null,12);xtra.forEach(([l,k])=>I(l,o=>o[k]||'',null,null,14))}}
+ else{I('Photo / location reference',xGrid,null,null,20);
+  S('Root protection area');C('Equivalent stem diameter (mm)',o=>Math.round(eqd(o)),'0',10);C('RPR (m) – 12 × dia., max 15 m',o=>+rpr(o).toFixed(2),'0.00',10);C('RPA (m²)',o=>+rpa(o).toFixed(1),'0.0',10);
+  if(anyP)C('Group RPA offset (m)',o=>T.includes(o)?null:+off(o).toFixed(2),'0.00',10);
+  C('Veteran / ancient buffer applies?',o=>isVet(o)?(T.includes(o)?`Yes – max radius ${vbr(o).toFixed(2)} m, area ${vba(o).toFixed(1)} m²`:`Yes – +${voff(o).toFixed(2)} m from crown extent`):'',null,22)}
+ if(!safe&&new Set(items.map(o=>o.sd||'')).size>1){S('Additional');I('Survey date',o=>xDate(o.sd),'dd/mm/yyyy',null,12)}
+ if(anyD){S('Desk-based estimate');C('Desk estimate',o=>T.includes(o)&&isDesk(o)?'Y':'',null,8);C('Estimate basis',o=>T.includes(o)&&isDesk(o)?deskTxt(o):'',null,36)}
+ return f}
+function xLookups(wb){const ws=wb.addWorksheet('Lookups');const L={sp:SP,age:['Young','Semi mature','Early mature','Mature','Veteran','Ancient'],cond:['Good','Fair','Poor','Dead'],cat:['U','A1','A2','A3','B1','B2','B3','C1','C2','C3'],
+  fd:['N','NE','E','SE','S','SW','W','NW'],obs:[...new Set(NOTES.map(n=>n[1].replace(/\.$/,'')))],qs:QS.map(x=>x[0]),qt:QT.map(x=>x[0]),qp:QP.map(x=>x[0]),wp:WP,rec:REC},ref={};
+ Object.keys(L).forEach((k,i)=>{const col=ws.getColumn(i+1);col.width=k==='obs'||k==='rec'||k==='sp'?34:12;ws.getCell(1,i+1).value={sp:'Species',age:'Age class',cond:'Physiological condition',cat:'Retention category',fd:'FSB direction',obs:'Observation picklist',qs:'QTRA Size',qt:'QTRA Target',qp:'QTRA PoF',wp:'Work priority',rec:'Recommendations'}[k];
+  ws.getCell(1,i+1).font={name:'Arial',bold:true,color:{argb:'FFFFFFFF'}};ws.getCell(1,i+1).fill=xFill(XC.dk);
+  L[k].forEach((v,j)=>{ws.getCell(j+2,i+1).value=v;ws.getCell(j+2,i+1).font={name:'Arial',size:10}});
+  const c=ws.getColumn(i+1).letter;ref[k]=`Lookups!$${c}$2:$${c}$${L[k].length+1}`});
+ ws.views=[{state:'frozen',ySplit:1}];return ref}
+function xHead(ws,safe,items,horiz){const lc=horiz?3:1;const ds=[...new Set(items.map(o=>o.sd).filter(Boolean))].sort(),sd=ds.length===1?xDate(ds[0]):ds.length?ukD(ds[0])+' – '+ukD(ds[ds.length-1]):null;
+ const rows=safe?[['Site ID',META.sid||''],['Site name',META.sname||''],['Reason for survey',META.reason||''],['Surveyor',META.surv||curSurv()],['Survey date',sd]]
+  :[['Project number',META.pno||''],['Project name',META.pname||''],['Surveyor',META.surv||curSurv()],['Survey date',sd]];
+ ws.getCell('A1').value=safe?'Safety (QTRA) tree survey – tree schedule':'BS5837 tree survey – tree schedule';ws.getCell('A1').font={name:'Arial',size:14,bold:true,color:{argb:XC.dk}};ws.getRow(1).height=20;
+ rows.forEach(([l,v],i)=>{const r=i+2;if(lc>1)ws.mergeCells(r,1,r,lc);ws.getCell(r,1).value=l;ws.getCell(r,1).font={name:'Arial',size:11,bold:true};ws.mergeCells(r,lc+1,r,lc+4);const c=ws.getCell(r,lc+1);c.value=v;
+  c.font={name:'Arial',size:11,color:{argb:XC.blue}};c.fill=xFill(XC.inp);c.border=xBorder;c.alignment={horizontal:'left'};if(v instanceof Date)c.numFmt='dd/mm/yyyy'});
+ return rows.length+3}/* first row after the header block + one blank row */
+const xLines=(v,w)=>{if(v==null||v==='')return 1;const s=v instanceof Date?'00/00/0000':typeof v==='number'?v.toLocaleString('en-GB'):String(v);return s.split('\n').reduce((n,p)=>n+Math.max(1,Math.ceil(p.length/Math.max(4,w-2))),0)};
+const xH=n=>Math.min(150,Math.max(18,n*14.5+4));
+function xStyle(c,kind,fm,wrapTop){c.font={name:'Arial',size:11,bold:kind==='calc',color:kind==='in'?{argb:XC.blue}:undefined};c.fill=xFill(kind==='in'?XC.inp:XC.calc);c.border=xBorder;
+ c.alignment={horizontal:wrapTop==='left'?'left':'center',vertical:'top',wrapText:true};if(fm)c.numFmt=fm}
+/* conditional formats as the field sheets: category colours, over-limit values (orange text) and tolerability */
+function xCF(ws,label,ref,tl){const fx=f=>({type:'expression',formulae:[f]});
+ const add=(rules)=>ws.addConditionalFormatting({ref,rules});
+ if(label==='Retention category')add([['A','FFB7F7B7'],['B','FFC9CCFF'],['C','FFD9D9D9'],['U','FFE6B8B8']].map(([l,c],i)=>({...fx(`LEFT(${tl},1)="${l}"`),priority:i+1,style:{fill:{type:'pattern',pattern:'solid',bgColor:{argb:c}},font:{bold:true}}})));
+ if(label==='Tolerability')add([['Unacceptable','FFFF0000','FFFFFFFF'],['Tolerable if ALARP (risk reduction required)','FFFFC000','FF000000'],['Tolerable if ALARP','FFFFFF00','FF000000'],['Broadly Acceptable','FF92D050','FF000000']].map(([v,b,fc],i)=>({...fx(`${tl}="${v}"`),priority:i+1,style:{fill:{type:'pattern',pattern:'solid',bgColor:{argb:b}},font:{bold:true,color:{argb:fc}}}})));
+ const lim=/^Stem diameter/.test(label)?2000:/^Crown spread/.test(label)?15:label==='Height (m)'?35:0;
+ if(lim)add([{type:'cellIs',operator:'greaterThan',formulae:[lim],priority:1,style:{font:{color:{argb:XC.over},bold:true}}}])}
+function xVertical(wb,items,lk){const safe=isSafe(),ws=wb.addWorksheet(safe?'Safety schedule (vertical)':'BS5837 schedule (vertical)'),F=xFields(items);
+ const h0=xHead(ws,safe,items),n=items.length;ws.getColumn(1).width=44;for(let j=0;j<n;j++)ws.getColumn(j+2).width=18;
+ const hr=ws.getRow(h0);hr.height=18;const a=ws.getCell(h0,1);a.value='Attribute';
+ [a,...items.map((o,j)=>{const c=ws.getCell(h0,j+2);c.value=o.ref;return c})].forEach((c,j)=>{c.font={name:'Arial',size:11,bold:true,color:{argb:'FFFFFFFF'}};c.fill=xFill(XC.dk);c.border=xBorder;c.alignment={horizontal:j?'center':'left',vertical:'middle'}});
+ F.forEach((f,i)=>{const r=h0+1+i,row=ws.getRow(r),lab=ws.getCell(r,1);lab.value=f[0];row.height=18;
+  if(f[1]==='sec'){lab.font={name:'Arial',size:11,bold:true,color:{argb:XC.dk}};for(let j=0;j<=n;j++)ws.getCell(r,j+1).fill=xFill(XC.sec);return}
+  lab.font={name:'Arial',size:11,bold:f[1]==='in'};lab.border=xBorder;lab.alignment={vertical:'top',wrapText:true};
+  items.forEach((o,j)=>{const c=ws.getCell(r,j+2),v=f[2](o);c.value=v===''?null:v;xStyle(c,f[1],f[3],/Notes|notes|Recommendations|basis|Observation/.test(f[0])?'left':'');
+   if(f[4]&&lk[f[4]])c.dataValidation={type:'list',allowBlank:true,showErrorMessage:f[4]!=='sp'&&f[4]!=='rec',formulae:[lk[f[4]]]}});
+  row.height=Math.max(xH(Math.max(1,...items.map(o=>xLines(f[2](o),18)))),f[0].startsWith('Notes')?60:/^Free text|^Recommendations/.test(f[0])?48:18);
+  if(n)xCF(ws,f[0],`B${r}:${ws.getColumn(n+1).letter}${r}`,`B${r}`)});
+ ws.views=[{state:'frozen',xSplit:1,ySplit:h0}];
+ ws.pageSetup={paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:0,fitToHeight:1,margins:{left:.4,right:.4,top:.5,bottom:.5,header:.3,footer:.3},printTitlesColumn:'A:A'};
+ ws.headerFooter={oddFooter:'&L&8&F&R&8Page &P of &N'};return ws}
+function xHorizontal(wb,items,lk){const safe=isSafe(),ws=wb.addWorksheet(safe?'Safety schedule (horizontal)':'BS5837 schedule (horizontal)'),F=xFields(items,true);
+ const h0=xHead(ws,safe,items,true),sr=h0,hr=h0+1,d0=h0+2;let col=0,secStart=1,secName='';const cols=[];
+ const closeSec=end=>{if(!secName||end<secStart)return;if(end>secStart)ws.mergeCells(sr,secStart,sr,end);const c=ws.getCell(sr,secStart);c.value=secName;c.font={name:'Arial',size:11,bold:true,color:{argb:XC.dk}};c.alignment={horizontal:'center',vertical:'middle'};
+  for(let k=secStart;k<=end;k++){const x=ws.getCell(sr,k);x.fill=xFill(XC.sec);x.border=xBorder}};
+ F.forEach(f=>{if(f[1]==='sec'){closeSec(col);secName=f[0];secStart=col+1;return}col++;cols.push([col,f]);
+  const c=ws.getCell(hr,col);c.value=f[0];c.font={name:'Arial',size:10,bold:true,color:{argb:'FFFFFFFF'}};c.fill=xFill(XC.dk);c.border=xBorder;c.alignment={horizontal:'center',vertical:'middle',wrapText:true};ws.getColumn(col).width=f[5]||11});
+ closeSec(col);ws.getRow(sr).height=18;ws.getRow(hr).height=58;
+ items.forEach((o,i)=>{const r=d0+i;let ln=1;cols.forEach(([j,f])=>{const c=ws.getCell(r,j),v=f[2](o);c.value=v===''?null:v;xStyle(c,f[1],f[3],/Notes|notes|Recommendations|basis|Observation|Species|Location|Veteran/.test(f[0])?'left':'');
+   if(f[4]&&lk[f[4]])c.dataValidation={type:'list',allowBlank:true,showErrorMessage:f[4]!=='sp'&&f[4]!=='rec',formulae:[lk[f[4]]]};ln=Math.max(ln,xLines(v,f[5]||11))});
+  ws.getRow(r).height=xH(ln)});
+ const last=d0+Math.max(items.length,1)-1;cols.forEach(([j,f])=>{const L=ws.getColumn(j).letter;xCF(ws,f[0],`${L}${d0}:${L}${last}`,`${L}${d0}`)});
+ ws.views=[{state:'frozen',xSplit:1,ySplit:hr}];ws.autoFilter={from:{row:hr,column:1},to:{row:hr,column:col}};
+ ws.pageSetup={paperSize:8,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.3,right:.3,top:.5,bottom:.5,header:.3,footer:.3},printTitlesRow:`${sr}:${hr}`};
+ ws.headerFooter={oddFooter:'&L&8&F&R&8Page &P of &N'};return ws}
+async function xSchedule(which){if(typeof ExcelJS==='undefined')return alert('The formatted schedule needs the ExcelJS library, which has not loaded – check your connection and reload TreePlotta once while online.');
+ const items=[...[...T].sort((a,b)=>natCmp(a.ref,b.ref)),...[...PG].sort((a,b)=>natCmp(a.ref,b.ref))];/* trees, then groups / woodlands / hedges */if(!items.length)return alert('Nothing to export');
+ const wb=new ExcelJS.Workbook();wb.creator='TreePlotta';wb.created=new Date();
+ const L=xLookupsRefs();/* Lookups is added last so the schedule tabs come first */
+ try{if(which!=='h')xVertical(wb,items,L);if(which!=='v')xHorizontal(wb,items,L);xLookups(wb)}finally{items.forEach(o=>delete o.__ob)}
+ const buf=await wb.xlsx.writeBuffer(),blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=xName(which);document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)}
+/* the Lookups sheet refs are fixed (columns A–K in this order), so the schedule sheets can point at them before the sheet exists */
+function xLookupsRefs(){const L={sp:SP,age:6,cond:4,cat:10,fd:8,obs:[...new Set(NOTES.map(n=>n[1].replace(/\.$/,'')))].length,qs:QS.length,qt:QT.length,qp:QP.length,wp:WP.length,rec:REC.length},ref={};
+ Object.keys(L).forEach((k,i)=>{const n=Array.isArray(L[k])?L[k].length:L[k],c=String.fromCharCode(65+i);ref[k]=`Lookups!$${c}$2:$${c}$${n+1}`});return ref}
+function xName(which){const tag=which==='v'?'Vertical':which==='h'?'Horizontal':'Vertical_Horizontal';
+ if(isSafe())return(fnPart(META.sid)||'SITE_NUMBER')+'_'+(fnPart(META.sname)||'SITE_NAME')+'-Safety_Tree_Schedule_'+tag+'_'+stamp()+'.xlsx';
+ const p=[fnPart(META.pno),fnPart(META.pname)].filter(Boolean).join('_');return(p?p+'-':'')+'BS5837_Tree_Schedule_'+tag+'_'+stamp()+'.xlsx'}
+$('bSched').onclick=()=>{$('menu').hidden=true;if(!T.length&&!PG.length)return alert('Nothing to export');$('xTy').textContent=isSafe()?'Safety (QTRA)':'BS5837';$('xovl').hidden=false};
+$('xCancel').onclick=()=>{$('xovl').hidden=true};
+$('xGo').onclick=async()=>{const w=(document.querySelector('input[name=xori]:checked')||{}).value||'b';$('xovl').hidden=true;try{await xSchedule(w)}catch(e){alert('Schedule export failed: '+e.message)}};
 </script></body></html>
