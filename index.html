@@ -253,6 +253,7 @@ input.est{background:#fff3d6!important;border-style:dashed!important;border-colo
 #xpanel{background:#fff;color:#222;border-radius:8px;padding:14px;max-width:460px;width:100%}#xpanel h3{margin:0 0 6px}#xpanel .xnote{font-size:12.5px;color:#555;margin:0 0 10px}
 #xpanel .xopt{display:flex;gap:8px;align-items:flex-start;border:1px solid #ccc;border-radius:6px;padding:8px;margin:0 0 6px;font-size:13px;cursor:pointer}#xpanel .xopt{flex-direction:row!important;text-align:left}#xpanel .xopt input{margin:2px 0 0;width:auto!important;flex:none}#xpanel .xopt span{flex:1;text-align:left}
 #xpanel .xopt:has(input:checked){border-color:#1f3d2b;background:#eef6f0}#xpanel .row{display:flex;gap:6px;margin-top:10px}#xpanel .row button{flex:1}
+input.fsbauto{color:#2e6b3f!important;font-style:italic}.fsbtag{font-size:10.5px;font-weight:700;color:#2e6b3f;margin-left:4px}
 </style></head><body>
 <div id="login"><form id="lgForm" autocomplete="on">
 <div class="lgLogo">🌳</div><h1>TreePlotta</h1><p>Sign in to continue</p>
@@ -467,7 +468,7 @@ function highlightMissing(root,obj){const need=new Set(reqList(obj).map(r=>r[0])
 function qresHTML(o){if(!o)return'';const q=qtra(o),ad=actionDate(o);
  let h=q?`Risk index <span class="${q.ri<=100000?'riBad':''}">${Math.round(q.ri).toLocaleString('en-GB')}</span> · Risk of harm <b>${q.ri>0?'1/'+Math.round(q.ri).toLocaleString('en-GB'):'nil'}</b><br>Tolerability <span class="tol t${TOLK[q.tol]}">${q.tol}</span>`:'<i>Choose Size, Target range and Probability of failure to calculate the risk of harm.</i>';
  h+=`<br>Safety action date <b>${ad?ukD(ad):'–'}</b>${ad&&!o.sd?' <i>(from today – no survey date)</i>':''}`;return h}
-function refresh(root,obj){deskMark(root,obj);highlightMissing(root,obj);highlightStems(root,obj);highlightCC(root,obj);highlightLimits(root,obj);const q=root.querySelector('.qres');if(q)q.innerHTML=qresHTML(obj)}
+function refresh(root,obj){deskMark(root,obj);fsbMark(root,obj);highlightMissing(root,obj);highlightStems(root,obj);highlightCC(root,obj);highlightLimits(root,obj);const q=root.querySelector('.qres');if(q)q.innerHTML=qresHTML(obj)}
 function extraFields(){return isSafe()?{sd:today(),by:curSurv(),li:'',qs:'',qt:'',qp:'',rec:'',wp:'',st:'',ph:''}:{sd:today(),by:curSurv()}}
 function highlightCC(root,obj){const el=root.querySelector('input[data-k="cc"]');if(!el)return;
  el.classList.toggle('needs-check',!!obj&&num(obj.cc)===0)}
@@ -571,6 +572,21 @@ function deskMark(root,obj){const b=root.querySelector('.deskbox');if(b)b.innerH
 function deskAfter(root,t,k){const ch=deskEdited(t,k);if(!ch.length)return;ch.forEach(x=>{if(x===k)return;const el=root.querySelector(`input[data-k="${x}"]`);if(el)el.value=t[x]});handles()}
 function deskModeUI(){const b=$('bDeskMode');if(b)b.textContent='🌳 Desk mode for new trees: '+(deskNew?'ON':'Off');$('bAdd').classList.toggle('desk',deskNew)}
 
+
+// ---------- FSB height auto = ⅓ of tree height (BS5837 trees and groups/woodlands/hedges), rounded to 0.5 m.
+// o.fhm='Y' once FSB height is typed / stepped by hand – it then stays as entered. Clearing it (blank or 0) returns it to automatic.
+const fsbCalc=o=>num(o.h)>0?Math.max(0.5,rnd(num(o.h)/3,0.5)):0;
+function fsbAuto(o){if(!o||isSafe()||o.fhm==='Y')return false;const v=fsbCalc(o);if(num(o.fh)===v)return false;o.fh=v;return true}
+/* surveys made before this feature: a stored FSB height that isn't ⅓ of the height was set by hand, so keep it */
+function fsbInit(o){if(!o||isSafe()||o.fhm!==undefined)return;o.fhm=num(o.fh)>0&&num(o.fh)!==fsbCalc(o)?'Y':'';fsbAuto(o)}
+function fsbAfter(root,o,k){if(!o||isSafe())return;
+ if(k==='fh'){o.fhm=num(o.fh)>0?'Y':'';if(o.fhm)return}
+ if(fsbAuto(o)){const el=root.querySelector('input[data-k="fh"]');if(el&&document.activeElement!==el)el.value=o.fh}}
+function fsbMark(root,o){const el=root.querySelector('input[data-k="fh"]');if(!el)return;const auto=!!o&&!isSafe()&&o.fhm!=='Y';el.classList.toggle('fsbauto',auto);
+ el.title=!o||isSafe()?'':auto?'Automatic – ⅓ of the height. Type a value to override it.':'Entered by hand – clear it (or set 0) to go back to ⅓ of the height.';
+ const lab=el.closest('label');if(lab){let t=lab.querySelector('.fsbtag');if(!t){t=document.createElement('span');t.className='fsbtag';lab.insertBefore(t,lab.querySelector('.stepwrap'))}t.textContent=!o||isSafe()?'':auto?' auto ⅓ ht':' manual'}}
+function fsbFromRow(o,row){if(row&&Object.prototype.hasOwnProperty.call(row,'FSB height manual'))o.fhm=/^y/i.test(String(row['FSB height manual']||''))?'Y':''}
+
 const m2ll=(t,x,y)=>[t.lat+y/R,t.lon+x/(R*Math.cos(t.lat*Math.PI/180))];
 const colour=t=>{if(isSafe()){const q=qtra(t);return q?TOLC[q.tol]:'#a4c'}return({A:'#00ff00',B:'#0000ff',C:'#5b5b5b',U:'#7f0000'})[(t.cat||'')[0]]||'#a4c'};
 const lblCls=t=>{if(isSafe()){const q=qtra(t);return'lbl lbl'+(q?TOLK[q.tol]:'X')}return'lbl lbl'+((t.cat||'')[0]||'X')};
@@ -645,7 +661,7 @@ function nextRef(prefix){let m=0;const chk=r=>{const x=/^[A-Za-z](\d+)$/.exec(r)
  T.forEach(t=>chk(t.ref));PG.forEach(p=>chk(p.ref));return prefix+(m+1)}
 function newTree(){return{ref:nextRef('T'),sp:'',n:1,d1:300,d2:0,d3:0,d4:0,d5:0,cn:3,ce:3,cs:3,cw:3,cc:0,h:0,age:'',cond:'',notes:'',fd:'',fh:0,cat:'',...extraFields(),lat:null,lon:null}}
 function draw(t){
- if(G.has(t)){map.removeLayer(G.get(t));G.delete(t)}
+ if(t.fhm===undefined)fsbInit(t);if(G.has(t)){map.removeLayer(G.get(t));G.delete(t)}
  if(t.lat==null)return;const c=colour(t),s=t===sel,ll=[t.lat,t.lon],pts=[];
  for(let a=0;a<=360;a+=5){const r=a*Math.PI/180,sn=Math.sin(r),cs=Math.cos(r);pts.push(m2ll(t,...rotXY(t,(sn>=0?t.ce:t.cw)*sn,(cs>=0?t.cn:t.cs)*cs)))}
  const go=e=>{if(mode=='label'){L.DomEvent.stopPropagation(e);return lpOpen(t)}if(!mode){L.DomEvent.stopPropagation(e);batch?bToggle(t):wantSelect(t)}};
@@ -671,7 +687,7 @@ function handles(){
  for(const k in pos){const m=mk(`<div class="h">${k[1].toUpperCase()}</div>`,pos[k](),1000);ms[k]=m;
   m.on('dragstart',()=>measShow(t,k,pos[k]()));
   m.on('drag',e=>{const p=e.latlng,[dx,dy]=unrotXY(t,(p.lng-t.lon)*R*Math.cos(t.lat*Math.PI/180),(p.lat-t.lat)*R);
-   let d=k=='cn'?dy:k=='cs'?-dy:k=='ce'?dx:-dx;t[k]=Math.max(0,Math.round(d*2)/2);deskEdited(t,k);m.setLatLng(pos[k]());measShow(t,k,pos[k]());draw(t);fill(t);dirty=1});
+   let d=k=='cn'?dy:k=='cs'?-dy:k=='ce'?dx:-dx;t[k]=Math.max(0,Math.round(d*2)/2);deskEdited(t,k);fsbAuto(t);m.setLatLng(pos[k]());measShow(t,k,pos[k]());draw(t);fill(t);dirty=1});
   m.on('dragend',()=>{measHide(1200);save();handles()})}
  const s=mk('<div class="h s">+</div>',[t.lat,t.lon],1100);
  const qbs=matchMedia('(pointer:coarse)').matches?44:34,qb=batch?null:L.marker([t.lat,t.lon],{zIndexOffset:1200,keyboard:false,icon:L.divIcon({className:'',html:'<div class="qbtn" title="Quick entry">✎</div>',iconSize:[qbs,qbs],iconAnchor:[-26,-26]})}).addTo(HL);
@@ -702,9 +718,9 @@ function buildFields(fs,pre){return fs.map(([k,l,ty,o,wide])=>{if(ty=='sec')retu
 function addRec(root,obj,v){if(!obj||!v)return;if(/^none$/i.test(v))obj.rec='None';else{const t=v+'.',cur=(obj.rec||'').trim();if(!cur.includes(t))obj.rec=(cur&&!noWork(obj)?cur+' ':'')+t}
  root.querySelector('[data-k="rec"]').value=obj.rec;if(v===REINSPECT){obj.wp='N/A';const w=root.querySelector('[data-k="wp"]');if(w)w.value='N/A'}}
 fm.addEventListener('click',e=>{const b=e.target.closest('.stp');if(!b||!sel)return;const k=b.dataset.k,step=+b.dataset.s,inp=b.parentElement.querySelector('input');
- sel[k]=Math.max(0,rnd(num(inp.value)+step,Math.abs(step)));inp.value=sel[k];deskAfter(fm,sel,k);draw(sel);if(k[0]=='c'||k[0]=='d')handles();ro();list();refresh(fm,sel);save()});
+ sel[k]=Math.max(0,rnd(num(inp.value)+step,Math.abs(step)));inp.value=sel[k];deskAfter(fm,sel,k);fsbAfter(fm,sel,k);draw(sel);if(k[0]=='c'||k[0]=='d')handles();ro();list();refresh(fm,sel);save()});
 fm.addEventListener('input',e=>{const el=e.target,k=el.dataset.k;if(!k||!sel||el.type=='button')return;
- sel[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;stampSv(sel);deskAfter(fm,sel,k);
+ sel[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;stampSv(sel);deskAfter(fm,sel,k);fsbAfter(fm,sel,k);
  draw(sel);if(k[0]=='c'||k[0]=='d')handles();ro();list();refresh(fm,sel);save()});
 fm.addEventListener('change',e=>{const el=e.target;if(el.dataset.act!='rec'||!sel)return;addRec(fm,sel,el.value);el.value='';draw(sel);list();refresh(fm,sel);save()});
 function fill(t){fm.querySelectorAll('[data-k],[data-act]').forEach(el=>{const v=t&&el.dataset.k?t[el.dataset.k]:'';el.type=='checkbox'?el.checked=v=='Y':el.value=v??'';el.disabled=!t});$('bNotes').disabled=!t;refresh(fm,t);ro()}
@@ -784,7 +800,7 @@ const gA=p=>turf.area(feat(p)),gPer=p=>turf.length(turf.polygonToLine(feat(p)),{
 function buf(p,r){if(r==null)r=off(p);if(!r)return null;try{const g=turf.buffer(feat(p),r,{units:'meters'}).geometry,c=g.type=='Polygon'?g.coordinates[0]:g.coordinates[0][0];return c.map(v=>[v[1],v[0]])}catch(x){return null}}
 /* groups/woodlands/hedges (and area notes) sit in their own pane BELOW trees, so a tree plotted inside a polygon can always be tapped */
 map.createPane('polyPane').style.zIndex=390;
-function drawP(p){if(GP.has(p)){map.removeLayer(GP.get(p));GP.delete(p)}
+function drawP(p){if(p.fhm===undefined)fsbInit(p);if(GP.has(p)){map.removeLayer(GP.get(p));GP.delete(p)}
  const c=colour(p),s=p===selP,ds=null,ls=[],b=isSafe()?null:buf(p);
  if(b)ls.push(L.polygon(b,{pane:'polyPane',color:'#ff0000',weight:2,fill:false,interactive:false}));
  const vb=isVet(p)?buf(p,voff(p)):null;if(vb)ls.push(L.polygon(vb,{pane:'polyPane',color:'#ff0000',weight:2,dashArray:'8 5',fill:false,interactive:false}));
@@ -824,9 +840,9 @@ function buildForms(){
  document.title='TreePlotta – '+(isSafe()?'Safety':'BS5837')}
 buildForms();
 pf.addEventListener('click',e=>{const b=e.target.closest('.stp');if(!b||!selP)return;const k=b.dataset.k,step=+b.dataset.s,inp=b.parentElement.querySelector('input');
- selP[k]=Math.max(0,rnd(num(inp.value)+step,Math.abs(step)));inp.value=selP[k];drawP(selP);proro();list();refresh(pf,selP);save()});
+ selP[k]=Math.max(0,rnd(num(inp.value)+step,Math.abs(step)));inp.value=selP[k];fsbAfter(pf,selP,k);drawP(selP);proro();list();refresh(pf,selP);save()});
 pf.addEventListener('input',e=>{const el=e.target,k=el.dataset.k;if(!k||!selP||el.type=='button')return;
- selP[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;stampSv(selP);
+ selP[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;stampSv(selP);fsbAfter(pf,selP,k);
  if(k==='kind'){const letter={Group:'G',Woodland:'W',Hedge:'H'}[selP.kind]||'G',n=(/\d+$/.exec(selP.ref)||['1'])[0];selP.ref=letter+n;const ri=pf.querySelector('[data-k=ref]');if(ri)ri.value=selP.ref}
  drawP(selP);proro();list();refresh(pf,selP);save()});
 pf.addEventListener('change',e=>{const el=e.target;if(el.dataset.act!='rec'||!selP)return;addRec(pf,selP,el.value);el.value='';drawP(selP);list();refresh(pf,selP);save()});
@@ -1664,8 +1680,8 @@ function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
   if(v.length<3){skipped++;return}np.push({...b,kind:type,ll:v})});
  return{nt,np,meta,skipped}}
 $('bExp').onclick=()=>{if(!T.length&&!PG.length&&!SN.length)return alert('Nothing to export');if(isSafe())return expSafety();if(!projOK())return;
- const DH=['Type',...HD,'Survey date','Surveyor','Label position','Crown rotation (deg)','Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)',...DESK_HD];
- const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),xlSerial(o.sd),o.by||META.surv||'',type==='Tree'?(o.lp||''):'',type==='Tree'&&crot(o)?crot(o):'',...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo,...deskCols(type==='Tree',o)];
+ const DH=['Type',...HD,'Survey date','Surveyor','Label position','Crown rotation (deg)','Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)',...DESK_HD,'FSB height manual'];
+ const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),xlSerial(o.sd),o.by||META.surv||'',type==='Tree'?(o.lp||''):'',type==='Tree'&&crot(o)?crot(o):'',...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo,...deskCols(type==='Tree',o),o.fhm==='Y'?'Y':''];
  const tRows=T.map(t=>{const e=t.lat!=null?en(t):['',''];
   return row('Tree',t,[t.lat==null?'':+t.lat.toFixed(8),t.lat==null?'':+t.lon.toFixed(8),e[0]===''?'':+e[0].toFixed(2),e[1]===''?'':+e[1].toFixed(2),'','','',''])});
  const pRows=PG.map(p=>row(p.kind,p,['','','','',+gA(p).toFixed(1),+gPer(p).toFixed(1),p.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),p.ll.map(v=>{const e=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return e[0].toFixed(2)+','+e[1].toFixed(2)}).join('; ')]));
@@ -1836,7 +1852,7 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
   else if(ds){
    XLSX.utils.sheet_to_json(ds,{defval:''}).forEach(o=>{
     const type=String(o.Type||'Tree').trim(),ref=String(o.Ref!==undefined?o.Ref:o['Tree Ref']).trim();if(!ref)return;
-    const base={};K.forEach((k,i)=>{const v=o[HD[i]];base[k]=['sp','ref','age','cond','notes','fd','cat'].includes(k)?String(v).trim():num(v)});base.ref=ref;base.sd=fromXlDate(o['Survey date']);base.by=String(o['Surveyor']??'').trim();
+    const base={};K.forEach((k,i)=>{const v=o[HD[i]];base[k]=['sp','ref','age','cond','notes','fd','cat'].includes(k)?String(v).trim():num(v)});base.ref=ref;base.sd=fromXlDate(o['Survey date']);base.by=String(o['Surveyor']??'').trim();fsbFromRow(base,o);
     if(type==='Tree'){
      const t=Object.assign(newTree.call(0),base);
      const la=o['Latitude (WGS84)'],lo=o['Longitude (WGS84)'],E=o['Easting (OSGB36)'],N=o['Northing (OSGB36)'];
@@ -1997,15 +2013,15 @@ $('bDeskMode').onclick=()=>{deskNew=!deskNew;try{localStorage.setItem(DESK_KEY,d
 $('bDeskFill').onclick=()=>{$('menu').hidden=true;const c=T.filter(t=>!isDesk(t)&&(!(eqd(t)>0)||!(num(t.h)>0)));
  if(!c.length)return alert('Every tree already has a stem diameter and height (or is already a desk estimate).');
  if(!confirm(`Turn on desk estimates for ${c.length} tree(s) with no stem diameter and/or height?\n\n${c.slice(0,30).map(t=>t.ref).join(', ')}${c.length>30?' …':''}\n\nValues already entered stay as measurements – only the blank ones are estimated from the species equations.`))return;
- c.forEach(t=>{deskSet(t,true,true);draw(t)});if(sel){fill(sel);handles()}list();save()};
+ c.forEach(t=>{deskSet(t,true,true);fsbAuto(t);draw(t)});if(sel){fill(sel);handles()}list();save()};
 fm.addEventListener('click',e=>{const b=e.target.closest('button[data-desk]');if(!b||!sel)return;const a=b.dataset.desk;
  if(a==='est'){sel.est={...(sel.est||{}),[b.dataset.dk]:''};deskCalc(sel)}
  else if(a==='note'){toggleNote(sel,DESK_NOTE,true)}
- draw(sel);fill(sel);handles();list();save()});
+ fsbAuto(sel);draw(sel);fill(sel);handles();list();save()});
 fm.addEventListener('change',e=>{const c=e.target.closest('input[data-desk]');if(!c||!sel)return;
  if(c.dataset.desk==='on'){if(c.checked){const has=eqd(sel)>0||num(sel.h)>0;deskSet(sel,true,has&&confirm('Keep the stem diameter and height already entered as measurements?\n\nOK = keep them and only estimate what is blank\nCancel = replace them with allometric estimates'))}else deskSet(sel,false)}
- else if(c.dataset.desk==='fb'){deskFb=c.checked;try{localStorage.setItem(DESK_FB_KEY,deskFb?'1':'0')}catch(x){}T.filter(isDesk).forEach(t=>{deskCalc(t);if(t!==sel)draw(t)})}
- draw(sel);fill(sel);handles();list();save()});
+ else if(c.dataset.desk==='fb'){deskFb=c.checked;try{localStorage.setItem(DESK_FB_KEY,deskFb?'1':'0')}catch(x){}T.filter(isDesk).forEach(t=>{deskCalc(t);fsbAuto(t);if(t!==sel)draw(t)})}
+ fsbAuto(sel);draw(sel);fill(sel);handles();list();save()});
 deskModeUI();
 
 // ---------- 📋 formatted tree schedules (ExcelJS). Vertical = attributes down column A, one column per feature – the same layout,
