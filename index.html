@@ -239,6 +239,16 @@ body{position:fixed;top:0;right:0;bottom:0;left:0;height:auto}
 aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),24px)) 0 0 env(safe-area-inset-left)}
 /* iPhone/iPad (touch, no mouse): pinch and drag replace the zoom buttons and pan pad; laptops/desktops keep them */
 @media (hover:none) and (pointer:coarse){.leaflet-control-zoom,.leaflet-control.pan-ctrl{display:none!important}}
+.deskbox{border:1px solid #c9b27a;background:#fffaf0;color:#222;border-radius:6px;padding:6px 8px;margin:2px 0;font-size:12.5px}.deskbox:empty{display:none}
+.deskbox .dkon{display:flex!important;flex-direction:row!important;align-items:center;gap:6px;font-weight:700;margin:0}.deskbox .dkon small{font-weight:400;color:#666}.deskbox .dkon input{width:auto;margin:0}
+.deskbox .dkl{margin:4px 0;color:#333}.deskbox .dkw{color:#a35400}
+.deskbox table.dkt{width:100%;border-collapse:collapse;margin:4px 0}.deskbox .dkt th{text-align:left;font-weight:600;padding:3px 4px 3px 0;white-space:nowrap}.deskbox .dkt td{padding:3px 4px;vertical-align:middle}.deskbox .dkt td:nth-child(2){white-space:nowrap}.deskbox .dkt tr+tr{border-top:1px solid #eee2c4}
+.deskbox .dkt button{padding:2px 7px;font-size:11.5px;min-height:0}
+.dks{display:inline-block;border-radius:9px;padding:0 6px;font-size:11px;font-weight:700;white-space:nowrap}.dks.est{background:#ffe2a8;color:#7a4b00}.dks.mes{background:#d7f0dc;color:#1f6b33}.dks.bad{background:#fde2e2;color:#9c0006}
+.deskbox .dkh{color:#666;font-size:11.5px;margin:4px 0}.deskbox .dkfb{display:flex!important;flex-direction:row!important;gap:6px;align-items:center;font-size:12px;margin:4px 0}.deskbox .dkfb input{width:auto;margin:0}
+input.est{background:#fff3d6!important;border-style:dashed!important;border-color:#d39b2a!important;font-style:italic;color:#7a4b00!important}
+.lblEst{font-style:italic;text-decoration:underline dashed}.dkt1{font-size:10px;background:#ffe2a8;color:#7a4b00;border-radius:8px;padding:0 5px;margin-left:4px;font-weight:700}
+#bAdd.desk{box-shadow:inset 0 -3px 0 #ffb300}
 </style></head><body>
 <div id="login"><form id="lgForm" autocomplete="on">
 <div class="lgLogo">🌳</div><h1>TreePlotta</h1><p>Sign in to continue</p>
@@ -278,7 +288,7 @@ aside.max{padding:calc(env(safe-area-inset-top) + min(env(safe-area-inset-top),2
 </header>
 <div id="mapTools" class="leaflet-bar maptools"><button id="bLoc" title="Show my live location on the map">◉</button><button id="bMeas" title="Measure a length on the map">📏</button><button id="bMClr" title="Clear kept measurements" hidden>🧹</button><button id="bSVm" title="Street View – tap a road to open Google Street View">🚶</button></div>
 <div hidden><button id="bTable">📊 Data table (all features)…</button><button id="bBatch" title="Batch edit – tap several trees / polygons and change them together">☑ Batch edit – tap features on the map</button></div>
-<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bDxf">⬇ Export drawing (DXF)</button><button id="bHist">🕘 Export history…</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><button id="bOff">📶 Offline maps…</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
+<div id="menu" hidden><div class="mh">Survey file</div><button id="bImp">⬆ Import survey (xlsx)</button><button id="bExp">⬇ Export survey (xlsx)</button><div id="expInfo"></div><button id="bDxf">⬇ Export drawing (DXF)</button><button id="bHist">🕘 Export history…</button><div class="mh">Desk assessment</div><button id="bDeskMode">🌳 Desk mode for new trees: Off</button><button id="bDeskFill">🌳 Desk-estimate trees missing height / diameter…</button><div class="mh">Site background</div><button id="bTopoImp">🗺 Import topo survey (DXF)</button><button id="bTopoCfg">🗺 Topo layers &amp; style…</button><button id="bOff">📶 Offline maps…</button><hr><button id="bNew" class="danger">🗑 New survey (clear all)</button><button id="bOut" onclick="tpSignOut()">🔒 Sign out</button><div id="st"></div></div>
 <div id="ovl" hidden><div id="opanel">
 <h3>Offline maps</h3>
 <p>While you still have signal, pan and zoom the map to cover the site, then download it here. Downloaded tiles are stored on this device and used automatically whenever there is no connection.</p>
@@ -383,7 +393,7 @@ $('nFi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)re
   if(merge){nn.forEach(n=>{if(!NOTES.some(x=>x[0]==n[0]&&x[1]==n[1]))NOTES.push(n)})}else{NOTES=nn}
   saveNotes();renderNotesList($('nFilter').value)}catch(x){alert('Import failed: '+x.message)}};
 // [key,label,type,options,wide]
-const F=[['ref','Tree ref','t'],['sp','Species','sp'],
+const F=[['ref','Tree ref','t'],['sp','Species','sp'],['__dk','','dk'],
 ['__s1','Stems','sec'],['n','Number of stems','n'],['d1','Stem diameter 1 (mm)','n',10],['d2','Stem diameter 2 (mm)','n',10],['d3','Stem diameter 3 (mm)','n',10],['d4','Stem diameter 4 (mm)','n',10],['d5','Stem diameter 5 (mm)','n',10],
 ['__s2','Crown spread','sec'],['cn','Crown spread N (m)','n',0.5],['ce','Crown spread E (m)','n',0.5],['cs','Crown spread S (m)','n',0.5],['cw','Crown spread W (m)','n',0.5],
 ['__s3','Height, clearance \u0026 FSB','sec'],['h','Height (m)','n',0.5],['cc','Crown clearance (m)','n',0.5],['fd','FSB direction','s',['N','NE','E','SE','S','SW','W','NW']],['fh','FSB height (m)','n',0.5],
@@ -432,7 +442,7 @@ const SAFE_BODY=[['__s0','Survey','sec'],['sd','Survey date','d'],['sp','Species
 ['__s4','Condition','sec'],['age','Age class','s',['Young','Semi mature','Early mature','Mature','Veteran','Ancient']],['cond','Physiological condition','s',['Good','Fair','Poor','Dead']],['notes','Notes','a'],['__nb','','nb'],
 ['__s5','QTRA','sec'],['qs','QTRA - Size','s',qopts(QS),1],['__qsh','','qh','qs'],['qt','QTRA - Target range','s',qopts(QT,[['Human – pedestrians / occupancy','P'],['Property – repair cost','$'],['Vehicles','V'],['No target','N/A']]),1],['__qth','','qh','qt'],['qb','QTRA - Target basis','t',null,1],['qp','QTRA - Probability of failure','s',qopts(QP),1],['__qr','','qr'],
 ['__s6','Recommendations & action','sec'],['rec','Recommendations','a'],['__rp','','rp'],['wp','Work priority','s',WP],['ph','Photo filename','t',null,1]];
-const SF=[['ref','Tree ref','t'],...SAFE_BODY];
+const SF=[['ref','Tree ref','t'],...SAFE_BODY.slice(0,3),['__dk','','dk'],...SAFE_BODY.slice(3)];
 const SPF=[['ref','Ref','t'],['kind','Object type','s',['Group','Woodland','Hedge']],...SAFE_BODY];
 const REQ_SAFE=[['sd','Survey date'],['sp','Species'],['h','Height'],['cn','Crown spread N'],['ce','Crown spread E'],['cs','Crown spread S'],['cw','Crown spread W'],['age','Age class'],['cond','Physiological condition'],['qs','QTRA - Size'],['qt','QTRA - Target range'],['qp','QTRA - Probability of failure'],['rec','Recommendations'],['wp','Work priority']];
 const noWork=o=>/^\s*none\.?\s*$/i.test(o.rec||'');
@@ -451,7 +461,7 @@ function highlightMissing(root,obj){const need=new Set(reqList(obj).map(r=>r[0])
 function qresHTML(o){if(!o)return'';const q=qtra(o),ad=actionDate(o);
  let h=q?`Risk index <span class="${q.ri<=100000?'riBad':''}">${Math.round(q.ri).toLocaleString('en-GB')}</span> · Risk of harm <b>${q.ri>0?'1/'+Math.round(q.ri).toLocaleString('en-GB'):'nil'}</b><br>Tolerability <span class="tol t${TOLK[q.tol]}">${q.tol}</span>`:'<i>Choose Size, Target range and Probability of failure to calculate the risk of harm.</i>';
  h+=`<br>Safety action date <b>${ad?ukD(ad):'–'}</b>${ad&&!o.sd?' <i>(from today – no survey date)</i>':''}`;return h}
-function refresh(root,obj){highlightMissing(root,obj);highlightStems(root,obj);highlightCC(root,obj);highlightLimits(root,obj);const q=root.querySelector('.qres');if(q)q.innerHTML=qresHTML(obj)}
+function refresh(root,obj){deskMark(root,obj);highlightMissing(root,obj);highlightStems(root,obj);highlightCC(root,obj);highlightLimits(root,obj);const q=root.querySelector('.qres');if(q)q.innerHTML=qresHTML(obj)}
 function extraFields(){return isSafe()?{sd:today(),by:curSurv(),li:'',qs:'',qt:'',qp:'',rec:'',wp:'',st:'',ph:''}:{sd:today(),by:curSurv()}}
 function highlightCC(root,obj){const el=root.querySelector('input[data-k="cc"]');if(!el)return;
  el.classList.toggle('needs-check',!!obj&&num(obj.cc)===0)}
@@ -484,6 +494,77 @@ const rpr=t=>Math.min(eqd(t)*0.012,15),rpa=t=>Math.PI*rpr(t)**2,off=t=>rpr(t)-(n
 const vbr=t=>Math.max(...vetRing(t).map(p=>Math.hypot(p[0],p[1]))),vba=t=>ringArea(vetRing(t)),
  voff=t=>Math.max(eqd(t)*0.015-(num(t.cn)+num(t.ce)+num(t.cs)+num(t.cw))/4,5);
 const vetNote=(t,grp)=>{const d=eqd(t)*0.015,a=String(t.age).trim();return`<span style="color:#b00">${esc(a[0].toUpperCase()+a.slice(1).toLowerCase())} buffer (dashed): greater of 15 × stem Ø (${d.toFixed(2)} m) or 5 m beyond crown edge · `+(grp?`<b>+${voff(t).toFixed(2)} m</b> from crown extent`:`max radius <b>${vbr(t).toFixed(2)} m</b> · area <b>${vba(t).toFixed(1)} m²</b>`)+'</span>'};
+// ---------- 🌳 Desk-based estimates – Fennell, J.T. & Fay, L. (2024) Handbook of UK Urban Tree Allometric Equations and Size Characteristics, v1.4.
+// AL_EQ: 'latin|response|predictor' → [ln intercept, exponent, correction (ln), R²]  (D = DBH cm, H = height m, C = crown radius m)
+// Prediction = EXP(ln intercept) × predictor^exponent × EXP(correction).  AL_SP / AL_GE: typical (median) mature [crown radius m, height m, DBH cm].
+// A desk tree carries t.desk='Y' and t.est = {d1|h|cr: basis text}. A key in t.est means that dimension is an estimate; typing, stepping or
+// dragging a value makes it a measurement (key removed) and the remaining estimates recalculate from the measured dimensions only.
+const AL_EQ={"acer campestre|D|C":[2.27129,0.83611,0.05782,0.46],"acer platanoides|D|C":[2.29737,0.82504,0.04224,0.53],"acer pseudoplatanus|D|C":[2.15605,0.91895,0.06212,0.54],"aesculus hippocastanum|D|C":[2.33144,0.98041,0.06925,0.52],"alnus glutinosa|D|C":[2.41866,0.71601,0.08117,0.38],"betula pendula|D|C":[2.35919,0.7158,0.04892,0.46],"carpinus betulus|D|C":[2.24817,0.80861,0.04952,0.55],"castanea sativa|D|C":[1.78312,1.25561,0.11461,0.61],"cerasus avium|D|C":[2.38517,0.69208,0.05292,0.43],"fagus sylvatica|D|C":[2.00717,1.04997,0.0534,0.65],"fraxinus excelsior|D|C":[2.34051,0.80883,0.07078,0.5],"ilex aquifolium|D|C":[2.48209,0.63639,0.07348,0.23],"pinus sylvestris|D|C":[2.84563,0.61368,0.04422,0.39],"platanus x hispanica|D|C":[1.78705,1.02136,0.04702,0.66],"prunus avium|D|C":[2.62285,0.62257,0.05127,0.29],"quercus petraea|D|C":[2.11932,0.94658,0.03608,0.65],"quercus robur|D|C":[2.20733,0.97484,0.0681,0.58],"salix caprea|D|C":[2.31549,0.74238,0.13063,0.2],"salix fragilis|D|C":[2.88884,0.6976,0.15262,0.27],"sorbus aucuparia|D|C":[2.10557,0.80919,0.04136,0.44],"taxus baccata|D|C":[2.29527,0.96943,0.05986,0.53],"tilia cordata|D|C":[1.84549,1.14972,0.0552,0.66],"tilia x europaea|D|C":[3.15535,0.51882,0.05566,0.24],"acer campestre|D|H":[2.12021,0.63347,0.07624,0.29],"acer platanoides|D|H":[1.99982,0.68087,0.05789,0.35],"acer pseudoplatanus|D|H":[1.36036,0.91945,0.07763,0.42],"aesculus hippocastanum|D|H":[1.7161,0.89639,0.07182,0.5],"alnus glutinosa|D|H":[1.64099,0.78473,0.08539,0.35],"betula pendula|D|H":[1.45866,0.76676,0.05237,0.42],"carpinus betulus|D|H":[1.71343,0.7364,0.06835,0.38],"castanea sativa|D|H":[0.82789,1.31018,0.13673,0.53],"fagus sylvatica|D|H":[1.36669,1.00453,0.07088,0.54],"fraxinus excelsior|D|H":[1.90334,0.69752,0.1021,0.28],"pinus sylvestris|D|H":[1.84685,0.74367,0.04986,0.31],"platanus x hispanica|D|H":[0.92362,1.05658,0.05845,0.58],"quercus petraea|D|H":[1.87413,0.9257,0.04557,0.56],"quercus robur|D|H":[1.68021,0.91195,0.09454,0.41],"salix caprea|D|H":[2.10514,0.6607,0.1291,0.21],"sorbus aucuparia|D|H":[1.48839,0.83843,0.03786,0.49],"taxus baccata|D|H":[1.53963,1.0197,0.06274,0.51],"tilia cordata|D|H":[0.97794,1.07122,0.03166,0.8],"tilia x europaea|D|H":[2.22726,0.69124,0.03965,0.46],"acer campestre|H|C":[1.11787,0.68329,0.04399,0.43],"acer platanoides|H|C":[1.25778,0.6968,0.03433,0.49],"acer pseudoplatanus|H|C":[1.55585,0.56895,0.03907,0.41],"aesculus hippocastanum|H|C":[1.23856,0.76249,0.04493,0.5],"alnus glutinosa|H|C":[1.67647,0.43529,0.05498,0.25],"betula pendula|H|C":[1.80015,0.46208,0.0478,0.27],"carpinus betulus|H|C":[1.4969,0.56475,0.04733,0.38],"castanea sativa|H|C":[1.20863,0.67946,0.03806,0.58],"crataegus monogyna|H|C":[1.21887,0.44116,0.03971,0.2],"fagus sylvatica|H|C":[1.22129,0.73742,0.0323,0.6],"fraxinus excelsior|H|C":[1.75143,0.43757,0.05958,0.26],"ilex aquifolium|H|C":[1.27294,0.51362,0.05018,0.22],"platanus x hispanica|H|C":[1.25466,0.75079,0.02234,0.69],"prunus avium|H|C":[1.06961,0.62926,0.05274,0.29],"quercus petraea|H|C":[0.91441,0.66705,0.03435,0.49],"quercus robur|H|C":[1.46616,0.59265,0.04522,0.43],"salix caprea|H|C":[1.08995,0.63346,0.05439,0.3],"salix fragilis|H|C":[1.58974,0.45608,0.06133,0.28],"sorbus aucuparia|H|C":[1.18461,0.54396,0.03667,0.29],"taxus baccata|H|C":[1.32385,0.60263,0.03641,0.42],"tilia cordata|H|C":[1.00877,0.93801,0.0425,0.63],"tilia x europaea|H|C":[1.5031,0.65635,0.04211,0.4],"tilia x vulgaris|H|C":[1.36573,0.7788,0.02686,0.44],"acer campestre|H|D":[0.5034,0.45482,0.05474,0.29],"acer platanoides|H|D":[0.49855,0.51762,0.04401,0.35],"acer pseudoplatanus|H|D":[0.80877,0.4572,0.0386,0.42],"aesculus hippocastanum|H|D":[0.28452,0.56106,0.04496,0.5],"alnus glutinosa|H|D":[0.78404,0.44028,0.04791,0.35],"betula pendula|H|D":[0.58933,0.55122,0.03765,0.42],"carpinus betulus|H|D":[0.55571,0.51434,0.04774,0.38],"castanea sativa|H|D":[0.7846,0.40394,0.04216,0.53],"fagus sylvatica|H|D":[0.48202,0.53465,0.03773,0.54],"fraxinus excelsior|H|D":[1.00629,0.39627,0.058,0.28],"pinus sylvestris|H|D":[0.92684,0.42296,0.02836,0.31],"platanus x hispanica|H|D":[0.66413,0.5476,0.03029,0.58],"quercus petraea|H|D":[-0.20005,0.60622,0.02984,0.56],"quercus robur|H|D":[0.75628,0.45091,0.04674,0.41],"salix caprea|H|D":[0.98543,0.3162,0.06179,0.21],"sorbus aucuparia|H|D":[0.03541,0.58251,0.0263,0.49],"taxus baccata|H|D":[0.37423,0.49985,0.03075,0.51],"tilia cordata|H|D":[-0.26798,0.75112,0.0222,0.8],"tilia x europaea|H|D":[-0.05472,0.66247,0.038,0.46],"acer campestre|C|D":[-0.50396,0.55026,0.03806,0.46],"acer platanoides|C|D":[-0.71554,0.6393,0.03274,0.53],"acer pseudoplatanus|C|D":[-0.51408,0.58347,0.03944,0.54],"aesculus hippocastanum|C|D":[-0.43954,0.53115,0.03752,0.52],"alnus glutinosa|C|D":[-0.38257,0.52772,0.05982,0.38],"betula pendula|C|D":[-0.80284,0.64367,0.04399,0.46],"carpinus betulus|C|D":[-0.87842,0.68007,0.04165,0.55],"castanea sativa|C|D":[-0.18116,0.48214,0.04401,0.61],"cerasus avium|C|D":[-0.67883,0.62818,0.04804,0.43],"fagus sylvatica|C|D":[-0.58385,0.62032,0.03154,0.65],"fraxinus excelsior|C|D":[-0.66099,0.61624,0.05392,0.5],"ilex aquifolium|C|D":[-0.01085,0.36319,0.04194,0.23],"pinus sylvestris|C|D":[-0.97181,0.63889,0.04604,0.39],"platanus x hispanica|C|D":[-0.46949,0.64716,0.0298,0.66],"prunus avium|C|D":[-0.2032,0.47252,0.03891,0.29],"quercus petraea|C|D":[-0.82601,0.68933,0.02628,0.65],"quercus robur|C|D":[-0.513,0.5907,0.04127,0.58],"salix caprea|C|D":[0.63746,0.26885,0.0473,0.2],"salix fragilis|C|D":[0.16541,0.39,0.08532,0.27],"sorbus aucuparia|C|D":[-0.55251,0.54508,0.02786,0.44],"taxus baccata|C|D":[-0.47663,0.54894,0.0339,0.53],"tilia cordata|C|D":[-0.55758,0.57352,0.02754,0.66],"tilia x europaea|C|D":[-0.15803,0.46083,0.04944,0.24],"acer campestre|C|H":[0.09007,0.62631,0.04032,0.43],"acer platanoides|C|H":[-0.08819,0.71021,0.03499,0.49],"acer pseudoplatanus|C|H":[-0.18935,0.72648,0.04989,0.41],"aesculus hippocastanum|C|H":[0.01059,0.65998,0.03889,0.5],"alnus glutinosa|C|H":[0.12041,0.57182,0.07222,0.25],"betula pendula|C|H":[-0.06778,0.578,0.05978,0.27],"carpinus betulus|C|H":[-0.12776,0.68005,0.057,0.38],"castanea sativa|C|H":[-0.29202,0.84626,0.0474,0.58],"crataegus monogyna|C|H":[0.32009,0.46445,0.0418,0.2],"fagus sylvatica|C|H":[-0.24804,0.81856,0.03586,0.6],"fraxinus excelsior|C|H":[0.12998,0.58682,0.0799,0.26],"ilex aquifolium|C|H":[0.34802,0.43382,0.04239,0.22],"platanus x hispanica|C|H":[-0.52169,0.91789,0.02732,0.69],"prunus avium|C|H":[0.54057,0.46525,0.03899,0.29],"quercus petraea|C|H":[0.24477,0.74176,0.03821,0.49],"quercus robur|C|H":[-0.00285,0.72629,0.05542,0.43],"salix caprea|C|H":[0.57372,0.47933,0.04116,0.3],"salix fragilis|C|H":[0.27855,0.6237,0.08387,0.28],"sorbus aucuparia|C|H":[0.13462,0.52741,0.03555,0.29],"taxus baccata|C|H":[0.05039,0.69613,0.04206,0.42],"tilia cordata|C|H":[-0.12316,0.66732,0.03024,0.63],"tilia x europaea|C|H":[0.10888,0.60831,0.03903,0.4],"tilia x vulgaris|C|H":[0.11776,0.55897,0.01928,0.44]};
+const AL_SP={"acer campestre":[5,9,38.7],"acer platanoides":[6,13,44.5],"acer pseudoplatanus":[6.5,15,55.6],"acer saccharinum":[7,17,70],"aesculus hippocastanum":[6,15,67],"alnus cordata":[5.5,17,51],"alnus glutinosa":[5,12,43.4],"betula pendula":[5,13,35],"carpinus betulus":[6,14,42],"castanea sativa":[8,15,108.2],"cedrus atlantica":[8.5,20,88],"cerasus avium":[5,10,36],"chamaecyparis lawsoniana":[3,12,30],"corylus avellana":[3,6,10],"crataegus monogyna":[3,5,23],"cupressus macrocarpa":[5,17,61.1],"fagus sylvatica":[8,16,76],"fraxinus excelsior":[6,14,54],"ilex aquifolium":[3,6.8,30.5],"malus sylvestris":[4,6,32],"picea abies":[4.5,19,47],"pinus nigra":[6,18,62],"pinus sylvestris":[5,14,48.5],"platanus x hispanica":[10,18,74],"populus alba":[7,18,52],"populus nigra":[7,22,75],"populus x canadensis":[8,23,93.5],"prunus avium":[5,8,40],"prunus cerasifera":[4,7,35],"pseudotsuga menziesii":[6,16.5,65],"quercus cerris":[9.2,19,75],"quercus ilex":[5,11,55],"quercus robur":[8.5,17,83],"quercus rubra":[7.5,16,53],"robinia pseudoacacia":[6.6,14,49],"salix alba":[7,17,66],"salix caprea":[5.8,10,42.8],"salix fragilis":[6.2,12,80],"sambucus nigra":[2.2,5,15],"sorbus aria":[4,8,37],"sorbus aucuparia":[3.5,6,28],"sorbus intermedia":[4,7,47],"taxus baccata":[6,10,60],"tilia cordata":[6,16.5,50],"tilia x europaea":[6,16,67],"tilia x vulgaris":[5,13,68]};
+const AL_GE={"acer":[6,13.5,49],"aesculus":[6,15,67],"alnus":[5,14,47],"betula":[4.9,13,35],"carpinus":[6,14,43],"castanea":[8,15,108.2],"cedrus":[11.2,20,121],"cerasus":[5,10,36],"chamaecyparis":[3,12,30],"corylus":[3,6,10],"crataegus":[3,5,24],"cupressus":[4,15,48],"fagus":[8,16,76],"fraxinus":[6,14,54],"ilex":[3,7,30],"malus":[3.5,6,27],"picea":[4.5,18,47],"pinus":[5,15,52],"platanus":[10,18,72],"populus":[7,20,73],"prunus":[4.5,7,37],"pseudotsuga":[6,16.5,65],"quercus":[8.5,17,81],"robinia":[6.6,14,49.5],"salix":[6,12,67],"sambucus":[2,5,15.5],"sorbus":[4,7,33],"taxus":[5.4,10,58],"tilia":[5.5,14.5,58]};
+const AL_CN={"alder":"alnus glutinosa","grey alder":"alnus incana","italian alder":"alnus cordata","apple":"malus domestica","crab apple":"malus sylvestris","ash":"fraxinus excelsior","manna ash":"fraxinus ornus","narrow-leaved ash":"fraxinus angustifolia","aspen":"populus tremula","bay":"laurus nobilis","beech":"fagus sylvatica","copper beech":"fagus sylvatica","weeping beech":"fagus sylvatica","silver birch":"betula pendula","downy birch":"betula pubescens","himalayan birch":"betula utilis","paper birch":"betula papyrifera","blackthorn":"prunus spinosa","box":"buxus sempervirens","alder buckthorn":"frangula alnus","purging buckthorn":"rhamnus cathartica","atlas cedar":"cedrus atlantica","blue atlas cedar":"cedrus atlantica","cedar of lebanon":"cedrus libani","deodar cedar":"cedrus deodara","western red cedar":"thuja plicata","japanese red cedar":"cryptomeria japonica","wild cherry":"prunus avium","bird cherry":"prunus padus","japanese cherry":"prunus serrulata","tibetan cherry":"prunus serrula","cherry plum":"prunus cerasifera","cherry laurel":"prunus laurocerasus","portugal laurel":"prunus lusitanica","sweet chestnut":"castanea sativa","horse chestnut":"aesculus hippocastanum","red horse chestnut":"aesculus x carnea","indian horse chestnut":"aesculus indica","leyland cypress":"cuprocyparis leylandii","lawson cypress":"chamaecyparis lawsoniana","monterey cypress":"cupressus macrocarpa","italian cypress":"cupressus sempervirens","swamp cypress":"taxodium distichum","douglas fir":"pseudotsuga menziesii","grand fir":"abies grandis","noble fir":"abies procera","nordmann fir":"abies nordmanniana","elder":"sambucus nigra","english elm":"ulmus procera","wych elm":"ulmus glabra","field elm":"ulmus minor","hybrid elm":"ulmus x hollandica","eucalyptus":"eucalyptus","cider gum":"eucalyptus gunnii","false acacia":"robinia pseudoacacia","field maple":"acer campestre","norway maple":"acer platanoides","silver maple":"acer saccharinum","red maple":"acer rubrum","sugar maple":"acer saccharum","japanese maple":"acer palmatum","paperbark maple":"acer griseum","ginkgo":"ginkgo biloba","hawthorn":"crataegus monogyna","midland hawthorn":"crataegus laevigata","hazel":"corylus avellana","turkish hazel":"corylus colurna","holly":"ilex aquifolium","hornbeam":"carpinus betulus","hop hornbeam":"ostrya carpinifolia","honey locust":"gleditsia triacanthos","indian bean tree":"catalpa bignonioides","judas tree":"cercis siliquastrum","juniper":"juniperus communis","katsura":"cercidiphyllum japonicum","european larch":"larix decidua","japanese larch":"larix kaempferi","hybrid larch":"larix x marschlinsii","laburnum":"laburnum anagyroides","common lime":"tilia x europaea","small-leaved lime":"tilia cordata","large-leaved lime":"tilia platyphyllos","silver lime":"tilia tomentosa","london plane":"platanus x hispanica","oriental plane":"platanus orientalis","magnolia":"magnolia","medlar":"mespilus germanica","monkey puzzle":"araucaria araucana","mulberry":"morus alba","black mulberry":"morus nigra","english oak":"quercus robur","sessile oak":"quercus petraea","red oak":"quercus rubra","turkey oak":"quercus cerris","holm oak":"quercus ilex","pin oak":"quercus palustris","scarlet oak":"quercus coccinea","cork oak":"quercus suber","hungarian oak":"quercus frainetto","lucombe oak":"quercus x hispanica","pear":"pyrus communis","wild pear":"pyrus pyraster","callery pear":"pyrus calleryana","persian ironwood":"parrotia persica","austrian pine":"pinus nigra","bhutan pine":"pinus wallichiana","corsican pine":"pinus nigra","lodgepole pine":"pinus contorta","maritime pine":"pinus pinaster","monterey pine":"pinus radiata","scots pine":"pinus sylvestris","stone pine":"pinus pinea","weymouth pine":"pinus strobus","plum":"prunus domestica","black poplar":"populus nigra","black italian poplar":"populus x canadensis","hybrid black poplar":"populus x canadensis","grey poplar":"populus x canescens","lombardy poplar":"populus nigra","white poplar":"populus alba","balsam poplar":"populus balsamifera","coast redwood":"sequoia sempervirens","dawn redwood":"metasequoia glyptostroboides","giant redwood":"sequoiadendron giganteum","rowan":"sorbus aucuparia","sea buckthorn":"hippophae rhamnoides","snowy mespilus":"amelanchier lamarckii","spindle":"euonymus europaeus","norway spruce":"picea abies","sitka spruce":"picea sitchensis","serbian spruce":"picea omorika","blue spruce":"picea pungens","strawberry tree":"arbutus unedo","sweetgum":"liquidambar styraciflua","sycamore":"acer pseudoplatanus","tree of heaven":"ailanthus altissima","tulip tree":"liriodendron tulipifera","walnut":"juglans regia","black walnut":"juglans nigra","wellingtonia":"sequoiadendron giganteum","whitebeam":"sorbus aria","swedish whitebeam":"sorbus intermedia","wild service tree":"sorbus torminalis","bay willow":"salix pentandra","crack willow":"salix fragilis","goat willow":"salix caprea","grey willow":"salix cinerea","osier":"salix viminalis","weeping willow":"salix x sepulcralis","white willow":"salix alba","corkscrew willow":"salix babylonica","yew":"taxus baccata","irish yew":"taxus baccata","guelder rose":"viburnum opulus","wayfaring tree":"viburnum lantana","dogwood":"cornus sanguinea","privet":"ligustrum vulgare"};
+const DESK_KEY=KEY+'_deskmode',DESK_FB_KEY=KEY+'_deskfb';
+let deskNew=(()=>{try{return localStorage.getItem(DESK_KEY)==='1'}catch(x){return false}})();
+let deskFb=(()=>{try{return localStorage.getItem(DESK_FB_KEY)==='1'}catch(x){return false}})();
+const DESK_NOTE='Dimensions estimated from aerial imagery using allometry (Fennell & Fay 2024) - to be verified on site.';
+const DK_LAB={d1:'Dia',h:'Ht',cr:'CR'},DK_NAME={d1:'Stem diameter',h:'Height',cr:'Crown radius'},DK_UNIT={d1:'mm',h:'m',cr:'m'};
+const DK_STEMS=['d1','d2','d3','d4','d5'],DK_CROWN=['cn','ce','cs','cw'],DK_ALL=['n',...DK_STEMS,'h',...DK_CROWN];
+const isDesk=t=>!!t&&t.desk==='Y';
+const isEst=(t,k)=>isDesk(t)&&!!t.est&&k in t.est;
+const dkOf=k=>/^d[1-5]$/.test(k)?'d1':k==='h'?'h':DK_CROWN.includes(k)?'cr':null;
+const crMean=t=>(num(t.cn)+num(t.ce)+num(t.cs)+num(t.cw))/4;
+const capLat=s=>s?s[0].toUpperCase()+s.slice(1):'';
+/* Latin name from the species field: the part in brackets, a typed common name, or the text itself */
+function deskLatin(sp){let s=String(sp||'').trim();if(!s||/^(unknown|mixed)/i.test(s))return'';
+ const m=/\(([^)]+)\)\s*$/.exec(s);if(m)s=m[1];
+ s=s.replace(/['‘’"].*$/,'').replace(/\s*[×✕]\s*/g,' x ').replace(/\s+/g,' ').trim().toLowerCase();
+ if(AL_CN[s])return AL_CN[s];
+ const hit=x=>Object.prototype.hasOwnProperty.call(AL_SP,x)||Object.keys(AL_EQ).some(k=>k.startsWith(x+'|'));
+ if(hit(s))return s;const w=s.split(' '),b=(w[1]==='x'?w.slice(0,3):w.slice(0,2)).join(' ');return hit(b)?b:s}
+const alEq=(lat,r,p)=>AL_EQ[lat+'|'+r+'|'+p]||null;
+const alPred=(e,x)=>Math.exp(e[0])*Math.pow(x,e[1])*Math.exp(e[2]);
+const alCount=lat=>lat?Object.keys(AL_EQ).filter(k=>k.startsWith(lat+'|')).length:0;
+function alMature(lat){if(!lat)return null;const g=lat.split(' ')[0];return AL_SP[lat]?{v:AL_SP[lat],lvl:'species'}:AL_GE[g]?{v:AL_GE[g],lvl:'genus'}:null}
+/* recalculate every estimated dimension from the measured ones; returns the field keys whose values changed */
+function deskCalc(t){if(!isDesk(t))return[];const E={...(t.est||{})},lat=deskLatin(t.sp),before=DK_ALL.map(k=>t[k]),mat=alMature(lat);
+ const D=!('d1' in E)&&eqd(t)>0?eqd(t)/10:null,H=!('h' in E)&&num(t.h)>0?num(t.h):null,C=!('cr' in E)&&crMean(t)>0?crMean(t):null;
+ const best=(r,opts)=>{let b=null;opts.forEach(([p,x,lab])=>{if(x==null)return;const e=lat&&alEq(lat,r,p);if(e&&(!b||e[3]>b.r2))b={v:alPred(e,x),r2:e[3],lab}});return b};
+ const go=(k,r,opts,mi,mul,step,apply)=>{if(!(k in E))return;let b=best(r,opts),txt;
+  if(b)txt=`from ${b.lab} (R² ${b.r2.toFixed(2)})`;else if(deskFb&&mat&&mat.v[mi]){b={v:mat.v[mi]};txt=`mature typical (${mat.lvl})`}
+  else txt=!lat?'species not recognised':(D==null&&H==null&&C==null)?'needs one measured dimension':'no equation – enter a value';
+  E[k]=txt;apply(b?Math.max(step,rnd(b.v*mul,step)):0)};
+ go('d1','D',[['C',C,'CR'],['H',H,'Ht']],2,10,10,v=>{t.d1=v;t.d2=t.d3=t.d4=t.d5=0;if(v&&!(num(t.n)>0))t.n=1});
+ go('h','H',[['D',D,'dia'],['C',C,'CR']],1,1,0.5,v=>{t.h=v});
+ go('cr','C',[['D',D,'dia'],['H',H,'Ht']],0,1,0.5,v=>{DK_CROWN.forEach(k=>t[k]=v)});
+ t.est=E;return DK_ALL.filter((k,i)=>t[k]!==before[i])}
+/* a value was typed / stepped / dragged: that dimension is now measured */
+function deskEdited(t,k){if(!isDesk(t))return[];const d=dkOf(k);if(d&&t.est&&d in t.est){t.est={...t.est};delete t.est[d]}
+ return d||k==='sp'?deskCalc(t):[]}
+/* keep=true: values already entered stay as measurements and only the blank dimensions are estimated */
+function deskSet(t,on,keep){if(!on){delete t.desk;delete t.est;return}t.desk='Y';const e={};
+ if(!keep||!(eqd(t)>0))e.d1='';if(!keep||!(num(t.h)>0))e.h='';if(!(crMean(t)>0))e.cr='';t.est=e;deskCalc(t)}
+function deskInit(t){if(deskNew){t.d1=0;t.h=0;deskSet(t,true,true)}return t}
+function deskTxt(t){if(!isDesk(t))return'';const E=t.est||{};return['d1','h','cr'].map(k=>DK_LAB[k]+': '+(k in E?(E[k]||'estimate'):'measured')).join('; ')}
+function deskParse(s){const E={};String(s||'').split(';').forEach(p=>{const m=/^\s*(Dia|Ht|CR)\s*:\s*(.*?)\s*$/i.exec(p);if(!m)return;const k={dia:'d1',ht:'h',cr:'cr'}[m[1].toLowerCase()];if(!/^measured$/i.test(m[2]))E[k]=m[2]});return E}
+function deskFromRow(t,o){delete t.desk;delete t.est;if(String(o['Desk estimate']??'').trim().toUpperCase()==='Y'){t.desk='Y';t.est=deskParse(o['Estimate basis'])}return t}
+const deskCols=(isTree,o)=>isTree&&isDesk(o)?['Y',deskTxt(o),capLat(deskLatin(o.sp))]:['','',''];
+const DESK_HD=['Desk estimate','Estimate basis','Allometry species'];
+function deskVal(t,k){const v=k==='d1'?eqd(t):k==='h'?num(t.h):crMean(t);return v>0?(k==='d1'?Math.round(v)+' mm':(+v).toFixed(1)+' m'):'–'}
+function deskBox(t){const on=isDesk(t);let h=`<label class="dkon"><input type="checkbox" data-desk="on"${on?' checked':''}> 🌳 Desk-based estimate <small>(Fennell &amp; Fay 2024 allometry)</small></label>`;
+ if(!on)return h;const lat=deskLatin(t.sp),n=alCount(lat),mat=alMature(lat),E=t.est||{};
+ h+=`<div class="dkl">${!lat?'<span class="dkw">Choose a species to estimate from.</span>':n?`<i>${esc(capLat(lat))}</i> – ${n} of 6 equations`:`<span class="dkw"><i>${esc(capLat(lat))}</i> – no species equations in the Handbook.${mat?' Tick “typical mature size” below to fill gaps.':''}</span>`}</div><table class="dkt">`;
+ ['d1','h','cr'].forEach(k=>{const es=k in E,txt=es?(E[k]||'estimate'):'measured',bad=es&&/^(no |needs|species)/.test(txt);
+  h+=`<tr><th>${DK_NAME[k]}</th><td>${deskVal(t,k)}</td><td><span class="dks ${es?(bad?'bad':'est'):'mes'}">${es?'Est.':'Measured'}</span> ${es?esc(txt):''}</td><td>${es?'':`<button type="button" data-desk="est" data-dk="${k}" title="Treat as unknown and estimate it">Estimate</button>`}</td></tr>`});
+ h+=`</table><div class="dkh">Drag the crown handles to the canopy edge on the aerial view. Type any value you know (e.g. height from LiDAR) and it becomes a measurement; the rest re-estimate.</div>`+
+  `<label class="dkfb"><input type="checkbox" data-desk="fb"${deskFb?' checked':''}> Use typical mature size where there's no equation</label>`+
+  `<button type="button" class="w" data-desk="note"${hasNote(t,DESK_NOTE)?' disabled':''}>📝 Add desk-estimate note to Notes</button>`;
+ return h}
+function deskMark(root,obj){const b=root.querySelector('.deskbox');if(b)b.innerHTML=obj&&T.includes(obj)?deskBox(obj):'';
+ DK_ALL.forEach(k=>{const el=root.querySelector(`input[data-k="${k}"]`);if(!el)return;const d=dkOf(k),on=!!obj&&!!d&&isEst(obj,d)&&num(obj[k])>0;el.classList.toggle('est',on);if(on)el.title='Estimate – '+(obj.est[d]||'allometry');else if(el.title&&/^Estimate/.test(el.title))el.title=''})}
+/* after a form edit of k: sync the other inputs the estimate changed, and redraw the crown handles */
+function deskAfter(root,t,k){const ch=deskEdited(t,k);if(!ch.length)return;ch.forEach(x=>{if(x===k)return;const el=root.querySelector(`input[data-k="${x}"]`);if(el)el.value=t[x]});handles()}
+function deskModeUI(){const b=$('bDeskMode');if(b)b.textContent='🌳 Desk mode for new trees: '+(deskNew?'ON':'Off');$('bAdd').classList.toggle('desk',deskNew)}
+
 const m2ll=(t,x,y)=>[t.lat+y/R,t.lon+x/(R*Math.cos(t.lat*Math.PI/180))];
 const colour=t=>{if(isSafe()){const q=qtra(t);return q?TOLC[q.tol]:'#a4c'}return({A:'#00ff00',B:'#0000ff',C:'#5b5b5b',U:'#7f0000'})[(t.cat||'')[0]]||'#a4c'};
 const lblCls=t=>{if(isSafe()){const q=qtra(t);return'lbl lbl'+(q?TOLK[q.tol]:'X')}return'lbl lbl'+((t.cat||'')[0]||'X')};
@@ -536,13 +617,13 @@ new ToolCtrl().addTo(map);
 map.on('moveend',save);
 map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle selection, empty map does nothing */
  const sn=snap(e.latlng);
- if(mode==='add'){if(!confirmLeave('Add a new tree anyway?'))return;const t=newTree();t.lat=sn.lat;t.lon=sn.lng;T.push(t);setMode('add');/* one tree per press of ＋ Add */select(t);save()}
+ if(mode==='add'){if(!confirmLeave('Add a new tree anyway?'))return;const t=deskInit(newTree());t.lat=sn.lat;t.lon=sn.lng;T.push(t);setMode('add');/* one tree per press of ＋ Add */select(t);save()}
  else if(mode==='queue'){const t=sel&&sel.lat==null?sel:T.find(x=>x.lat==null);if(!t)return setMode('queue');
   const im=issueText(t);
   if(im&&!confirm(im+'\nPlot anyway?'))return;
   t.lat=sn.lat;t.lon=sn.lng;
   const n=T.find(x=>x.lat==null&&x!==t);if(n)select(n);else{setMode('queue');select(t)}save()}
- else if(mode==='paste'&&clip&&clip.kind=='tree'){if(!confirmLeave('Paste a copy here anyway?'))return;const t={...clip.data,ref:newTree().ref,sd:today(),by:curSurv(),lat:sn.lat,lon:sn.lng};T.push(t);select(t);save()}
+ else if(mode==='paste'&&clip&&clip.kind=='tree'){if(!confirmLeave('Paste a copy here anyway?'))return;const t={...clip.data,ref:newTree().ref,sd:today(),by:curSurv(),lat:sn.lat,lon:sn.lng};if(t.est)t.est={...t.est};T.push(t);select(t);save()}
  else if(mode==='paste'&&clip&&clip.kind=='poly'){const src=clip.data,c=turf.centerOfMass(feat(src)).geometry.coordinates,dLat=e.latlng.lat-c[1],dLon=e.latlng.lng-c[0];
   const pre={Group:'G',Woodland:'W',Hedge:'H'}[src.kind]||'G';
   const p={...src,ref:nextRef(pre),sd:today(),by:curSurv(),ll:src.ll.map(v=>[v[0]+dLat,v[1]+dLon])};PG.push(p);selectP(p);save()}
@@ -563,12 +644,12 @@ function draw(t){
  for(let a=0;a<=360;a+=5){const r=a*Math.PI/180,sn=Math.sin(r),cs=Math.cos(r);pts.push(m2ll(t,...rotXY(t,(sn>=0?t.ce:t.cw)*sn,(cs>=0?t.cn:t.cs)*cs)))}
  const go=e=>{if(mode=='label'){L.DomEvent.stopPropagation(e);return lpOpen(t)}if(!mode){L.DomEvent.stopPropagation(e);batch?bToggle(t):wantSelect(t)}};
  const g=L.layerGroup([
-  ...(isSafe()?[]:[L.circle(ll,{radius:rpr(t),color:'#ff0000',weight:2,fill:false,interactive:false})]),
+  ...(isSafe()?[]:[L.circle(ll,{radius:rpr(t),color:'#ff0000',weight:2,fill:false,interactive:false,dashArray:isEst(t,'d1')?'6 5':null})]),
   ...(isVet(t)?[L.polygon(vetRing(t).map(p=>m2ll(t,p[0],p[1])),{color:'#ff0000',weight:2,dashArray:'8 5',fill:false,interactive:false})]:[]),
-  L.polygon(pts,BSEL.has(t)?{color:'#00e5ff',fillColor:c,weight:4,fillOpacity:.4}:{color:c,weight:s?3:2,fillOpacity:s?.25:.1}).on('click',go),
+  L.polygon(pts,BSEL.has(t)?{color:'#00e5ff',fillColor:c,weight:4,fillOpacity:.4}:{color:c,weight:s?3:2,fillOpacity:s?.25:.1,dashArray:isEst(t,'cr')?'5 4':null}).on('click',go),
   ...(isSafe()?[]:fsbArrow(t,c)),
   L.circle(ll,{radius:eqd(t)/2000,color:c,weight:1,fillOpacity:.9,interactive:false}),
-  L.circleMarker(ll,{radius:4,color:'#fff',weight:1,fillColor:c,fillOpacity:1}).on('click',go).bindTooltip(t.ref,{permanent:true,direction:LBL_TT[lblDir(t)][0],className:lblCls(t),offset:LBL_TT[lblDir(t)][1]})
+  L.circleMarker(ll,{radius:4,color:'#fff',weight:1,fillColor:c,fillOpacity:1}).on('click',go).bindTooltip(t.ref,{permanent:true,direction:LBL_TT[lblDir(t)][0],className:lblCls(t)+(isDesk(t)?' lblEst':''),offset:LBL_TT[lblDir(t)][1]})
  ]).addTo(map);G.set(t,g)}
 // crown-spread drag readout: dashed line from trunk centre to the node and a small distance label just above it
 const measL=L.layerGroup().addTo(map);let measT=null;
@@ -584,7 +665,7 @@ function handles(){
  for(const k in pos){const m=mk(`<div class="h">${k[1].toUpperCase()}</div>`,pos[k](),1000);ms[k]=m;
   m.on('dragstart',()=>measShow(t,k,pos[k]()));
   m.on('drag',e=>{const p=e.latlng,[dx,dy]=unrotXY(t,(p.lng-t.lon)*R*Math.cos(t.lat*Math.PI/180),(p.lat-t.lat)*R);
-   let d=k=='cn'?dy:k=='cs'?-dy:k=='ce'?dx:-dx;t[k]=Math.max(0,Math.round(d*2)/2);m.setLatLng(pos[k]());measShow(t,k,pos[k]());draw(t);fill(t);dirty=1});
+   let d=k=='cn'?dy:k=='cs'?-dy:k=='ce'?dx:-dx;t[k]=Math.max(0,Math.round(d*2)/2);deskEdited(t,k);m.setLatLng(pos[k]());measShow(t,k,pos[k]());draw(t);fill(t);dirty=1});
   m.on('dragend',()=>{measHide(1200);save();handles()})}
  const s=mk('<div class="h s">+</div>',[t.lat,t.lon],1100);
  const qbs=matchMedia('(pointer:coarse)').matches?44:34,qb=batch?null:L.marker([t.lat,t.lon],{zIndexOffset:1200,keyboard:false,icon:L.divIcon({className:'',html:'<div class="qbtn" title="Quick entry">✎</div>',iconSize:[qbs,qbs],iconAnchor:[-26,-26]})}).addTo(HL);
@@ -603,6 +684,7 @@ const optH=x=>Array.isArray(x)?`<option value="${esc(x[0])}">${esc(x[1])}</optio
 function buildFields(fs,pre){return fs.map(([k,l,ty,o,wide])=>{if(ty=='sec')return `<div class="sec">${l}</div>`;
  if(ty=='nb')return `<button type="button" id="${pre}Notes" class="w">📋 Predefined notes…</button>`;
  if(ty=='qr')return '<div class="qres"></div>';
+ if(ty=='dk')return '<div class="w deskbox"></div>';
  if(ty=='qh')return o==='qt'?'<button type="button" class="w qhbtn" data-qh="qt">🎯 Help me choose the Target range…</button>':'<button type="button" class="w qhbtn" data-qh="qs">📏 Help me choose the Size…</button>';
  if(ty=='rp')return `<label class="w">Add a standard recommendation<select data-act="rec"><option value="">Choose to add…</option>${REC.map(r=>optH(r)).join('')}</select></label>`;
  const w=ty=='a'||ty=='sp'||wide?' class="w"':'';const st=o||1;
@@ -614,9 +696,9 @@ function buildFields(fs,pre){return fs.map(([k,l,ty,o,wide])=>{if(ty=='sec')retu
 function addRec(root,obj,v){if(!obj||!v)return;if(/^none$/i.test(v))obj.rec='None';else{const t=v+'.',cur=(obj.rec||'').trim();if(!cur.includes(t))obj.rec=(cur&&!noWork(obj)?cur+' ':'')+t}
  root.querySelector('[data-k="rec"]').value=obj.rec;if(v===REINSPECT){obj.wp='N/A';const w=root.querySelector('[data-k="wp"]');if(w)w.value='N/A'}}
 fm.addEventListener('click',e=>{const b=e.target.closest('.stp');if(!b||!sel)return;const k=b.dataset.k,step=+b.dataset.s,inp=b.parentElement.querySelector('input');
- sel[k]=Math.max(0,rnd(num(inp.value)+step,Math.abs(step)));inp.value=sel[k];draw(sel);if(k[0]=='c'||k[0]=='d')handles();ro();list();refresh(fm,sel);save()});
+ sel[k]=Math.max(0,rnd(num(inp.value)+step,Math.abs(step)));inp.value=sel[k];deskAfter(fm,sel,k);draw(sel);if(k[0]=='c'||k[0]=='d')handles();ro();list();refresh(fm,sel);save()});
 fm.addEventListener('input',e=>{const el=e.target,k=el.dataset.k;if(!k||!sel||el.type=='button')return;
- sel[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;stampSv(sel);
+ sel[k]=el.type=='checkbox'?(el.checked?'Y':''):el.type=='number'?num(el.value):el.value;stampSv(sel);deskAfter(fm,sel,k);
  draw(sel);if(k[0]=='c'||k[0]=='d')handles();ro();list();refresh(fm,sel);save()});
 fm.addEventListener('change',e=>{const el=e.target;if(el.dataset.act!='rec'||!sel)return;addRec(fm,sel,el.value);el.value='';draw(sel);list();refresh(fm,sel);save()});
 function fill(t){fm.querySelectorAll('[data-k],[data-act]').forEach(el=>{const v=t&&el.dataset.k?t[el.dataset.k]:'';el.type=='checkbox'?el.checked=v=='Y':el.value=v??'';el.disabled=!t});$('bNotes').disabled=!t;refresh(fm,t);ro()}
@@ -628,7 +710,7 @@ function refSeq(r){const m=/\d+$/.exec(r||'');return m?+m[0]:Infinity}
 function natCmp(a,b){return refSeq(a)-refSeq(b)}
 const tdot=o=>{if(!isSafe())return'';const q=qtra(o);return q?`<span class="td" style="background:${TOLC[q.tol]}" title="${q.tol}"></span>`:''};
 const bcb=o=>batch?`<input type="checkbox" class="lcb" ${BSEL.has(o)?'checked':''}>`:'';
-function list(){tbSync();const entries=[...T.map((t,i)=>({ref:t.ref,html:`<div data-i="${i}" class="${t===sel||BSEL.has(t)?'s':''}">${bcb(t)}${t.ref} – ${esc(t.sp||'(no species)')}${tdot(t)} ${t.lat==null?'<i>unplotted</i>':''}</div>`})),
+function list(){tbSync();const entries=[...T.map((t,i)=>({ref:t.ref,html:`<div data-i="${i}" class="${t===sel||BSEL.has(t)?'s':''}">${bcb(t)}${t.ref} – ${esc(t.sp||'(no species)')}${tdot(t)} ${isDesk(t)?'<span class="dkt1">desk</span>':''} ${t.lat==null?'<i>unplotted</i>':''}</div>`})),
  ...PG.map((p,i)=>({ref:p.ref,html:`<div data-p="${i}" class="${p===selP||BSEL.has(p)?'s':''}">${bcb(p)}▱ ${p.ref} – ${p.kind}${p.sp?' – '+esc(p.sp):''}${tdot(p)}</div>`}))];
  entries.sort((x,y)=>natCmp(x.ref,y.ref));
  $('list').innerHTML=entries.map(e=>e.html).join('')||'<div>Nothing yet – press “＋ Add” or “▱ Polygon”.</div>';banner()}
@@ -681,7 +763,7 @@ function banner(){if(batch)return bRefresh();const u=T.filter(t=>t.lat==null),n=
  else if(mode=='meas')m=mBanner();
  else if(mode=='addv')m='Click on or near an edge to add a vertex · Esc to stop';
  else if(mode=='delv')m='Tap a vertex (white square) to delete it · Esc to stop';
- else if(mode=='add')m='Tap the map to place one tree · Esc to cancel';
+ else if(mode=='add')m='Tap the map to place one tree'+(deskNew?' <b>(desk estimate)</b>':'')+' · Esc to cancel';
  else if(mode=='rot')m=sel?`Rotate crown of <b>${esc(sel.ref)}</b>: <b>${crot(sel)}°</b> · drag the ↻ handle round the trunk · <button type="button" data-rot="-15">−15°</button> <button type="button" data-rot="15">+15°</button> <button type="button" data-rot="0">Reset</button> <button type="button" data-rot="done">✓ Done</button>`:'Select a tree to rotate its crown · Esc to finish';
  else if(mode=='sv')m='Tap a road to open Google Street View there'+(sel&&sel.lat!=null?` (it will face ${esc(sel.ref)})`:'')+' · Esc to cancel';
  else if(mode=='label')m='Tap a tree, then pick where its reference label goes · tap 🏷 or Esc to finish';
@@ -1116,8 +1198,8 @@ function bApply(){const it=bItems();if(!it.length)return;const set={},lab=[];
  notes.forEach(t=>lab.push('Notes + “'+t+'”'));const recs=[...BREC];recs.forEach(r=>lab.push('Recommendations + “'+r+'”'));
  if(!lab.length)return alert('Nothing to change – choose a value for at least one field, or pick notes to add.');
  if(!confirm(`Apply to ${it.length} selected feature(s)?\n\n• `+lab.join('\n• ')+'\n\nYou can undo this with ↶ Undo last batch.'))return;
- const keys=[...new Set([...Object.keys(set),'notes','rec','wp'])];BUNDO.push(it.map(o=>({o,b:Object.fromEntries(keys.map(k=>[k,o[k]]))})));if(BUNDO.length>10)BUNDO.shift();
- let changed=0;it.forEach(o=>{const before=JSON.stringify(keys.map(k=>o[k]));Object.assign(o,set);notes.forEach(t=>toggleNote(o,t,true));recs.forEach(r=>recAdd(o,r));if(JSON.stringify(keys.map(k=>o[k]))!==before)changed++});
+ const keys=[...new Set([...Object.keys(set),'notes','rec','wp',...(it.some(isDesk)?[...DK_ALL,'est']:[])])];BUNDO.push(it.map(o=>({o,b:Object.fromEntries(keys.map(k=>[k,o[k]]))})));if(BUNDO.length>10)BUNDO.shift();
+ let changed=0;it.forEach(o=>{const before=JSON.stringify(keys.map(k=>o[k]));Object.assign(o,set);if(T.includes(o)&&isDesk(o))Object.keys(set).forEach(k=>deskEdited(o,k));notes.forEach(t=>toggleNote(o,t,true));recs.forEach(r=>recAdd(o,r));if(JSON.stringify(keys.map(k=>o[k]))!==before)changed++});
  save();$('bform').querySelectorAll('[data-bk]').forEach(el=>el.value='');$('bNoteFree').value='';BN.notes='';BREC.clear();$('bform').querySelectorAll('[data-rec]').forEach(c=>c.checked=false);bRedrawAll();
  const inc=it.filter(o=>missingTreeFields(o).length);
  $('bMsg').innerHTML=`Updated ${changed} of ${it.length} feature(s).`+(inc.length?`<br>${inc.length} of the selected still have missing data: ${inc.slice(0,12).map(o=>esc(o.ref)).join(', ')}${inc.length>12?'…':''} <button id="bSelInc" type="button">Select just these</button>`:'');
@@ -1532,7 +1614,7 @@ $('bDxf').onclick=dxf;
 // ---------- xlsx
 // Safety survey: same columns (A:AJ) as the 'Survey data' sheet of the Tree Survey Schedule, plus app columns for re-import
 const SHD=['Site ID','Site name','Reason for survey','Survey date','Tree Ref','Object type','Line item','Species','Number of stems','Stem 1 diameter (mm)','Stem 2 diameter (mm)','Stem 3 diameter (mm)','Stem 4 diameter (mm)','Stem 5 diameter (mm)','Crown spread north (m)','Crown spread east (m)','Crown spread south (m)','Crown spread west (m)','Crown clearance (m)','Height (m)','Age class','Physiological condition','Notes','QTRA - Size','QTRA - Target range','QTRA - Probability of failure','QTRA - Risk Index','Tolerability of risk region','Recommendations','Work priority','Safety action date','Status','Coordinates \n(British National Grid e.g.377,756.86E 163,001.69N)','X','Y','Photo filename'];
-const SXH=['Latitude (WGS84)','Longitude (WGS84)','Vertices (lat,lon)','Vertices (OSGB E,N)','Area (m2)','QTRA size code','QTRA target code','Crown rotation (deg)','Surveyor','QTRA target basis'];
+const SXH=['Latitude (WGS84)','Longitude (WGS84)','Vertices (lat,lon)','Vertices (OSGB E,N)','Area (m2)','QTRA size code','QTRA target code','Crown rotation (deg)','Surveyor','QTRA target basis',...DESK_HD];
 const xlSerial=iso=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||'');return m?(Date.UTC(+m[1],m[2]-1,+m[3])-Date.UTC(1899,11,30))/864e5:''};
 function fromXlDate(v){if(v==null||v==='')return'';if(typeof v=='number')return new Date(Date.UTC(1899,11,30)+Math.round(v)*864e5).toISOString().slice(0,10);
  if(v instanceof Date)return isoD(v);const t=String(v).trim();let m=/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/.exec(t);if(m)return m[3]+'-'+pad2(m[2])+'-'+pad2(m[1]);m=/^(\d{4})-(\d\d)-(\d\d)/.exec(t);return m?m[0]:''}
@@ -1543,7 +1625,7 @@ function safeRow(o,type){const isT=type==='Tree',q=qtra(o);let e=null,ll=null;
   qdesc(QS,o.qs),qdesc(QT,o.qt),o.qp||'',q?+q.ri.toFixed(2):'',q?q.tol:'',o.rec||'',o.wp||'',xlSerial(actionDate(o)),o.st||'',
   e?fmtG(e[0])+'E '+fmtG(e[1])+'N':'',e?+e[0].toFixed(2):'',e?+e[1].toFixed(2):'',o.ph||'',
   ll?+ll[0].toFixed(8):'',ll?+ll[1].toFixed(8):'',isT?'':o.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),
-  isT?'':o.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; '),isT?'':+gA(o).toFixed(1),o.qs||'',o.qt||'',isT&&crot(o)?crot(o):'',o.by||META.surv||'',o.qb||'']}
+  isT?'':o.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; '),isT?'':+gA(o).toFixed(1),o.qs||'',o.qt||'',isT&&crot(o)?crot(o):'',o.by||META.surv||'',o.qb||'',...deskCols(isT,o)]}
 function expSafety(){const all=[...T.map(t=>[t,'Tree']),...PG.map(p=>[p,p.kind])].sort((a,b)=>natCmp(a[0].ref,b[0].ref));
  const mm=metaMissing(META),inc=all.filter(([o])=>issueText(o)).map(([o])=>o.ref),un=T.filter(t=>t.lat==null).map(t=>t.ref);
  if(mm.length||inc.length||un.length){let m='';if(mm.length)m+='Safety survey details missing: '+mm.join(', ')+'\n';if(inc.length)m+=inc.length+' feature(s) incomplete or with values to check: '+inc.slice(0,25).join(', ')+(inc.length>25?'…':'')+'\n';if(un.length)m+=un.length+' tree(s) not plotted: '+un.slice(0,25).join(', ')+'\n';
@@ -1570,14 +1652,14 @@ function parseSafety(wb){const nt=[],np=[];let meta=null,skipped=0;
   else{let E=null,N=null;if(ok(o.X)&&ok(o.Y)&&num(o.X)){E=num(o.X);N=num(o.Y)}else if(ck){const m=/([\d,]+(?:\.\d+)?)\s*E\s+([\d,]+(?:\.\d+)?)\s*N/i.exec(String(o[ck]));if(m){E=+m[1].replace(/,/g,'');N=+m[2].replace(/,/g,'')}}
    if(E!=null){const pp=proj4('EPSG:27700','EPSG:4326',[E,N]);lo=pp[0];la=pp[1]}}
   const type=y('Object type')||'Tree';
-  if(type==='Tree'||!['Group','Woodland','Hedge'].includes(type)){nt.push({...newTree(),...b,lat:la,lon:lo});return}
+  if(type==='Tree'||!['Group','Woodland','Hedge'].includes(type)){nt.push(deskFromRow({...newTree(),...b,lat:la,lon:lo},o));return}
   let v=String(o['Vertices (lat,lon)']||'').split(';').map(x=>x.split(',').map(Number)).filter(a=>a.length==2&&!isNaN(a[0])&&!isNaN(a[1]));
   if(v.length<3&&la!=null){const c={lat:la,lon:lo};v=[m2ll(c,-5,5),m2ll(c,5,5),m2ll(c,5,-5),m2ll(c,-5,-5)]}
   if(v.length<3){skipped++;return}np.push({...b,kind:type,ll:v})});
  return{nt,np,meta,skipped}}
 $('bExp').onclick=()=>{if(!T.length&&!PG.length&&!SN.length)return alert('Nothing to export');if(isSafe())return expSafety();if(!projOK())return;
- const DH=['Type',...HD,'Survey date','Surveyor','Label position','Crown rotation (deg)','Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
- const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),xlSerial(o.sd),o.by||META.surv||'',type==='Tree'?(o.lp||''):'',type==='Tree'&&crot(o)?crot(o):'',...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo];
+ const DH=['Type',...HD,'Survey date','Surveyor','Label position','Crown rotation (deg)','Veteran/ancient buffer radius (m)','Veteran/ancient buffer area (m2)','Veteran/ancient group buffer offset (m)','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)',...DESK_HD];
+ const row=(type,o,geo)=>[type,...K.map(k=>o[k]),+rpr(o).toFixed(3),+rpa(o).toFixed(2),+off(o).toFixed(2),xlSerial(o.sd),o.by||META.surv||'',type==='Tree'?(o.lp||''):'',type==='Tree'&&crot(o)?crot(o):'',...(isVet(o)?[+vbr(o).toFixed(3),+vba(o).toFixed(2),+voff(o).toFixed(2)]:['','','']),...geo,...deskCols(type==='Tree',o)];
  const tRows=T.map(t=>{const e=t.lat!=null?en(t):['',''];
   return row('Tree',t,[t.lat==null?'':+t.lat.toFixed(8),t.lat==null?'':+t.lon.toFixed(8),e[0]===''?'':+e[0].toFixed(2),e[1]===''?'':+e[1].toFixed(2),'','','',''])});
  const pRows=PG.map(p=>row(p.kind,p,['','','','',+gA(p).toFixed(1),+gPer(p).toFixed(1),p.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),p.ll.map(v=>{const e=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return e[0].toFixed(2)+','+e[1].toFixed(2)}).join('; ')]));
@@ -1596,10 +1678,10 @@ function dtCols(){const ty=o=>T.includes(o)?'Tree':(o.kind||'Group'),stems=[1,2,
  if(isSafe())return[['Ref',o=>o.ref,'ref'],['Type',ty],['Survey date',o=>ukD(o.sd),'sd'],['Species',o=>dtv(o,'sp'),'sp'],['Stems',o=>o.n||'','n',1],...stems,...crown,
   ['Height (m)',dtN('h',1),'h',1],['Clearance (m)',o=>fx1(o.cc),'cc',1],['Age class',o=>dtv(o,'age'),'age'],['Condition',o=>dtv(o,'cond'),'cond'],
   ['QTRA size',o=>dtv(o,'qs'),'qs'],['QTRA target',o=>dtv(o,'qt'),'qt'],['Target basis',o=>dtv(o,'qb'),'qb'],['QTRA probability',o=>dtv(o,'qp'),'qp'],['Risk index',o=>{const q=qtra(o);return q?String(Math.round(q.ri)):''},null,1],
-  ['Tolerability',o=>{const q=qtra(o);return q?q.tol:''},'tol'],['Recommendations',o=>dtv(o,'rec'),'rec'],['Work priority',o=>dtv(o,'wp'),'wp'],['Action date',o=>ukD(actionDate(o))],['Photo',o=>dtv(o,'ph'),'ph'],['Surveyor',o=>o.by||META.surv||'','by'],['Notes',o=>dtv(o,'notes'),'notes'],pl];
+  ['Tolerability',o=>{const q=qtra(o);return q?q.tol:''},'tol'],['Recommendations',o=>dtv(o,'rec'),'rec'],['Work priority',o=>dtv(o,'wp'),'wp'],['Action date',o=>ukD(actionDate(o))],['Photo',o=>dtv(o,'ph'),'ph'],['Surveyor',o=>o.by||META.surv||'','by'],['Desk estimate',o=>T.includes(o)&&isDesk(o)?deskTxt(o):'','desk'],['Notes',o=>dtv(o,'notes'),'notes'],pl];
  return[['Ref',o=>o.ref,'ref'],['Type',ty],['Survey date',o=>ukD(o.sd),'sd'],['Surveyor',o=>o.by||META.surv||'','by'],['Species',o=>dtv(o,'sp'),'sp'],['Stems',o=>o.n||'','n',1],...stems,...crown,['Height (m)',dtN('h',1),'h',1],['Clearance (m)',o=>fx1(o.cc),'cc',1],
   ['FSB dir',o=>dtv(o,'fd'),'fd'],['FSB ht (m)',dtN('fh',1),'fh',1],['Age class',o=>dtv(o,'age'),'age'],['Condition',o=>dtv(o,'cond'),'cond'],['Category',o=>dtv(o,'cat'),'cat'],
-  ['RPR (m)',o=>rpr(o).toFixed(2),null,1],['RPA (m²)',o=>rpa(o).toFixed(1),null,1],['Notes',o=>dtv(o,'notes'),'notes'],pl]}
+  ['RPR (m)',o=>rpr(o).toFixed(2),null,1],['RPA (m²)',o=>rpa(o).toFixed(1),null,1],['Desk estimate',o=>T.includes(o)&&isDesk(o)?deskTxt(o):'','desk'],['Notes',o=>dtv(o,'notes'),'notes'],pl]}
 const fx1=v=>v===''||v==null||isNaN(+v)?'':(+v).toFixed(1);
 const dtMiss=(o,k)=>k&&k!=='tol'&&(reqList(o).some(r=>r[0]===k)&&fieldMissing(o[k])||(/^d1$/.test(k)&&fieldMissing(o.d1)));
 const dtItems=()=>[...T,...PG];
@@ -1683,7 +1765,7 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
      const ok=v=>v!==undefined&&v!==''&&!isNaN(parseFloat(v));
      if(ok(la)&&ok(lo)&&!(num(la)==0&&num(lo)==0)){t.lat=num(la);t.lon=num(lo)}else if(ok(E)&&ok(N)){const pp=proj4('EPSG:27700','EPSG:4326',[num(E),num(N)]);t.lon=pp[0];t.lat=pp[1]}
      {const lp=String(o['Label position']||'').trim().toUpperCase();if(FSB_DEG[lp]!=null)t.lp=lp;const rr=num(o['Crown rotation (deg)']);if(rr)t.rot=((rr%360)+360)%360}
-     nt.push(t);
+     deskFromRow(t,o);nt.push(t);
     }else{
      const v=String(o['Vertices (lat,lon)']).split(';').map(x=>x.split(',').map(Number)).filter(a=>a.length==2&&!isNaN(a[0])&&!isNaN(a[1]));
      if(v.length<3)return;
@@ -1700,7 +1782,7 @@ $('fi').onchange=async e=>{exitBatch();const f=e.target.files[0];e.target.value=
     const la=o['Latitude (WGS84)'],lo=o['Longitude (WGS84)'],E=o['Easting (OSGB36)'],N=o['Northing (OSGB36)'];
     const ok=v=>v!==undefined&&v!==''&&!isNaN(parseFloat(v));
     if(ok(la)&&ok(lo)&&!(num(la)==0&&num(lo)==0)){t.lat=num(la);t.lon=num(lo)}else if(ok(E)&&ok(N)){const pp=proj4('EPSG:27700','EPSG:4326',[num(E),num(N)]);t.lon=pp[0];t.lat=pp[1]}
-    nt.push(t)});
+    deskFromRow(t,o);nt.push(t)});
   }
   const nn=nParse(wb);
   if(!nt.length&&!np.length&&!nn.length)return alert('No tree, polygon or site note rows found in this file');
@@ -1817,7 +1899,7 @@ $('bn').addEventListener('click',e=>{if(e.target.id==='bxEnd'){e.stopPropagation
  if(e.target.id==='bMNew'){e.stopPropagation();cancelMeas();return banner()}
  if(e.target.id==='bMKeep'){e.stopPropagation();return mKeep()}if(e.target.id==='bMKClr'){e.stopPropagation();return mkClear()}
  if(e.target.id==='bMTree'&&mode==='meas'&&mpts.length>1&&mEndSet){e.stopPropagation();/* new tree at the last measured point, e.g. a tree base located by offset from a mapped feature */
-  const p=mpts[mpts.length-1];if(!confirmLeave('Add a new tree anyway?'))return;const t=newTree();t.lat=p[0];t.lon=p[1];T.push(t);setMode(null);select(t);save()}});
+  const p=mpts[mpts.length-1];if(!confirmLeave('Add a new tree anyway?'))return;const t=deskInit(newTree());t.lat=p[0];t.lon=p[1];T.push(t);setMode(null);select(t);save()}});
 const NHD=['Ref','Type','Notes','Latitude (WGS84)','Longitude (WGS84)','Easting (OSGB36)','Northing (OSGB36)','Area (m2)','Perimeter (m)','Vertices (lat,lon)','Vertices (OSGB E,N)'];
 function nSheet(wb){const rows=[...SN].sort((a,b)=>natCmp(a.ref,b.ref)).map(n=>{if(n.kind==='Area'){const c=turf.centerOfMass(feat(n)).geometry.coordinates,e=proj4('EPSG:4326','EPSG:27700',c);
   return[n.ref,'Area',n.notes||'',+c[1].toFixed(8),+c[0].toFixed(8),+e[0].toFixed(2),+e[1].toFixed(2),+gA(n).toFixed(1),+gPer(n).toFixed(1),n.ll.map(v=>v[0].toFixed(8)+','+v[1].toFixed(8)).join('; '),n.ll.map(v=>{const q=proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);return q[0].toFixed(2)+','+q[1].toFixed(2)}).join('; ')]}
@@ -1830,4 +1912,20 @@ function nParse(wb){const ws=wb.Sheets['Site notes'];if(!ws)return[];const out=[
  return out}
 load();try{if(localStorage.getItem(KEY+'_pane')==='0')pane(false)}catch(x){}
 $('handle').dataset.icon=handleIcon(!document.querySelector('aside').classList.contains('collapsed'));
+
+// ---------- 🌳 desk-estimate controls
+$('bDeskMode').onclick=()=>{deskNew=!deskNew;try{localStorage.setItem(DESK_KEY,deskNew?'1':'0')}catch(x){}deskModeUI();banner()};
+$('bDeskFill').onclick=()=>{$('menu').hidden=true;const c=T.filter(t=>!isDesk(t)&&(!(eqd(t)>0)||!(num(t.h)>0)));
+ if(!c.length)return alert('Every tree already has a stem diameter and height (or is already a desk estimate).');
+ if(!confirm(`Turn on desk estimates for ${c.length} tree(s) with no stem diameter and/or height?\n\n${c.slice(0,30).map(t=>t.ref).join(', ')}${c.length>30?' …':''}\n\nValues already entered stay as measurements – only the blank ones are estimated from the species equations.`))return;
+ c.forEach(t=>{deskSet(t,true,true);draw(t)});if(sel){fill(sel);handles()}list();save()};
+fm.addEventListener('click',e=>{const b=e.target.closest('button[data-desk]');if(!b||!sel)return;const a=b.dataset.desk;
+ if(a==='est'){sel.est={...(sel.est||{}),[b.dataset.dk]:''};deskCalc(sel)}
+ else if(a==='note'){toggleNote(sel,DESK_NOTE,true)}
+ draw(sel);fill(sel);handles();list();save()});
+fm.addEventListener('change',e=>{const c=e.target.closest('input[data-desk]');if(!c||!sel)return;
+ if(c.dataset.desk==='on'){if(c.checked){const has=eqd(sel)>0||num(sel.h)>0;deskSet(sel,true,has&&confirm('Keep the stem diameter and height already entered as measurements?\n\nOK = keep them and only estimate what is blank\nCancel = replace them with allometric estimates'))}else deskSet(sel,false)}
+ else if(c.dataset.desk==='fb'){deskFb=c.checked;try{localStorage.setItem(DESK_FB_KEY,deskFb?'1':'0')}catch(x){}T.filter(isDesk).forEach(t=>{deskCalc(t);if(t!==sel)draw(t)})}
+ draw(sel);fill(sel);handles();list();save()});
+deskModeUI();
 </script></body></html>
