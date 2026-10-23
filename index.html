@@ -516,8 +516,8 @@ function highlightStems(root,obj){const cnt=obj?requiredStemCount(obj):0;
 function issueText(o){const miss=missingTreeFields(o),chk=limitIssues(o);let m='';
  if(miss.length)m+='Survey for '+o.ref+' is incomplete:\n\u2022 '+miss.join('\n\u2022 ')+'\n';
  if(chk.length)m+=(m?'\n':'')+'Values to check for '+o.ref+':\n\u2022 '+chk.join('\n\u2022 ')+'\n';return m}
-function confirmLeave(reason){const o=sel||selP;if(!o||(sel&&sel.lat==null))return true;const m=issueText(o);if(!m)return true;
- return confirm(m+'\n'+reason)}
+/* no missing-data pop-up when leaving a tree or polygon (removed at user request) – gaps are shown by the highlighting in the form, data viewer and full table */
+function confirmLeave(reason){return true}
 function wantSelect(t){if(sel===t)return true;if(!confirmLeave('Move on to '+(t?t.ref:'another tree')+' anyway?'))return false;select(t);return true}
 let SN=[],selN=null,noteDraw=false;/* site notes */
 let PG=[],selP=null,clip=null,site=null,SM=null,T=[],sel=null,mode=null,G=new Map(),HL=L.layerGroup(),dirty=0;
@@ -687,8 +687,6 @@ map.on('click',e=>{if(batch)return;/* batch mode: taps on features toggle select
  const sn=snap(e.latlng);
  if(mode==='add'){if(!confirmLeave('Add a new tree anyway?'))return;const t=deskInit(newTree());t.lat=sn.lat;t.lon=sn.lng;T.push(t);setMode('add');/* one tree per press of ＋ Add */select(t);save()}
  else if(mode==='queue'){const t=sel&&sel.lat==null?sel:T.find(x=>x.lat==null);if(!t)return setMode('queue');
-  const im=issueText(t);
-  if(im&&!confirm(im+'\nPlot anyway?'))return;
   t.lat=sn.lat;t.lon=sn.lng;
   const n=T.find(x=>x.lat==null&&x!==t);if(n)select(n);else{setMode('queue');select(t)}save()}
  else if(mode==='paste'&&clip&&clip.kind=='tree'){if(!confirmLeave('Paste a copy here anyway?'))return;const t={...clip.data,ref:newTree().ref,sd:today(),by:curSurv(),lat:sn.lat,lon:sn.lng};if(t.est)t.est={...t.est};T.push(t);select(t);save()}
