@@ -1603,24 +1603,36 @@ function dxf(){
  const TOLD=[['UNACCEPTABLE',1,'Unacceptable'],['ALARP_REDUCE',40,'Tolerable if ALARP (risk reduction required)'],['ALARP',2,'Tolerable if ALARP'],['ACCEPTABLE',72,'Broadly Acceptable'],['NONE',6,'Not yet assessed']];
  /* exact in-app colours written as RGB (code 420); the colour index is only a fallback for old viewers */
  const hex=h=>{h=h.replace('#','');if(h.length==3)h=h.split('').map(x=>x+x).join('');return[0,2,4].map(k=>parseInt(h.substr(k,2),16))},CRGB={A:'#00ff00',B:'#0000ff',C:'#5b5b5b',U:'#7f0000',NONE:'#aa44cc'};
- const cls=o=>{if(safe){const q=qtra(o),t=q&&q.tol,r=TOLD.find(x=>x[2]===t)||TOLD[4];return[r[0],r[1],hex(TOLC[r[2]]||CRGB.NONE)]}const k=(o.cat||'')[0];return AC[k]?[k,AC[k],hex(CRGB[k])]:['NONE',6,hex(CRGB.NONE)]};
+ const cls=o=>{if(safe){const q=qtra(o),t=q&&q.tol,r=TOLD.find(x=>x[2]===t)||TOLD[4];return[r[0],r[1],hex(TOLC[r[2]]||CRGB.NONE)]}const k=(o.cat||'')[0];return AC[k]?[k,AC[k],hex(CRGB[k])]:['NONE',3,hex('#009900')]};
  const used=new Set(),os=v=>proj4('EPSG:4326','EPSG:27700',[v[1],v[0]]);let anyVet=false,anyFsb=false;
- P.forEach(t=>{const[x,y]=en(t),[c,col,rgb]=cls(t),td=Math.max(eqd(t)/2000,0.01);used.add(c);
+ /* BS5837 trees with no retention category yet (desk / preliminary): clean drawing – green crowns (TREE_CROWN_NONE), red RPAs as usual,
+    trunks, FSB arrows and references in black (ACI 7, black on a white background) */
+ const ink=(c,col,rgb)=>!safe&&c==='NONE'?[7,null]:[col,rgb];
+ P.forEach(t=>{const[x,y]=en(t),[c,col,rgb]=cls(t),[kc,krgb]=ink(c,col,rgb),td=Math.max(eqd(t)/2000,0.01);used.add(c);
   if(!safe&&!isU(t)){const r=rpr(t);circ(front,lay('RPA',c,col,rgb),x,y,r,{col:1});rpaFill(mid,hCirc(x,y,r),c)}
   if(!safe&&isVet(t)){anyVet=true;const ring=vetRing(t).map(v=>[x+v[0],y+v[1]]);lwp(front,lay('VETBUFFER',c,col,rgb),ring,{col:1});vetFill(back,hPoly(ring),c)}
   const cr=[];for(let a=0;a<360;a+=5){const r=a*Math.PI/180,sn=Math.sin(r),cs=Math.cos(r);{const q=rotXY(t,(sn>=0?t.ce:t.cw)*sn,(cs>=0?t.cn:t.cs)*cs);cr.push([x+q[0],y+q[1]])}}
   lwp(front,lay('CROWN',c,col,rgb),cr,{col,rgb,lw:40});
-  lwp(front,lay('TRUNK',c,col,rgb),[[x-td/2,y,1],[x+td/2,y,1]],{col,rgb,w:td});
+  lwp(front,lay('TRUNK',c,kc,krgb),[[x-td/2,y,1],[x+td/2,y,1]],{col:kc,rgb:krgb,w:td});
   /* FSB direction arrow (BS5837), as on the map: from the stem 1.5 m beyond its edge, 0.4 m solid head – layer TREE_FSB_<category> */
-  {const fd=FSB_DEG[String(t.fd||'').trim().toUpperCase()];if(!safe&&fd!=null){anyFsb=true;const a=fd*Math.PI/180,ux=Math.sin(a),uy=Math.cos(a),px=uy,py=-ux,r1=td/2+1.5,hb=r1-0.4,P=(r,w=0)=>[x+ux*r+px*w,y+uy*r+py*w],n=lay('FSB',c,col,rgb),tri=[P(r1),P(hb,0.2),P(hb,-0.2)];
-   lwp(front,n,[P(0),P(hb)],{col,rgb,open:1});hatch(front,n,col,rgb,hPoly(tri));lwp(front,n,tri,{col,rgb})}}
+  {const fd=FSB_DEG[String(t.fd||'').trim().toUpperCase()];if(!safe&&fd!=null){anyFsb=true;const a=fd*Math.PI/180,ux=Math.sin(a),uy=Math.cos(a),px=uy,py=-ux,r1=td/2+1.5,hb=r1-0.4,P=(r,w=0)=>[x+ux*r+px*w,y+uy*r+py*w],n=lay('FSB',c,kc,krgb),tri=[P(r1),P(hb,0.2),P(hb,-0.2)];
+   lwp(front,n,[P(0),P(hb)],{col:kc,rgb:krgb,open:1});hatch(front,n,kc,krgb,hPoly(tri));lwp(front,n,tri,{col:kc,rgb:krgb})}}
   const a=FSB_DEG[lblDir(t)]*Math.PI/180,ux=Math.sin(a),uy=Math.cos(a),gx=x+ux*(td/2+0.4),gy=y+uy*(td/2+0.4);
-  txt(front,lay('REF',c,col,rgb),gx,gy,1,t.ref,{col,rgb,ha:ux>0.1?0:ux<-0.1?2:1,va:uy>0.1?1:uy<-0.1?3:2})});
+  txt(front,lay('REF',c,kc,krgb),gx,gy,1,t.ref,{col:kc,rgb:krgb,ha:ux>0.1?0:ux<-0.1?2:1,va:uy>0.1?1:uy<-0.1?3:2})});
  PG.forEach(p=>{const[c,col,rgb]=cls(p);used.add(c);const ring=p.ll.map(os);
   lwp(front,lay('GROUP',c,col,rgb),ring,{col,rgb,lw:40});
   const b=safe||isU(p)?null:buf(p);if(b){const r=b.map(os);lwp(front,lay('GROUPRPA',c,col,rgb),r,{col:1});rpaFill(mid,hPoly(r),c)}
   const vb=!safe&&isVet(p)?buf(p,voff(p)):null;if(vb){anyVet=true;const r=vb.map(os);lwp(front,lay('GROUPVETBUFFER',c,col,rgb),r,{col:1});vetFill(back,hPoly(r),c)}
-  const q=proj4('EPSG:4326','EPSG:27700',turf.pointOnFeature(feat(p)).geometry.coordinates);txt(front,lay('GROUPREF',c,col,rgb),q[0],q[1],1,p.ref,{col,rgb})});
+  const q=proj4('EPSG:4326','EPSG:27700',turf.pointOnFeature(feat(p)).geometry.coordinates);txt(front,lay('GROUPREF',c,...ink(c,col,rgb)),q[0],q[1],1,p.ref,{col:ink(c,col,rgb)[0],rgb:ink(c,col,rgb)[1]})});
+ /* canopy cover projections (Canopy Cover Calculator, incl. per-feature overrides): projected crown spreads at years 10–40, one standalone layer per decade (CANOPY_YR10 … CANOPY_YR40) */
+ {const rows=ccRows(),CCOL={10:92,20:130,30:150,40:190};
+  CC_YRS.forEach((yr,k)=>{if(!k)return;const n='CANOPY_YR'+yr,col=CCOL[yr];let any=false;
+   rows.forEach(r=>{if(r.g){const g=ccGeom(r,k);if(!g)return;const polys=g.geometry.type==='Polygon'?[g.geometry.coordinates]:g.geometry.coordinates;
+     polys.forEach(pl=>{lwp(front,n,pl[0].slice(0,-1).map(c=>proj4('EPSG:4326','EPSG:27700',c)),{col});any=true});return}
+    const t=r.o,rad=r.pr[k];if(t.lat==null||rad.every(v=>!v))return;const[x,y]=en(t),pts=[];
+    for(let a=0;a<360;a+=5){const q=a*Math.PI/180,sn=Math.sin(q),cs=Math.cos(q),v=rotXY(t,((sn>=0?rad[1]:rad[3])||0)*sn,((cs>=0?rad[0]:rad[2])||0)*cs);pts.push([x+v[0],y+v[1]])}
+    lwp(front,n,pts,{col});any=true});
+   if(any)LY[n]={c:col}})}
  /* site notes: one layer SITE_NOTES (orange) – point = POINT + small circle, area = closed polyline; ref label with the note text beneath */
  if(SN.length){const NL='SITE_NOTES';LY[NL]={c:30};
   const wrap=s=>String(s||'').split(/\r?\n/).flatMap(l=>{const o=[];let cur='';l.trim().split(/\s+/).forEach(w=>{if(!w)return;if((cur+' '+w).trim().length>50&&cur){o.push(cur);cur=w}else cur=(cur+' '+w).trim()});if(cur)o.push(cur);return o});
@@ -2167,16 +2179,17 @@ const ccNum=v=>v===''||v==null||isNaN(+v)?null:+v;
 function ccParams(o){const g=ccIsGrp(o),lk=g?{v:CC_LK.group,lvl:'group',key:'group'}:ccLook(o.sp),li=lk&&lk.v[1]>0?lk.v[1]:null,lm=lk&&lk.v[0]>0?lk.v[0]:null;
  const oi=ccNum(o.ccInc),om=ccNum(o.ccMax);return{lk,li,lm,inc:oi!=null?oi:li,mx:g?null:(om!=null&&om>0?om:lm),incSrc:oi!=null?'override':li!=null?'lookup':'none',mxSrc:om!=null&&om>0?'override':lm!=null?'lookup':'none'}}
 /* the workbook arithmetic: s=[N,E,S,W] → 5 rows (survey, yr10…yr40) of radii; null = removed ('-') */
+const ccGone=(span,k)=>span==='<10'||(k>1&&span==='10+');
 function ccProject(s,inc,mx,span){const calc=[s.slice()];
- for(let k=1;k<5;k++){const gone=span==='<10'||(k>1&&span==='10+');calc.push(gone?[0,0,0,0]:calc[k-1].map(v=>v+inc*10))}
- const out=[s.slice()];for(let k=1;k<5;k++)out.push(calc[k].map((v,i)=>{const m=mx==null?v:Math.min(v,mx);if(m===0)return null;const p=out[k-1][i];
+ for(let k=1;k<CC_YRS.length;k++){const gone=ccGone(span,k);calc.push(gone?[0,0,0,0]:calc[k-1].map(v=>v+inc*10))}
+ const out=[s.slice()];for(let k=1;k<CC_YRS.length;k++)out.push(calc[k].map((v,i)=>{const m=mx==null?v:Math.min(v,mx);if(m===0)return null;const p=out[k-1][i];
   if(p===null)return null;if(mx!=null&&p>mx)return p;return m}));return out}
 const ccQArea=r=>{const[n,e,s,w]=r.map(v=>v||0);return Math.PI/4*(n*e+e*s+s*w+w*n)};
 function ccRows(){const inclG=META.ccGrp!=='0',rows=[];
  [...T].sort((a,b)=>natCmp(a.ref,b.ref)).forEach(t=>{const P=ccParams(t),sp=ccSpan(t),s=[t.cn,t.ce,t.cs,t.cw].map(num),pr=ccProject(s,P.inc||0,P.mx,sp.v);
   rows.push({o:t,g:false,P,sp,pr,area:pr.map(r=>r.every(v=>v===null)?0:ccQArea(r))})});
  if(inclG)[...PG].sort((a,b)=>natCmp(a.ref,b.ref)).forEach(p=>{if(!p.ll||p.ll.length<3)return;const P=ccParams(p),sp=ccSpan(p),inc=P.inc||0;
-  const grow=CC_YRS.map((y,k)=>{if(!k)return 0;if(sp.v==='<10'||(k>1&&sp.v==='10+'))return null;return inc*10*k});
+  const grow=CC_YRS.map((y,k)=>{if(!k)return 0;if(ccGone(sp.v,k))return null;return inc*10*k});
   let base=0;try{base=turf.area(feat(p))}catch(x){}
   const area=grow.map(gr=>{if(gr===null)return 0;if(!gr)return base;try{return turf.area(turf.buffer(feat(p),gr,{units:'meters'}))}catch(x){return base}});
   rows.push({o:p,g:true,P,sp,grow,area})});return rows}
@@ -2194,7 +2207,7 @@ let ccLast=null,ccMerged=null,ccTok=0;
 function ccRender(){const rows=ccRows();ccLast=rows;$('ccDef').value=META.ccDef||'40+';$('ccGrp').checked=META.ccGrp!=='0';$('ccSite').value=META.ccSite||'';
  const unpl=rows.filter(r=>!r.g&&r.o.lat==null).length,noD=rows.filter(r=>!r.g&&r.P.inc==null).length;
  let h='<thead><tr><th rowspan=2 class="ccst">Ref</th><th rowspan=2>Species</th><th rowspan=2>Lookup</th><th rowspan=2>Cat.</th><th rowspan=2>Retention<br>span</th><th rowspan=2>Increment<br>m/yr</th><th rowspan=2>Max<br>radius m</th>'+
-  CC_YRS.map(y=>`<th colspan=4 class="ccg">${y?'Year '+y:'Surveyed'}</th>`).join('')+'<th colspan=5 class="ccg">Crown area (m²)</th></tr><tr>'+
+  CC_YRS.map(y=>`<th colspan=4 class="ccg">${y?'Year '+y:'Surveyed'}</th>`).join('')+'<th colspan=6 class="ccg">Crown area (m²)</th></tr><tr>'+
   CC_YRS.map(()=>['N','E','S','W'].map((d,i)=>`<th${i?'':' class="ccg"'}>${d}</th>`).join('')).join('')+CC_YRS.map((y,i)=>`<th${i?'':' class="ccg"'}>${y||'Srv'}</th>`).join('')+'</tr></thead><tbody>';
  rows.forEach((r,ri)=>{const o=r.o,P=r.P,lv=r.g?'Group rate':P.lk?(P.lk.lvl==='exact'?'✓ ':P.lk.lvl==='species'?'≈ ':'genus ')+esc(ccCap(P.lk.key)):'<span class="ccw">⚠ not found</span>';
   const spanSel=`<select data-cc="span" data-i="${ri}"><option value=""${o.ccSpan?'':' selected'}>Auto (${r.sp.src==='override'?ccSpan({...o,ccSpan:''}).v:r.sp.v})</option>${CC_SPANS.map(s=>`<option${o.ccSpan===s?' selected':''}>${s}</option>`).join('')}</select>`;
@@ -2218,10 +2231,10 @@ function ccSummary(rows,merged){const site=num(META.ccSite)*10000;
  $('ccSum').innerHTML=h+'</tbody></table>'}
 /* map overlay of projected crowns for one year */
 const ccLayer=L.layerGroup();var ccOvT=0;
-function ccOverlay(rows){ccLayer.clearLayers();const k=+(META.ccMap||0);if(!k){map.removeLayer(ccLayer);return}if(!map.hasLayer(ccLayer))ccLayer.addTo(map);
+function ccOverlay(rows){ccLayer.clearLayers();let k=+(META.ccMap||0);if(!(k<CC_YRS.length))k=0;if(!k){map.removeLayer(ccLayer);return}if(!map.hasLayer(ccLayer))ccLayer.addTo(map);
  (rows||ccLast||ccRows()).forEach(r=>{const g=ccGeom(r,k);if(!g)return;try{L.geoJSON(g,{interactive:false,style:{color:'#1b7a3a',weight:2,dashArray:'5 4',fill:true,fillColor:'#2fa14f',fillOpacity:.12}}).addTo(ccLayer)}catch(x){}})}
 function ccOverlaySoon(){if(!+(META.ccMap||0))return;clearTimeout(ccOvT);ccOvT=setTimeout(()=>{try{ccOverlay(ccRows())}catch(x){}},400)}
-function ccOpen(){$('menu').hidden=true;if(!T.length&&!PG.length)return alert('No trees or groups in this survey yet.');$('ccMap').value=META.ccMap||'0';ccRender();$('ccovl').hidden=false}
+function ccOpen(){$('menu').hidden=true;if(!T.length&&!PG.length)return alert('No trees or groups in this survey yet.');$('ccMap').value=+(META.ccMap||0)<CC_YRS.length?META.ccMap||'0':'0';ccRender();$('ccovl').hidden=false}
 $('bCC').onclick=ccOpen;$('ccClose').onclick=$('ccX').onclick=()=>{$('ccovl').hidden=true};
 $('ccovl').addEventListener('click',e=>{if(e.target.id==='ccovl')$('ccovl').hidden=true});
 $('ccDef').onchange=e=>{META={...META,ccDef:e.target.value};save();ccRender()};
@@ -2243,14 +2256,14 @@ async function ccExport(){if(typeof ExcelJS==='undefined')return alert('The expo
  srow('Sum of crown areas (m²)',CC_YRS.map((y,k)=>+rows.reduce((s,r)=>s+r.area[k],0).toFixed(1)),'#,##0');
  srow('Canopy cover, overlaps merged (m²)',merged.map(v=>+v.toFixed(1)),'#,##0');
  if(site>0){srow('Site area (m²)',CC_YRS.map(()=>site),'#,##0');srow('Canopy cover (% of site)',merged.map(v=>v/site),'0.0%')}
- ws.addRow([]);const h1=ws.addRow(['Tree ref','Species','Lookup match','Retention category','Retention span (years)','Increment (m/yr)','Max radius (m)',...CC_YRS.flatMap(y=>[y?'Crown spread at year '+y:'Crown spread surveyed','','','']),'Crown area (m²)','','','','']);
+ ws.addRow([]);const h1=ws.addRow(['Tree ref','Species','Lookup match','Retention category','Retention span (years)','Increment (m/yr)','Max radius (m)',...CC_YRS.flatMap(y=>[y?'Crown spread at year '+y:'Crown spread surveyed','','','']),'Crown area (m²)',...CC_YRS.slice(1).map(()=>'')]);
  const h2=ws.addRow(['','','','','','','',...CC_YRS.flatMap(()=>['N','E','S','W']),...CC_YRS.map(y=>y?'Year '+y:'Surveyed')]);
- const hr1=h1.number;CC_YRS.forEach((y,k)=>ws.mergeCells(hr1,8+k*4,hr1,11+k*4));ws.mergeCells(hr1,28,hr1,32);for(let c=1;c<=7;c++)ws.mergeCells(hr1,c,hr1+1,c);
- [h1,h2].forEach(r=>{r.font=bold;r.alignment={wrapText:true,vertical:'middle',horizontal:'center'};for(let c=1;c<=32;c++){r.getCell(c).fill=hdF;r.getCell(c).border=bd}});h1.height=30;
+ const hr1=h1.number;CC_YRS.forEach((y,k)=>ws.mergeCells(hr1,8+k*4,hr1,11+k*4));const AC0=8+CC_YRS.length*4,NC=AC0+CC_YRS.length-1;ws.mergeCells(hr1,AC0,hr1,NC);for(let c=1;c<=7;c++)ws.mergeCells(hr1,c,hr1+1,c);
+ [h1,h2].forEach(r=>{r.font=bold;r.alignment={wrapText:true,vertical:'middle',horizontal:'center'};for(let c=1;c<=NC;c++){r.getCell(c).fill=hdF;r.getCell(c).border=bd}});h1.height=30;
  rows.forEach(r=>{const o=r.o,P=r.P,lk=r.g?'Group rate':P.lk?P.lk.lvl+': '+ccCap(P.lk.key):'not found';
   const sp=r.g?(o.kind||'Group')+(o.sp?' – '+o.sp:''):o.sp||'',cells=r.g?CC_YRS.flatMap((y,k)=>[k===0?'polygon':r.grow[k]===null?'-':'edge +'+r.grow[k].toFixed(2)+' m','','','']):r.pr.flatMap(row=>row.map(v=>v===null?'-':+v.toFixed(2)));
   const x=ws.addRow([o.ref||'',sp,lk,o.cat||'',r.sp.v+(r.sp.src==='override'?' (override)':r.sp.src==='default'?' (assumed)':''),P.inc??'',r.g?'n/a':P.mx??'',...cells,...r.area.map(a=>a?+a.toFixed(1):'-')]);
-  for(let c=1;c<=32;c++)x.getCell(c).border=bd;
+  for(let c=1;c<=NC;c++)x.getCell(c).border=bd;
   if(!r.g&&P.mx!=null)r.pr.forEach((row,k)=>row.forEach((v,i)=>{if(v===null)return;const c=x.getCell(8+k*4+i);if(v>P.mx+1e-9)c.fill=gtF;else if(k&&Math.abs(v-P.mx)<1e-9)c.fill=eqF}))});
  ws.addRow([]);[['Key:'],['Red fill – surveyed crown spread greater than the species maximum radius (held, no further growth)'],['Amber fill – projected crown spread has reached the species maximum radius'],['"-" – feature removed: its retention span has ended'],[],
   ['Method: each radius grows by increment × 10 per decade while the retention span lasts (<10: removed by year 10; 10+: grows to year 10, removed by year 20; 20+ and 40+: grows to year 40), capped at the maximum radius.'],
