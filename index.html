@@ -282,6 +282,17 @@ input.fsbauto{color:#2e6b3f!important;font-style:italic}.fsbtag{font-size:10.5px
 #ccpanel .ccleg i{display:inline-block;width:12px;height:12px;vertical-align:-2px;margin-right:4px;border:1px solid #ccc}
 #ccpanel .row{display:flex;gap:6px}#ccpanel .row button{flex:1}
 @media(max-width:700px){#ccovl{padding:6px}#ccpanel{padding:10px;max-height:98vh}#ccTbl input{width:72px}}
+
+/* one header row at every width: logo · tools · save dot · menu (the tools scroll sideways if they ever overflow) */
+header{flex-direction:row!important;align-items:center}
+header>.row:first-child{display:contents}
+header .hsp{display:none}
+header .ttl{order:0;flex:none}
+header div.row.tools{order:1;flex:1 1 auto;min-width:0;width:auto!important;justify-content:flex-start!important}
+header div.row.tools>button:first-child{margin-left:auto}header div.row.tools>#bAdd{margin-left:0}
+#offBadge,#dot,#bMenu{order:2;flex:none}
+header #bMenu{height:40px;min-height:40px;padding:0 12px}
+@media(max-width:520px){header{gap:5px}header .ttl{font-size:18px}header #bMenu{padding:0 9px}}
 </style></head><body>
 <div id="login"><form id="lgForm" autocomplete="on">
 <div class="lgLogo">🌳</div><h1>TreePlotta</h1><p>Sign in to continue</p>
